@@ -27,7 +27,7 @@ class Header extends Component {
                                 height: 32.5
                             }}
                         />
-                        <div style={{position: 'absolute', right: 150}}>
+                        <div style={{position: 'relative', right: 150}}>
                             <Button 
                                 style={{
                                     fontFamily: 'Titillium Web',

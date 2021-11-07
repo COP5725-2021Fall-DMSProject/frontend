@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 import Header from '../component/header'
+import Driver from '../component/testcomponent'
 
 class Homepage extends Component {
     constructor(props) {
@@ -10,6 +11,7 @@ class Homepage extends Component {
             <div>
                 <Header/>
                 This is the home page test
+                <Driver/>
             </div>
         )
     }
