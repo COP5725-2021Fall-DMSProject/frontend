@@ -17,18 +17,25 @@ function Driver() {
     };
 
     return (
-        <table className="table" style={{position: 'relative'}}>
-            <thead className="thead-dark">
-                <tr>
-                {Object.keys(driverData[0]).map((heading) => <th>{heading}</th>)} 
-                </tr>
-            </thead>
-            <tbody>
-            {driverData.map((row) => (
-                <tr> {Object.keys(driverData[0]).map((heading) => <td>{row[heading]}</td>)} </tr>
-            ))}
-            </tbody>
-        </table>
+            <table className="table" style={
+                {position: 'absolute',
+                top: '100px',
+                fontFamily: 'Arial, Helvetica, sans-serif',
+                border: '1px solid black',
+                // width: '100%'
+            }
+                }>
+                <thead className="thead-dark">
+                    <tr style={{border: '1px solid black'}}>
+                    {Object.keys(driverData[0]).map((heading) => <th style={{border: '1px solid black'}}>{heading}</th>)} 
+                    </tr>
+                </thead>
+                <tbody>
+                {driverData.map((row) => (
+                    <tr style={{border: '1px solid black'}}> {Object.keys(driverData[0]).map((heading) => <td style={{border: '1px solid black'}}>{row[heading]}</td>)} </tr>
+                ))}
+                </tbody>
+            </table>
     );
   }
 export default Driver;
