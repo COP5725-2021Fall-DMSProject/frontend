@@ -44,6 +44,15 @@ class Header extends Component {
                                     color: settings.Colors['subColor']
                                 }}
                             >
+                                Driver 
+                            </Button>
+                            <Button 
+                                style={{
+                                    fontFamily: 'Titillium Web',
+                                    fontSize: settings.HeaderText['fontSize'],
+                                    color: settings.Colors['subColor']
+                                }}
+                            >
                                 F1 Query 
                             </Button>
                             <Button 
