@@ -1,7 +1,6 @@
 import React, { useState, useEffect} from "react";
 import "../App.css";
 import * as driverApis from "../api/driver"
-import axios from "axios";
 
 function Driver() {
     const [driverData, setDriverData] = useState([{driverId: '',givenName:'', familyName:'',dateOfbirth:'',nationality:'',url:''}]);
