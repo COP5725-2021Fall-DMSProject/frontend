@@ -1,15 +1,24 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-
+import {
+  BrowserRouter,
+  Routes,
+  Route
+} from "react-router-dom";
 import './index.css';
 import Homepage from './pages/homepage';
 import PageC1 from './pages/c1page';
+import Driver from './pages/driver';
 import reportWebVitals from './reportWebVitals';
 
+
 ReactDOM.render(
-  <React.StrictMode>
-    <Homepage />
-  </React.StrictMode>,
+  <BrowserRouter>
+    <Routes>
+      <Route path="/" element={<Homepage/>} />
+      <Route path="/driver" element={<Driver/>} />
+    </Routes>
+  </BrowserRouter>,
   document.getElementById('root')
 );
 
