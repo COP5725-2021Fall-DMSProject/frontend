@@ -1,95 +1,145 @@
-import React, { Component } from 'react'
+import React, { useState, useEffect} from "react";
 import Header from '../component/header'
-import { Card, CardMedia, CardContent, Typography, CardActions, Button} from '@mui/material'
+import { Card, CardMedia, CardContent, Typography, CardActionArea} from '@mui/material'
 import settings from '../settings'
+import { Carousel } from 'react-bootstrap'
+import 'bootstrap/dist/css/bootstrap.min.css';
+import { Link } from 'react-router-dom';
 
-class Homepage extends Component {
-    constructor(props) {
-        super(props)
-    }
+function Homepage() {
+    const [CarouselIdx, setCarouseIdx] = useState(0);
+      
+    const handleSelect = (selectedIndex, e) => {
+        setCarouseIdx(selectedIndex);
+    };
 
-    creatingCarouselCard = () => {
+    function ControlledCarousel() {
         return (
-            <Card sx={{ maxWidth: 600, backgroundColor:'#38383f'}}>
-                <CardMedia
-                    component="img"
-                    height="200"
-                    image="./home_nextHamliton.jpg"
-                    alt="home_nextHamilton"
-                />
-                <CardContent>
-                    <Typography 
-                        gutterBottom variant="h5" component="div"
-                        sx={{ color: settings.Colors.subColor, fontFamily: settings.Font.secondary }}
-                    >
-                        Who's the next Hamilton?
-                    </Typography>
-                    <Typography sx={{ color: settings.Colors.subColor, fontFamily: settings.Font.major }} variant="body2" color="text.secondary">
-                        Hamilton is the Most Drivers’ World Championships (7 Championships). 
-                        This query we want to show who's will possibly the next Hamilton.
-                    </Typography>
-                </CardContent>
-                <CardActions>
-                    <Button size="small">Enter</Button>
-                </CardActions>
-            </Card>
-        )
-    }
-
-    render() {
-        return (
-            <div>
-                <Header/>
-                <div style={{
-                    display: 'flex',
-                    flexDirection: 'column',
-                    marginTop: 80,
-                    backgroundColor:'#000',
-                    height: 600
-                }}>
+          <Carousel activeIndex={CarouselIdx} onSelect={handleSelect}>
+            <Carousel.Item>
+                <div class="d-flex justify-content-center">
                     <div style={{
-                        marginLeft: 50 
+                        paddingTop: 20,
+                        paddingRight: 20,
+                        borderTop: 'solid 10px #e10600',
+                        borderRight: 'solid 10px #e10600',
+                        borderTopRightRadius: 25
                     }}>
-                        <div style={{
-                            width: '100%',
-                            height: 100,
-                            fontFamily: 'Audiowide',
-                            fontSize: 40,
-                            color: settings.Colors['subColor']
-                        }}>
-                            <div style={{
-                                marginTop: 30, 
-                                display: 'flex',
-                                flexDirection: 'row'
-                            }}>
-                                <img 
-                                    style={{
-                                        width: 50, 
-                                        height: 37.5, 
-                                        padding: 15,
-                                        borderTop: 'solid 2px #38383f',
-                                        borderRight: 'solid 2px #38383f',
-                                        borderTopRightRadius: 10
-                                    }} 
-                                    src="./racemap.png" 
-                                    alt="racemap" 
-                                    usemap="#racemap"
+                        <Link to={'/driver'} style={{ textDecoration: 'none' }}>
+                            <Card sx={{ maxWidth: 800, backgroundColor:'#38383f'}}>
+                                <CardMedia
+                                    component="img"
+                                    height="400"
+                                    image="./home_nextHamliton.png"
+                                    alt="home_nextHamilton"
                                 />
-                                <div style={{
-                                    display: 'flex',
-                                    alignItems: 'center',
-                                    marginLeft: 25
-                                }}>
-                                    Group 14 - Goat of F1 Racing
-                                </div>
-                            </div>
-                        </div>
-                        {this.creatingCarouselCard()}
+                                <CardContent>
+                                    <Typography 
+                                        gutterBottom variant="h5" component="div"
+                                        sx={{ color: settings.Colors.subColor, fontFamily: settings.Font.secondary }}
+                                    >
+                                        Who's the next Hamilton?
+                                    </Typography>
+                                    <Typography sx={{ color: settings.Colors.subColor, fontFamily: settings.Font.major, fontSize: 16 }} variant="body2" color="text.secondary">
+                                        Hamilton is the Most Drivers’ World Championships (7 Championships). 
+                                        This page is goint to show uou - who's will possibly the next Hamilton.
+                                    </Typography>
+                                </CardContent>
+                            </Card>
+                        </Link>
                     </div>
                 </div>
-            </div>
-        )
+            </Carousel.Item>
+            <Carousel.Item>
+                <div class="d-flex justify-content-center">
+                    <div style={{
+                        paddingTop: 20,
+                        paddingRight: 20,
+                        borderTop: 'solid 10px #e10600',
+                        borderRight: 'solid 10px #e10600',
+                        borderTopRightRadius: 25
+                    }}>
+                        <Link to={'/driver'} style={{ textDecoration: 'none' }}>
+                            <Card sx={{ maxWidth: 800, backgroundColor:'#38383f'}}>
+                                <CardMedia
+                                    component="img"
+                                    height="400"
+                                    image="./home_investableTeam.jpg"
+                                    alt="home_investableTeam"
+                                />
+                                <CardContent>
+                                    <Typography 
+                                        gutterBottom variant="h5" component="div"
+                                        sx={{ color: settings.Colors.subColor, fontFamily: settings.Font.secondary }}
+                                    >
+                                        Who’s an Investable Constructor? 
+                                    </Typography>
+                                    <Typography sx={{ color: settings.Colors.subColor, fontFamily: settings.Font.major, fontSize: 16 }} variant="body2" color="text.secondary">
+                                        F1 racing is rising to be extremely popular around the world. 
+                                        This page provides precious insight overview through the teams. 
+                                    </Typography>
+                                </CardContent>
+                            </Card>
+                        </Link>
+                    </div>
+                </div>
+            </Carousel.Item>
+          </Carousel>
+        );
     }
+
+    return (
+        <div>
+            <Header/>
+            <div style={{
+                display: 'flex',
+                flexDirection: 'column',
+                marginTop: 80,
+                backgroundColor:'#000',
+                height: 750
+            }}>
+                <div style={{}}>
+                    <div style={{
+                        width: '100%',
+                        height: 100,
+                        fontFamily: 'Audiowide',
+                        fontSize: 40,
+                        color: settings.Colors['subColor']
+                    }}>
+                        <div style={{
+                            marginLeft: 100,
+                            marginTop: 30, 
+                            display: 'flex',
+                            flexDirection: 'row'
+                            // justifyContent: 'center'
+                        }}>
+                            <img 
+                                style={{
+                                    width: 100, 
+                                    height: 80, 
+                                    padding: 15,
+                                    borderTop: 'solid 2px #38383f',
+                                    borderRight: 'solid 2px #38383f',
+                                    borderTopRightRadius: 10
+                                }} 
+                                src="./racemap.png" 
+                                alt="racemap" 
+                                usemap="#racemap"
+                            />
+                            <div style={{
+                                display: 'flex',
+                                alignItems: 'center',
+                                marginLeft: 25
+                            }}>
+                                Group 14 - Goat of F1 Racing
+                            </div>
+                        </div>
+                    </div>
+                    {ControlledCarousel()}
+                </div>
+            </div>
+        </div>
+    )
 }
 
 export default Homepage
