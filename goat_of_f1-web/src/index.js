@@ -7,7 +7,7 @@ import {
 } from "react-router-dom";
 import './index.css';
 import Homepage from './pages/homepage';
-import PageC1 from './pages/c1page';
+import C1Page from './pages/c1page';
 import Driver from './pages/driver';
 import reportWebVitals from './reportWebVitals';
 
@@ -17,6 +17,7 @@ ReactDOM.render(
     <Routes>
       <Route path="/" element={<Homepage/>} />
       <Route path="/driver" element={<Driver/>} />
+      <Route path="/c1page-next-halmiton" element={<C1Page/>} />
     </Routes>
   </BrowserRouter>,
   document.getElementById('root')
