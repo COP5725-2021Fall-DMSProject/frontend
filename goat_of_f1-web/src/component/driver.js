@@ -5,7 +5,7 @@ import * as driverApis from "../api/driver"
 function Driver() {
     const [driverData, setDriverData] = useState([{driverId: '',givenName:'', familyName:'',dateOfbirth:'',nationality:'',url:''}]);
     let year = 2017
-    
+
     useEffect(() => {
         driverApis.getDrivers(2017, setDriverData);
     }, []);
