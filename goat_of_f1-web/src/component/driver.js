@@ -1,28 +1,41 @@
 import React, { useState, useEffect} from "react";
 import "../App.css";
-import * as driverApis from "../api/driver"
+import axios from "axios";
+
+const f1Url = "http://ergast.com/api/f1/drivers.json?=123";
 
 function Driver() {
     const [driverData, setDriverData] = useState([{driverId: '',givenName:'', familyName:'',dateOfbirth:'',nationality:'',url:''}]);
-    let year = 2017
-
+  
     useEffect(() => {
-        driverApis.getDrivers(2017, setDriverData);
+        getDrivers();
     }, []);
+  
+    const getDrivers = async () => {
+        const response = await axios.get(f1Url);
+        setDriverData(response.data.MRData.DriverTable.Drivers);
+    };
 
     return (
-        <table className="table" style={{position: 'absolute', top: 50}}>
-            <thead className="thead-dark">
-                <tr>
-                {Object.keys(driverData[0]).map((heading) => <th>{heading}</th>)} 
-                </tr>
-            </thead>
-            <tbody>
-            {driverData.map((row) => (
-                <tr> {Object.keys(driverData[0]).map((heading) => <td>{row[heading]}</td>)} </tr>
-            ))}
-            </tbody>
-        </table>
+            <table className="table" style={
+                {position: 'absolute',
+                top: '100px',
+                fontFamily: 'Arial, Helvetica, sans-serif',
+                border: '1px solid black',
+                // width: '100%'
+            }
+                }>
+                <thead className="thead-dark">
+                    <tr style={{border: '1px solid black'}}>
+                    {Object.keys(driverData[0]).map((heading) => <th style={{border: '1px solid black'}}>{heading}</th>)} 
+                    </tr>
+                </thead>
+                <tbody>
+                {driverData.map((row) => (
+                    <tr style={{border: '1px solid black'}}> {Object.keys(driverData[0]).map((heading) => <td style={{border: '1px solid black'}}>{row[heading]}</td>)} </tr>
+                ))}
+                </tbody>
+            </table>
     );
   }
 export default Driver;

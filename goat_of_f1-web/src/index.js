@@ -7,6 +7,7 @@ import {
 } from "react-router-dom";
 import './index.css';
 import Homepage from './pages/homepage';
+import PageC1 from './pages/c1page';
 import Driver from './pages/driver';
 import reportWebVitals from './reportWebVitals';
 
