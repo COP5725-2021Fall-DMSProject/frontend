@@ -51,7 +51,7 @@ function PageC1() {
     }, [])
 
     const getComparisonData = async () => {
-        const response = await axios.get(compareUrl)
+        // const response = await axios.get(compareUrl)
         const fakeResponse = [
             { year: 2010 , race: 'Istanbul', driver: 77, lewis: 88},
             { year: 2011, race: 'Monaco', driver: 65, lewis: 63},
@@ -64,7 +64,7 @@ function PageC1() {
     }
 
     const getAgeWisePoints = async() => {
-        const response = await axios.get(agewisePointsUrl)
+        // const response = await axios.get(agewisePointsUrl)
         const fakeResponse = [
             { age:21, x: 72, lewis: 97 },
             { age:22, x: 87, lewis: 83 },
@@ -76,7 +76,7 @@ function PageC1() {
         setAgewisePoints(fakeResponse)
     }
     const getAgewiseAveragePoints = async () => {
-        const response = await axios.get(averageAgewisePointsUrl)
+        // const response = await axios.get(averageAgewisePointsUrl)
         const fakeResponse = [
             { x: 1, y: 30, lewis: 26 },
             { x: 2, y: 40, lewis:31 },

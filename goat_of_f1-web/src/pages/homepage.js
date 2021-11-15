@@ -25,7 +25,7 @@ function Homepage() {
                         borderRight: 'solid 10px #e10600',
                         borderTopRightRadius: 25
                     }}>
-                        <Link to={'/c1page-next-halmiton'} style={{ textDecoration: 'none' }}>
+                        <Link to={'/c1page-next-hamilton'} style={{ textDecoration: 'none' }}>
                             <Card sx={{ maxWidth: 800, backgroundColor:'#38383f'}}>
                                 <CardMedia
                                     component="img"
