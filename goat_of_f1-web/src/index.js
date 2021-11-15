@@ -17,7 +17,7 @@ ReactDOM.render(
     <Routes>
       <Route path="/" element={<Homepage/>} />
       <Route path="/driver" element={<Driver/>} />
-      <Route path="/c1page-next-halmiton" element={<C1Page/>} />
+      <Route path="/c1page-next-hamilton" element={<C1Page/>} />
     </Routes>
   </BrowserRouter>,
   document.getElementById('root')
