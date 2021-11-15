@@ -25,7 +25,7 @@ function Homepage() {
                         borderRight: 'solid 10px #e10600',
                         borderTopRightRadius: 25
                     }}>
-                        <Link to={'/driver'} style={{ textDecoration: 'none' }}>
+                        <Link to={'/c1page-next-halmiton'} style={{ textDecoration: 'none' }}>
                             <Card sx={{ maxWidth: 800, backgroundColor:'#38383f'}}>
                                 <CardMedia
                                     component="img"
@@ -94,7 +94,7 @@ function Homepage() {
             <div style={{
                 display: 'flex',
                 flexDirection: 'column',
-                marginTop: 80,
+                marginTop: 75,
                 backgroundColor:'#000',
                 height: 750
             }}>
