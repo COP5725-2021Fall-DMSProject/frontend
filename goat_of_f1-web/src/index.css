@@ -12,5 +12,9 @@ code {
     monospace;
 }
 
+.hide-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
 @import url('https://fonts.googleapis.com/css2?family=Titillium+Web:wght@600&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Audiowide');

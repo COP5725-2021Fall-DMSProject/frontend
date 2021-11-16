@@ -21,8 +21,8 @@ function Homepage() {
                     <div style={{
                         paddingTop: 20,
                         paddingRight: 20,
-                        borderTop: 'solid 10px #e10600',
-                        borderRight: 'solid 10px #e10600',
+                        borderTop: 'solid 10px ' + settings.Colors.mainColor,
+                        borderRight: 'solid 10px ' + settings.Colors.mainColor,
                         borderTopRightRadius: 25
                     }}>
                         <Link to={'/c1page-next-hamilton'} style={{ textDecoration: 'none' }}>
@@ -55,11 +55,11 @@ function Homepage() {
                     <div style={{
                         paddingTop: 20,
                         paddingRight: 20,
-                        borderTop: 'solid 10px #e10600',
-                        borderRight: 'solid 10px #e10600',
+                        borderTop: 'solid 10px ' + settings.Colors.mainColor,
+                        borderRight: 'solid 10px ' + settings.Colors.mainColor,
                         borderTopRightRadius: 25
                     }}>
-                        <Link to={'/driver'} style={{ textDecoration: 'none' }}>
+                        <Link to={'/c2page-investable-constructor'} style={{ textDecoration: 'none' }}>
                             <Card sx={{ maxWidth: 800, backgroundColor:'#38383f'}}>
                                 <CardMedia
                                     component="img"
