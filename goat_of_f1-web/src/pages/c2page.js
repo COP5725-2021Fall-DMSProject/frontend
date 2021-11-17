@@ -4,8 +4,7 @@ import {
     ArgumentAxis,
     ValueAxis,
     Chart,
-    LineSeries,
-    BarSeries,
+    SplineSeries,
     Title,
     Legend
   } from '@devexpress/dx-react-chart-material-ui';
@@ -20,22 +19,20 @@ import settings from "../settings";
 import axios from "axios";
 
 function C2Page() {
-    const [agewiseAveragePoints, setAverageAgewisePoints] = useState([{x:'', y:'', lewis:''}])
+    const [scoreIncrease, setAverageAgewisePoints] = useState([{ countructorId: 0, year: '', totalPoint: 0}])
     const [constructorList, setConstructorList] = useState([{constructorId: '', name:''}])
 
     useEffect(() => {
-        getAgewiseAveragePoints();
+        getScoreIncrease();
         getContructorList();
     }, [])
     
-    const getAgewiseAveragePoints = async () => {
+    const getScoreIncrease = async () => {
         // const response = await axios.get(averageAgewisePointsUrl)
         const fakeResponse = [
-            { x: 1, y: 30, lewis: 26 },
-            { x: 2, y: 40, lewis:31 },
-            { x: 3, y: 5, lewis: 10},
-            { x: 4, y: 2, lewis: 12},
-            { x: 5, y: 21, lewis: 25},
+            { countructorId: 0, year: 2015, totalPoint: 100 },
+            { countructorId: 0, year: 2016, totalPoint: 132 },
+            { countructorId: 0, year: 2017, totalPoint: 166 },
           ];
         // setAgewisePoints(response.data)
         setAverageAgewisePoints(fakeResponse)
@@ -50,52 +47,59 @@ function C2Page() {
         setConstructorList(response.data.MRData.ConstructorTable.Constructors)
     }
     
-
     const legendStyles = () => ({
         root: {
           display: 'flex',
           margin: 'auto',
           flexDirection: 'row',
         },
-      });
-      const legendRootBase = ({ classes, ...restProps }) => (
+    });
+    const legendRootBase = ({ classes, ...restProps }) => (
         <Legend.Root {...restProps} className={classes.root} />
-      );
-      const Root = withStyles(legendStyles, { name: 'LegendRoot' })(legendRootBase);
-      const legendLabelStyles = () => ({
+    );
+    const Root = withStyles(legendStyles, { name: 'LegendRoot' })(legendRootBase);
+    const legendLabelStyles = () => ({
         label: {
-          whiteSpace: 'nowrap',
+            whiteSpace: 'nowrap',
         },
-      });
-      const legendLabelBase = ({ classes, ...restProps }) => (
+    });
+    const legendLabelBase = ({ classes, ...restProps }) => (
         <Legend.Label className={classes.label} {...restProps} />
-      );
-      const Label = withStyles(legendLabelStyles, { name: 'LegendLabel' })(legendLabelBase);
+    );
+    const Label = withStyles(legendLabelStyles, { name: 'LegendLabel' })(legendLabelBase);
+
+    const ValueLabel = (props) => {
+        const { text } = props;
+        return (
+          <ValueAxis.Label
+            {...props}
+            text={`${text}%`}
+          />
+        );
+    };
 
     function constructorLineChart() {
         return(
             <Paper style={{
                 height:'55%',
-                width: '50%',
+                width: '70%',
             }}>
                 <Chart
-                    data={agewiseAveragePoints}
+                    data={scoreIncrease}
                 >
+                    <ArgumentScale/>
                     <ArgumentAxis/>
-                    <ValueAxis/>
+                    <ValueAxis
+                        labelComponent={ValueLabel}
+                    />
+                    
                     <LineSeries 
                         name="DriverX" 
-                        valueField="y" 
-                        argumentField="x"
-                    />
-
-                    <LineSeries 
-                        name="Lewis" 
-                        valueField="lewis" 
-                        argumentField="x" 
+                        valueField="totalPoint" 
+                        argumentField="year"
                     />
                     <Legend position="bottom" rootComponent={Root} labelComponent={Label} />
-                    <Title text="Agewise Average Points Comparison" />
+                    <Title style={{fontFamily: 'Audiowide'}}text="Constuctor Total Points (2015-2017)" />
                 </Chart>
             </Paper>
         )
@@ -105,16 +109,20 @@ function C2Page() {
         console.log(constructorList)
         const listItem = constructorList.map((element, index) => {
             return(
-                <ListItem>
-                    <ListItemText
-                        key={index}
-                        primary={element.name}
-                    />
-                </ListItem>
+                <div style={{
+                    borderRight: 'solid 3px ' + settings.Colors.mainColor,
+                    borderBottom: 'solid 3px ' + settings.Colors.mainColor,
+                }}>
+                    <ListItem>
+                        <ListItemText
+                            key={index}
+                            primary={element.name.toUpperCase()}
+                        />
+                    </ListItem>
+                </div>
             )
         })
 
-        console.log(listItem)
         return (
             <List class="hide-scrollbar" style={{maxHeight: '100%', overflow: 'auto'}}>
                 {listItem}
@@ -143,8 +151,6 @@ function C2Page() {
                 display: 'flex',
                 flexDirection: 'column'
             }}>
-                {constructorLineChart()}
-                {constructorLineChart()}
                 {constructorLineChart()}
             </div>
         </div>
