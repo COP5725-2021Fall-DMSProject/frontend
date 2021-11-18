@@ -1,7 +1,6 @@
 import React, { Component } from 'react'
 import { AppBar, Toolbar, Button } from '@mui/material'
 import settings from '../settings'
-import { height } from '@mui/system'
 import { Link } from 'react-router-dom'
 
 class Header extends Component {
@@ -31,9 +30,9 @@ class Header extends Component {
                         <div style={{position: 'absolute', right: 150}}>
                             <Button 
                                 style={{
-                                    fontFamily: 'Titillium Web',
-                                    fontSize: settings.HeaderText['fontSize'],
-                                    color: settings.Colors['subColor']
+                                    fontFamily: settings.Font.major,
+                                    fontSize: settings.HeaderText.fontSize,
+                                    color: settings.Colors.subColor
                                 }}
                                 component={Link}
                                 to="/" 
@@ -42,9 +41,9 @@ class Header extends Component {
                             </Button>
                             <Button 
                                 style={{
-                                    fontFamily: 'Titillium Web',
-                                    fontSize: settings.HeaderText['fontSize'],
-                                    color: settings.Colors['subColor']
+                                    fontFamily: settings.Font.major,
+                                    fontSize: settings.HeaderText.fontSize,
+                                    color: settings.Colors.subColor
                                 }}
                                 component={Link}
                                 to="/driver"                          
@@ -53,18 +52,18 @@ class Header extends Component {
                             </Button>
                             <Button 
                                 style={{
-                                    fontFamily: 'Titillium Web',
-                                    fontSize: settings.HeaderText['fontSize'],
-                                    color: settings.Colors['subColor']
+                                    fontFamily: settings.Font.major,
+                                    fontSize: settings.HeaderText.fontSize,
+                                    color: settings.Colors.subColor
                                 }}
                             >
                                 F1 Query 
                             </Button>
                             <Button 
                                 style={{
-                                    fontFamily: 'Titillium Web',
-                                    fontSize: settings.HeaderText['fontSize'],
-                                    color: settings.Colors['subColor']
+                                    fontFamily: settings.Font.major,
+                                    fontSize: settings.HeaderText.fontSize,
+                                    color: settings.Colors.subColor
                                 }}
                             >
                                 About Us 

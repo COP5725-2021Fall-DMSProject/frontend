@@ -7,6 +7,8 @@ import {
 } from "react-router-dom";
 import './index.css';
 import Homepage from './pages/homepage';
+import C1Page from './pages/c1page';
+import C2Page from './pages/c2page';
 import Driver from './pages/driver';
 import reportWebVitals from './reportWebVitals';
 
@@ -16,6 +18,8 @@ ReactDOM.render(
     <Routes>
       <Route path="/" element={<Homepage/>} />
       <Route path="/driver" element={<Driver/>} />
+      <Route path="/c1page-next-hamilton" element={<C1Page/>} />
+      <Route path="/c2page-investable-constructor" element={<C2Page/>} />
     </Routes>
   </BrowserRouter>,
   document.getElementById('root')
