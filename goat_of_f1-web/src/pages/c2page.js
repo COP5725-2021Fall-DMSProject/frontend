@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import Header from '../component/header'
 import {
     ArgumentAxis,
+    LineSeries,
     ValueAxis,
     Chart,
     SplineSeries,
@@ -87,7 +88,7 @@ function C2Page() {
                 <Chart
                     data={scoreIncrease}
                 >
-                    <ArgumentScale/>
+                    {/* <ArgumentScale/> */}
                     <ArgumentAxis/>
                     <ValueAxis
                         labelComponent={ValueLabel}
