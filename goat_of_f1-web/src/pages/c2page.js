@@ -1,27 +1,18 @@
 import React, { useState, useEffect } from "react";
 import Header from '../component/header'
-import {
-    ArgumentAxis,
-    LineSeries,
-    ValueAxis,
-    Chart,
-    SplineSeries,
-    Title,
-    Legend
-  } from '@devexpress/dx-react-chart-material-ui';
-import { withStyles } from '@material-ui/core/styles';
-import Paper from '@material-ui/core/Paper';
+import { Line } from 'react-chartjs-2';
 import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
-import ListItemAvatar from '@mui/material/ListItemAvatar';
-import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
 import settings from "../settings";
 import axios from "axios";
+import { randDarkColor } from '../utils/utils'
 
 function C2Page() {
     const [scoreIncrease, setAverageAgewisePoints] = useState([{ countructorId: 0, year: '', totalPoint: 0}])
-    const [constructorList, setConstructorList] = useState([{constructorId: '', name:''}])
+    const [constructorList, setConstructorList] = useState([])
+    const startYear = 2015
+    const endYear = 2017
 
     useEffect(() => {
         getScoreIncrease();
@@ -40,74 +31,60 @@ function C2Page() {
     }
 
     const getContructorList = async () => {
-        const constructorUrl = "http://ergast.com/api/f1/constructors.json";
+        const constructorUrl = settings.apiHostURL + '/c2/investable-constructors'
         let response = await axios.get(constructorUrl)
         // let filterList = response.data.MRData.DriverTable.Constructors.map((element) => {
         //     filterList.{'id': element.constructorId, 'name': element.name}
         // })
-        setConstructorList(response.data.MRData.ConstructorTable.Constructors)
+        setConstructorList(response.data.result.data.constructors)
     }
-    
-    const legendStyles = () => ({
-        root: {
-          display: 'flex',
-          margin: 'auto',
-          flexDirection: 'row',
-        },
-    });
-    const legendRootBase = ({ classes, ...restProps }) => (
-        <Legend.Root {...restProps} className={classes.root} />
-    );
-    const Root = withStyles(legendStyles, { name: 'LegendRoot' })(legendRootBase);
-    const legendLabelStyles = () => ({
-        label: {
-            whiteSpace: 'nowrap',
-        },
-    });
-    const legendLabelBase = ({ classes, ...restProps }) => (
-        <Legend.Label className={classes.label} {...restProps} />
-    );
-    const Label = withStyles(legendLabelStyles, { name: 'LegendLabel' })(legendLabelBase);
-
-    const ValueLabel = (props) => {
-        const { text } = props;
-        return (
-          <ValueAxis.Label
-            {...props}
-            text={`${text}%`}
-          />
-        );
-    };
 
     function constructorLineChart() {
+        const options = {
+            scales: {
+                y: {
+                    beginAtZero: true
+                  }
+                }
+            };
+        
+        var yearLabel = []
+        for(var i = startYear; i <= endYear; i++) {
+            yearLabel.push(i)
+        }
+
+        const data = {
+            labels: yearLabel,
+            datasets: constructorList.map((element, index) => {
+                const totalCostList = element.total_point
+                const randomColorString = randDarkColor()
+                return({
+                    label: element.name.toUpperCase(),
+                    data: totalCostList,
+                    fill: false,
+                    backgroundColor: randomColorString,
+                    borderColor: randomColorString,
+                })
+            })
+        };
         return(
-            <Paper style={{
-                height:'55%',
-                width: '70%',
-            }}>
-                <Chart
-                    data={scoreIncrease}
-                >
-                    {/* <ArgumentScale/> */}
-                    <ArgumentAxis/>
-                    <ValueAxis
-                        labelComponent={ValueLabel}
-                    />
-                    
-                    <LineSeries 
-                        name="DriverX" 
-                        valueField="totalPoint" 
-                        argumentField="year"
-                    />
-                    <Legend position="bottom" rootComponent={Root} labelComponent={Label} />
-                    <Title style={{fontFamily: 'Audiowide'}}text="Constuctor Total Points (2015-2017)" />
-                </Chart>
-            </Paper>
+            <div style={{width: '70%', height: 500}}>
+                <div className='header'>
+                    <h1 className='title page-title'> Total Points (2015-2017)</h1>
+                    <div className='links'>
+                    <a
+                        className='btn btn-gh'
+                        href='https://github.com/reactchartjs/react-chartjs-2/blob/master/example/src/charts/Line.js'
+                    >
+                    </a>
+                    </div>
+                </div>s
+                <Line data={data} options={options} />
+            </div>
         )
     }
 
-    function generateContructorList() {
-        console.log(constructorList)
+    function generateConstructorList() {
         const listItem = constructorList.map((element, index) => {
             return(
                 <div style={{
@@ -144,7 +121,7 @@ function C2Page() {
                 borderRight: 'solid 10px ' + settings.Colors.mainColor,
                 borderTopRightRadius: 25
             }}>
-                {generateContructorList()}
+                {generateConstructorList()}
             </div>
             <div style={{
                 marginTop: 100,
