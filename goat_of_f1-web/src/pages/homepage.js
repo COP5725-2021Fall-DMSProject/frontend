@@ -41,7 +41,7 @@ function Homepage() {
                                         Who's the next Hamilton?
                                     </Typography>
                                     <Typography sx={{ color: settings.Colors.subColor, fontFamily: settings.Font.major, fontSize: 16 }} variant="body2" color="text.secondary">
-                                        Hamilton is the Most Drivers’ World Championships (7 Championships). 
+                                        Hamilton holds the Most Drivers’ World Championships (7 Championships). 
                                         This page is goint to show uou - who's will possibly the next Hamilton.
                                     </Typography>
                                 </CardContent>
@@ -77,6 +77,40 @@ function Homepage() {
                                     <Typography sx={{ color: settings.Colors.subColor, fontFamily: settings.Font.major, fontSize: 16 }} variant="body2" color="text.secondary">
                                         F1 racing is rising to be extremely popular around the world. 
                                         This page provides precious insight overview through the teams. 
+                                    </Typography>
+                                </CardContent>
+                            </Card>
+                        </Link>
+                    </div>
+                </div>
+            </Carousel.Item>
+            <Carousel.Item>
+                <div class="d-flex justify-content-center">
+                    <div style={{
+                        paddingTop: 20,
+                        paddingRight: 20,
+                        borderTop: 'solid 10px ' + settings.Colors.mainColor,
+                        borderRight: 'solid 10px ' + settings.Colors.mainColor,
+                        borderTopRightRadius: 25
+                    }}>
+                        <Link to={'/c3page-lapwise-positions'} style={{ textDecoration: 'none' }}>
+                            <Card sx={{ maxWidth: 800, backgroundColor:'#38383f'}}>
+                                <CardMedia
+                                    component="img"
+                                    height="400"
+                                    image="./home_defence.jpeg"
+                                    alt="home_defence"
+                                />
+                                <CardContent>
+                                    <Typography 
+                                        gutterBottom variant="h5" component="div"
+                                        sx={{ color: settings.Colors.subColor, fontFamily: settings.Font.secondary }}
+                                    >
+                                        Which driver is a good defender? 
+                                    </Typography>
+                                    <Typography sx={{ color: settings.Colors.subColor, fontFamily: settings.Font.major, fontSize: 16 }} variant="body2" color="text.secondary">
+                                        Drivers try to defend their positions by consistently blocking other drivers. 
+                                        This page provides insights on such drivers on a lapwsie scale. 
                                     </Typography>
                                 </CardContent>
                             </Card>
