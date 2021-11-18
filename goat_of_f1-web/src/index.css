@@ -17,7 +17,12 @@ code {
 }
 
 .page-title {
-  font-family: 'Audiowide'
+  font-family: 'Audiowide';
+}
+
+.c2-function-components {
+  width: 70%;
+  height: 500;
 }
 
 @import url('https://fonts.googleapis.com/css2?family=Titillium+Web:wght@600&display=swap');
