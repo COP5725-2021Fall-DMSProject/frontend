@@ -25,6 +25,8 @@ function C3Page() {
         // setLapWisePosition(response.data)
         setLapWisePosition(fakeResponse)
     }
+
+    function lapWisePositionLineChart() {
     const data = {
         labels: lapWisePosition.map((element) => element.lap
         ),
@@ -55,12 +57,11 @@ function C3Page() {
               }
             }
       };
-      
-      return(
-        <>
-        <Header/>
+
+        return(
+        <div className="c2-function-components">
           <div className='header'>
-            <h1 className='title'>Line Chart</h1>
+            <h4 className='title page-title' align='center'>Lap wise comparison</h4>
             <div className='links'>
               <a
                 className='btn btn-gh'
@@ -70,8 +71,24 @@ function C3Page() {
             </div>
           </div>
           <Line data={data} options={options} />
-        </>
+          </div>
       );
+      }
+
+      return(
+        <div>
+        <Header/>
+        <div style={{
+          marginTop: 100,
+          marginLeft: 100,
+          display: 'flex',
+          flexDirection: 'column'
+      }}>
+      <div style={{height: 100}}/>
+        {lapWisePositionLineChart()}
+      </div>
+      </div>
+      )
 }
       
 export default C3Page;
