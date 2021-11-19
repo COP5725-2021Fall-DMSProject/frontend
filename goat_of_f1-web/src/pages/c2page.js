@@ -1,120 +1,51 @@
 import React, { useState, useEffect } from "react";
 import Header from '../component/header'
-import {
-    ArgumentAxis,
-    LineSeries,
-    ValueAxis,
-    Chart,
-    SplineSeries,
-    Title,
-    Legend
-  } from '@devexpress/dx-react-chart-material-ui';
-import { withStyles } from '@material-ui/core/styles';
-import Paper from '@material-ui/core/Paper';
+import { Line } from 'react-chartjs-2';
 import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
-import ListItemAvatar from '@mui/material/ListItemAvatar';
-import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
 import settings from "../settings";
 import axios from "axios";
+import { randDarkColor } from '../utils/utils'
+
+import explainBoard from '../component/explainBoard'
+import VerticalBar from '../component/verticalBar'
 
 function C2Page() {
-    const [scoreIncrease, setAverageAgewisePoints] = useState([{ countructorId: 0, year: '', totalPoint: 0}])
-    const [constructorList, setConstructorList] = useState([{constructorId: '', name:''}])
-
+    const [constructorList, setConstructorList] = useState([])
+    const [selectedTeam, setSelectedTeam] = useState({})
+    const startYear = 2015
+    const endYear = 2017
+    
     useEffect(() => {
-        getScoreIncrease();
-        getContructorList();
+        getConstructorList();
     }, [])
-    
-    const getScoreIncrease = async () => {
-        // const response = await axios.get(averageAgewisePointsUrl)
-        const fakeResponse = [
-            { countructorId: 0, year: 2015, totalPoint: 100 },
-            { countructorId: 0, year: 2016, totalPoint: 132 },
-            { countructorId: 0, year: 2017, totalPoint: 166 },
-          ];
-        // setAgewisePoints(response.data)
-        setAverageAgewisePoints(fakeResponse)
-    }
 
-    const getContructorList = async () => {
-        const constructorUrl = "http://ergast.com/api/f1/constructors.json";
+    const getConstructorList = async () => {
+        const constructorUrl = settings.apiHostURL + '/c2/investable-constructors'
         let response = await axios.get(constructorUrl)
-        // let filterList = response.data.MRData.DriverTable.Constructors.map((element) => {
-        //     filterList.{'id': element.constructorId, 'name': element.name}
-        // })
-        setConstructorList(response.data.MRData.ConstructorTable.Constructors)
-    }
-    
-    const legendStyles = () => ({
-        root: {
-          display: 'flex',
-          margin: 'auto',
-          flexDirection: 'row',
-        },
-    });
-    const legendRootBase = ({ classes, ...restProps }) => (
-        <Legend.Root {...restProps} className={classes.root} />
-    );
-    const Root = withStyles(legendStyles, { name: 'LegendRoot' })(legendRootBase);
-    const legendLabelStyles = () => ({
-        label: {
-            whiteSpace: 'nowrap',
-        },
-    });
-    const legendLabelBase = ({ classes, ...restProps }) => (
-        <Legend.Label className={classes.label} {...restProps} />
-    );
-    const Label = withStyles(legendLabelStyles, { name: 'LegendLabel' })(legendLabelBase);
-
-    const ValueLabel = (props) => {
-        const { text } = props;
-        return (
-          <ValueAxis.Label
-            {...props}
-            text={`${text}%`}
-          />
-        );
-    };
-
-    function constructorLineChart() {
-        return(
-            <Paper style={{
-                height:'55%',
-                width: '70%',
-            }}>
-                <Chart
-                    data={scoreIncrease}
-                >
-                    {/* <ArgumentScale/> */}
-                    <ArgumentAxis/>
-                    <ValueAxis
-                        labelComponent={ValueLabel}
-                    />
-                    
-                    <LineSeries 
-                        name="DriverX" 
-                        valueField="totalPoint" 
-                        argumentField="year"
-                    />
-                    <Legend position="bottom" rootComponent={Root} labelComponent={Label} />
-                    <Title style={{fontFamily: 'Audiowide'}}text="Constuctor Total Points (2015-2017)" />
-                </Chart>
-            </Paper>
-        )
+        if(response.data.result.data.constructors) {
+            setConstructorList(response.data.result.data.constructors)
+        }
+        let defaultTeam = response.data.result.data.constructors ? response.data.result.data.constructors[0] : {'name': 'None'}
+        setSelectedTeam(defaultTeam)
     }
 
-    function generateContructorList() {
-        console.log(constructorList)
+    function constructTimeRange() {
+        return `${startYear}-${endYear}`
+    }
+
+    // Get the investable constructor list
+    function generateConstructorList() {
         const listItem = constructorList.map((element, index) => {
             return(
-                <div style={{
-                    borderRight: 'solid 3px ' + settings.Colors.mainColor,
-                    borderBottom: 'solid 3px ' + settings.Colors.mainColor,
-                }}>
-                    <ListItem>
+                <div 
+                    style={{
+                        borderBottom: 'solid 2.5px ' + settings.Colors.mainColor,
+                        fontFamily: settings.Font.major
+                    }}
+                >
+                    <ListItem className="list-item-component">
                         <ListItemText
                             key={index}
                             primary={element.name.toUpperCase()}
@@ -125,27 +56,101 @@ function C2Page() {
         })
 
         return (
-            <List class="hide-scrollbar" style={{maxHeight: '100%', overflow: 'auto'}}>
-                {listItem}
-            </List>
+            <div style={{
+                position: 'fixed',
+                left: 75,
+                top: 100,
+                height: 400,
+                width: 300,
+                border: 'solid 10px ' + settings.Colors.mainColor,
+                borderTopRightRadius: 25
+            }}>
+                <List class="hide-scrollbar" style={{maxHeight: '100%', overflow: 'auto'}}>
+                    {listItem}
+                </List>
+            </div>
+        )
+    }
+    
+    // Function A
+    function constructorLineChart() {
+        const options = {
+            scales: {
+                y: {
+                    beginAtZero: true
+                  }
+                }
+            };
+        
+        var yearLabel = []
+        for(var i = startYear; i <= endYear; i++) {
+            yearLabel.push(i)
+        }
+        
+        const data = {
+            labels: yearLabel,
+            datasets: constructorList.map((element, index) => {
+                const totalCostList = element.total_point
+                const randomColorString = randDarkColor()
+                return({
+                    label: element.name.toUpperCase(),
+                    data: totalCostList,
+                    fill: false,
+                    backgroundColor: randomColorString,
+                    borderColor: randomColorString,
+                })
+            })
+        };
+
+        return(
+            <div className="c2-function-components">
+                <div className='header'>
+                    <h1 className='title page-title'> Total Points ({constructTimeRange()})</h1>
+                </div>
+                <Line data={data} options={options} />
+            </div>
+        )
+    }
+
+    // Function B
+    function constructorBudgetBars() {
+        var yearLabel = []
+        for(var i = startYear; i <= endYear; i++) {
+            yearLabel.push(i)
+        }
+    
+        const data = {
+            labels: yearLabel,
+            datasets: [
+                {
+                    label: 'Annual Team Budgets',
+                    data: selectedTeam.budgets,
+                    backgroundColor: [
+                        'rgba(255, 99, 132, 0.2)',
+                        'rgba(54, 162, 235, 0.2)',
+                        'rgba(255, 206, 86, 0.2)',
+                    ],
+                    borderColor: [
+                        'rgba(255, 99, 132, 1)',
+                        'rgba(54, 162, 235, 1)',
+                        'rgba(255, 206, 86, 1)',
+                        ],
+                    borderWidth: 1,
+                },
+            ],
+        };
+        
+        return(
+            <div className="c2-function-components">
+                {VerticalBar(`${selectedTeam.name} Stats`, ``, data, null)}
+            </div>
         )
     }
 
     return (
         <div>
             <Header/>
-            <div style={{
-                position: 'fixed',
-                left: 75,
-                top: 100,
-                height: 500,
-                width: 400,
-                borderTop: 'solid 10px ' + settings.Colors.mainColor,
-                borderRight: 'solid 10px ' + settings.Colors.mainColor,
-                borderTopRightRadius: 25
-            }}>
-                {generateContructorList()}
-            </div>
+            {generateConstructorList()}
             <div style={{
                 marginTop: 100,
                 marginLeft: 550,
@@ -153,6 +158,32 @@ function C2Page() {
                 flexDirection: 'column'
             }}>
                 {constructorLineChart()}
+                <div style={{marginTop: 50}} className="c2-function-components">
+                    {explainBoard(
+                        "Total Points Explanation", 
+                        [
+                            "1. For each year the increase rate should be over 20%",
+                            "2. Only listing the top K team with the MAX point differences (End - Start)",
+                        ]
+                    )}
+                </div>
+                <div style={{height: 100}}/>
+                <div style={{marginTop: 50}} className="c2-function-components">
+                    {explainBoard(
+                        "More Perspective", 
+                        [
+                            "1. Budget",
+                            "2. Pit Stop Time",
+                            "3. Errors" 
+                        ]
+                    )}
+                </div>
+                <div style={{height: 50}}/>
+                {constructorBudgetBars()}
+                <div style={{height: 50}}/>
+                {constructorBudgetBars()}
+                <div style={{height: 50}}/>
+                {constructorBudgetBars()}
             </div>
         </div>
     )

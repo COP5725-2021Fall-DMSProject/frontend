@@ -10,5 +10,6 @@ export default {
     Font: {
         'major': 'Titillium Web',
         'secondary': 'Audiowide'
-    }
+    },
+    apiHostURL: 'http://127.0.0.1:8000'
 }
