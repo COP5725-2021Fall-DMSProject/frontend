@@ -133,13 +133,15 @@ function Homepage() {
                 height: 750
             }}>
                 <div style={{}}>
-                    <div style={{
-                        width: '100%',
-                        height: 100,
-                        fontFamily: 'Audiowide',
-                        fontSize: 40,
-                        color: settings.Colors['subColor']
-                    }}>
+                    <div 
+                        className= "page-title"
+                        style={{
+                            width: '100%',
+                            height: 100,
+                            fontSize: 40,
+                            color: settings.Colors['subColor']
+                        }}
+                    >
                         <div style={{
                             marginLeft: 100,
                             marginTop: 30, 

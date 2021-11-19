@@ -1,120 +1,58 @@
 import React, { useState, useEffect } from "react";
 import Header from '../component/header'
-import {
-    ArgumentAxis,
-    LineSeries,
-    ValueAxis,
-    Chart,
-    SplineSeries,
-    Title,
-    Legend
-  } from '@devexpress/dx-react-chart-material-ui';
-import { withStyles } from '@material-ui/core/styles';
-import Paper from '@material-ui/core/Paper';
+import { Line } from 'react-chartjs-2';
 import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
-import ListItemAvatar from '@mui/material/ListItemAvatar';
-import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
 import settings from "../settings";
 import axios from "axios";
+import { randDarkColor } from '../utils/utils'
+
+import Table from '@mui/material/Table';
+import TableBody from '@mui/material/TableBody';
+import TableCell from '@mui/material/TableCell';
+import TableContainer from '@mui/material/TableContainer';
+import TableHead from '@mui/material/TableHead';
+import TableRow from '@mui/material/TableRow';
+import Paper from '@mui/material/Paper';
+
+import explainBoard from '../component/explainBoard'
 
 function C2Page() {
-    const [scoreIncrease, setAverageAgewisePoints] = useState([{ countructorId: 0, year: '', totalPoint: 0}])
-    const [constructorList, setConstructorList] = useState([{constructorId: '', name:''}])
-
+    const [constructorList, setConstructorList] = useState([])
+    const [selectedTeam, setSelectedTeam] = useState({})
+    const startYear = 2015
+    const endYear = 2017
+    
     useEffect(() => {
-        getScoreIncrease();
-        getContructorList();
+        getConstructorList();
     }, [])
-    
-    const getScoreIncrease = async () => {
-        // const response = await axios.get(averageAgewisePointsUrl)
-        const fakeResponse = [
-            { countructorId: 0, year: 2015, totalPoint: 100 },
-            { countructorId: 0, year: 2016, totalPoint: 132 },
-            { countructorId: 0, year: 2017, totalPoint: 166 },
-          ];
-        // setAgewisePoints(response.data)
-        setAverageAgewisePoints(fakeResponse)
-    }
 
-    const getContructorList = async () => {
-        const constructorUrl = "http://ergast.com/api/f1/constructors.json";
+    const getConstructorList = async () => {
+        const constructorUrl = settings.apiHostURL + '/c2/investable-constructors'
         let response = await axios.get(constructorUrl)
-        // let filterList = response.data.MRData.DriverTable.Constructors.map((element) => {
-        //     filterList.{'id': element.constructorId, 'name': element.name}
-        // })
-        setConstructorList(response.data.MRData.ConstructorTable.Constructors)
-    }
-    
-    const legendStyles = () => ({
-        root: {
-          display: 'flex',
-          margin: 'auto',
-          flexDirection: 'row',
-        },
-    });
-    const legendRootBase = ({ classes, ...restProps }) => (
-        <Legend.Root {...restProps} className={classes.root} />
-    );
-    const Root = withStyles(legendStyles, { name: 'LegendRoot' })(legendRootBase);
-    const legendLabelStyles = () => ({
-        label: {
-            whiteSpace: 'nowrap',
-        },
-    });
-    const legendLabelBase = ({ classes, ...restProps }) => (
-        <Legend.Label className={classes.label} {...restProps} />
-    );
-    const Label = withStyles(legendLabelStyles, { name: 'LegendLabel' })(legendLabelBase);
-
-    const ValueLabel = (props) => {
-        const { text } = props;
-        return (
-          <ValueAxis.Label
-            {...props}
-            text={`${text}%`}
-          />
-        );
-    };
-
-    function constructorLineChart() {
-        return(
-            <Paper style={{
-                height:'55%',
-                width: '70%',
-            }}>
-                <Chart
-                    data={scoreIncrease}
-                >
-                    {/* <ArgumentScale/> */}
-                    <ArgumentAxis/>
-                    <ValueAxis
-                        labelComponent={ValueLabel}
-                    />
-                    
-                    <LineSeries 
-                        name="DriverX" 
-                        valueField="totalPoint" 
-                        argumentField="year"
-                    />
-                    <Legend position="bottom" rootComponent={Root} labelComponent={Label} />
-                    <Title style={{fontFamily: 'Audiowide'}}text="Constuctor Total Points (2015-2017)" />
-                </Chart>
-            </Paper>
-        )
+        if(response.data.result.data.constructors) {
+            setConstructorList(response.data.result.data.constructors)
+        }
+        let defaultTeam = response.data.result.data.constructors ? response.data.result.data.constructors[0] : {'name': 'None'}
+        setSelectedTeam(defaultTeam)
     }
 
-    function generateContructorList() {
-        console.log(constructorList)
+    function constructTimeRange() {
+        return `${startYear}-${endYear}`
+    }
+
+    // Get the investable constructor list
+    function generateConstructorList() {
         const listItem = constructorList.map((element, index) => {
             return(
-                <div style={{
-                    borderRight: 'solid 3px ' + settings.Colors.mainColor,
-                    borderBottom: 'solid 3px ' + settings.Colors.mainColor,
-                }}>
-                    <ListItem>
+                <div 
+                    style={{
+                        borderBottom: 'solid 2.5px ' + settings.Colors.mainColor,
+                        fontFamily: settings.Font.major
+                    }}
+                >
+                    <ListItem className="list-item-component">
                         <ListItemText
                             key={index}
                             primary={element.name.toUpperCase()}
@@ -125,27 +63,126 @@ function C2Page() {
         })
 
         return (
-            <List class="hide-scrollbar" style={{maxHeight: '100%', overflow: 'auto'}}>
-                {listItem}
-            </List>
+            <div style={{
+                position: 'fixed',
+                left: 75,
+                top: 100,
+                height: 400,
+                width: 300,
+                border: 'solid 10px ' + settings.Colors.mainColor,
+                borderTopRightRadius: 25
+            }}>
+                <List class="hide-scrollbar" style={{maxHeight: '100%', overflow: 'auto'}}>
+                    {listItem}
+                </List>
+            </div>
+        )
+    }
+    
+    // Function A
+    function constructorLineChart() {
+        const options = {
+            scales: {
+                y: {
+                    beginAtZero: true
+                  }
+                }
+            };
+        
+        var yearLabel = []
+        for(var i = startYear; i <= endYear; i++) {
+            yearLabel.push(i)
+        }
+        
+        const data = {
+            labels: yearLabel,
+            datasets: constructorList.map((element, index) => {
+                const totalCostList = element.total_point
+                const randomColorString = randDarkColor()
+                return({
+                    label: element.name.toUpperCase(),
+                    data: totalCostList,
+                    fill: false,
+                    backgroundColor: randomColorString,
+                    borderColor: randomColorString,
+                })
+            })
+        };
+
+        return(
+            <div className="c2-function-components">
+                <div className='header'>
+                    <h1 className='title page-title'> Total Points ({constructTimeRange()})</h1>
+                    <div className='links'>
+                    <a
+                        className='btn btn-gh'
+                        href='https://github.com/reactchartjs/react-chartjs-2/blob/master/example/src/charts/Line.js'
+                    >
+                    </a>
+                    </div>
+                </div>
+                <Line data={data} options={options} />
+            </div>
+        )
+    }
+
+    function createRowData(year, budgets, avgPitTime, errors) {
+        return { year, budgets, avgPitTime, errors}
+    }
+
+    function constructTableRows() {
+        if(Object.keys(selectedTeam).length === 0) return []
+        let tableRows = []
+        for(let i = startYear; i <= endYear; i++) {
+            let currIdx = i-startYear
+            if(selectedTeam.budgets && selectedTeam.avg_pit_time && selectedTeam.errors) {
+                let tuple = createRowData(i, selectedTeam.budgets[currIdx], selectedTeam.avg_pit_time[currIdx], selectedTeam.errors[currIdx])
+                tableRows.push(tuple)
+            }
+        }
+        return tableRows
+    }
+
+    // Function B
+    function constructorStatTable() {
+        return (
+            <div className="c2-function-components">
+            <h1 className='title page-title'> {selectedTeam.name} Stats {constructTimeRange()}</h1>
+            <TableContainer style={{marginTop: 50, marginBottom: 50}} component={Paper}>
+                <Table size="medium" aria-label="a dense table">
+                <TableHead>
+                    <TableRow>
+                        <TableCell>Year</TableCell>
+                        <TableCell align="left">Budget(M)</TableCell>
+                        <TableCell align="left">Average Pit Time(s)</TableCell>
+                        <TableCell align="left">Errors</TableCell>
+                    </TableRow>
+                </TableHead>
+                <TableBody>
+                    {constructTableRows().map((row) => (
+                        <TableRow
+                            key={row.year}
+                            sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
+                        >
+                            <TableCell component="th" scope="row">
+                            {row.year}
+                            </TableCell>
+                            <TableCell align="left">{row.budgets}</TableCell>
+                            <TableCell align="left">{row.avgPitTime}</TableCell>
+                            <TableCell align="left">{row.errors}</TableCell>
+                        </TableRow>
+                    ))}
+                </TableBody>
+                </Table>
+            </TableContainer>
+            </div>
         )
     }
 
     return (
         <div>
             <Header/>
-            <div style={{
-                position: 'fixed',
-                left: 75,
-                top: 100,
-                height: 500,
-                width: 400,
-                borderTop: 'solid 10px ' + settings.Colors.mainColor,
-                borderRight: 'solid 10px ' + settings.Colors.mainColor,
-                borderTopRightRadius: 25
-            }}>
-                {generateContructorList()}
-            </div>
+            {generateConstructorList()}
             <div style={{
                 marginTop: 100,
                 marginLeft: 550,
@@ -153,6 +190,30 @@ function C2Page() {
                 flexDirection: 'column'
             }}>
                 {constructorLineChart()}
+                <div style={{marginTop: 50}} className="c2-function-components">
+                    {explainBoard(
+                        "Total Points Explanation", 
+                        [
+                            "1. For each year the increase rate should be over 20%",
+                            "2. Only listing the top K team with the MAX point differences (End - Start)",
+                        ]
+                    )}
+                </div>
+                <div style={{height: 100}}/>
+                {constructorStatTable()}
+                <div style={{marginTop: 50}} className="c2-function-components">
+                    {explainBoard(
+                        "Team Stats Explanation", 
+                        [
+                            "Teams are improving due to different perspectives",
+                            "1. Budget - The success is simply increasing the funding",
+                            "---",
+                            "2. Pit Stop Time - Changing race car components is also another battle, great team work show at pit stop time",
+                            "---",
+                            "3. Errors - Errors often is unacceptable, team will cost hundred thousands dollars due to errors" 
+                        ]
+                    )}
+                </div>
             </div>
         </div>
     )
