@@ -8,15 +8,8 @@ import settings from "../settings";
 import axios from "axios";
 import { randDarkColor } from '../utils/utils'
 
-import Table from '@mui/material/Table';
-import TableBody from '@mui/material/TableBody';
-import TableCell from '@mui/material/TableCell';
-import TableContainer from '@mui/material/TableContainer';
-import TableHead from '@mui/material/TableHead';
-import TableRow from '@mui/material/TableRow';
-import Paper from '@mui/material/Paper';
-
 import explainBoard from '../component/explainBoard'
+import VerticalBar from '../component/verticalBar'
 
 function C2Page() {
     const [constructorList, setConstructorList] = useState([])
@@ -113,68 +106,43 @@ function C2Page() {
             <div className="c2-function-components">
                 <div className='header'>
                     <h1 className='title page-title'> Total Points ({constructTimeRange()})</h1>
-                    <div className='links'>
-                    <a
-                        className='btn btn-gh'
-                        href='https://github.com/reactchartjs/react-chartjs-2/blob/master/example/src/charts/Line.js'
-                    >
-                    </a>
-                    </div>
                 </div>
                 <Line data={data} options={options} />
             </div>
         )
     }
 
-    function createRowData(year, budgets, avgPitTime, errors) {
-        return { year, budgets, avgPitTime, errors}
-    }
-
-    function constructTableRows() {
-        if(Object.keys(selectedTeam).length === 0) return []
-        let tableRows = []
-        for(let i = startYear; i <= endYear; i++) {
-            let currIdx = i-startYear
-            if(selectedTeam.budgets && selectedTeam.avg_pit_time && selectedTeam.errors) {
-                let tuple = createRowData(i, selectedTeam.budgets[currIdx], selectedTeam.avg_pit_time[currIdx], selectedTeam.errors[currIdx])
-                tableRows.push(tuple)
-            }
-        }
-        return tableRows
-    }
-
     // Function B
-    function constructorStatTable() {
-        return (
+    function constructorBudgetBars() {
+        var yearLabel = []
+        for(var i = startYear; i <= endYear; i++) {
+            yearLabel.push(i)
+        }
+    
+        const data = {
+            labels: yearLabel,
+            datasets: [
+                {
+                    label: 'Annual Team Budgets',
+                    data: selectedTeam.budgets,
+                    backgroundColor: [
+                        'rgba(255, 99, 132, 0.2)',
+                        'rgba(54, 162, 235, 0.2)',
+                        'rgba(255, 206, 86, 0.2)',
+                    ],
+                    borderColor: [
+                        'rgba(255, 99, 132, 1)',
+                        'rgba(54, 162, 235, 1)',
+                        'rgba(255, 206, 86, 1)',
+                        ],
+                    borderWidth: 1,
+                },
+            ],
+        };
+        
+        return(
             <div className="c2-function-components">
-            <h1 className='title page-title'> {selectedTeam.name} Stats {constructTimeRange()}</h1>
-            <TableContainer style={{marginTop: 50, marginBottom: 50}} component={Paper}>
-                <Table size="medium" aria-label="a dense table">
-                <TableHead>
-                    <TableRow>
-                        <TableCell>Year</TableCell>
-                        <TableCell align="left">Budget(M)</TableCell>
-                        <TableCell align="left">Average Pit Time(s)</TableCell>
-                        <TableCell align="left">Errors</TableCell>
-                    </TableRow>
-                </TableHead>
-                <TableBody>
-                    {constructTableRows().map((row) => (
-                        <TableRow
-                            key={row.year}
-                            sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
-                        >
-                            <TableCell component="th" scope="row">
-                            {row.year}
-                            </TableCell>
-                            <TableCell align="left">{row.budgets}</TableCell>
-                            <TableCell align="left">{row.avgPitTime}</TableCell>
-                            <TableCell align="left">{row.errors}</TableCell>
-                        </TableRow>
-                    ))}
-                </TableBody>
-                </Table>
-            </TableContainer>
+                {VerticalBar(`${selectedTeam.name} Stats`, ``, data, null)}
             </div>
         )
     }
@@ -200,20 +168,22 @@ function C2Page() {
                     )}
                 </div>
                 <div style={{height: 100}}/>
-                {constructorStatTable()}
                 <div style={{marginTop: 50}} className="c2-function-components">
                     {explainBoard(
-                        "Team Stats Explanation", 
+                        "More Perspective", 
                         [
-                            "Teams are improving due to different perspectives",
-                            "1. Budget - The success is simply increasing the funding",
-                            "---",
-                            "2. Pit Stop Time - Changing race car components is also another battle, great team work show at pit stop time",
-                            "---",
-                            "3. Errors - Errors often is unacceptable, team will cost hundred thousands dollars due to errors" 
+                            "1. Budget",
+                            "2. Pit Stop Time",
+                            "3. Errors" 
                         ]
                     )}
                 </div>
+                <div style={{height: 50}}/>
+                {constructorBudgetBars()}
+                <div style={{height: 50}}/>
+                {constructorBudgetBars()}
+                <div style={{height: 50}}/>
+                {constructorBudgetBars()}
             </div>
         </div>
     )
