@@ -1,6 +1,6 @@
 import React, { useState, useEffect} from "react";
 import Header from '../component/header'
-import { Bar, Line } from 'react-chartjs-2';
+import { Bar, Line, Chart } from 'react-chartjs-2';
 import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
 import ListItemText from '@mui/material/ListItemText';
@@ -8,17 +8,11 @@ import settings from "../settings";
 import "../App.css";
 import axios from "axios";  
 import { randDarkColor } from '../utils/utils'
-import { TableCell } from "@mui/material";
-import Table from '@mui/material/Table';
-import TableBody from '@mui/material/TableBody';
-import TableContainer from '@mui/material/TableContainer';
-import TableHead from '@mui/material/TableHead';
-import TableRow from '@mui/material/TableRow';
-import Paper from '@mui/material/Paper';
+const rand = () => Math.floor(Math.random() * 255);
 
 const competitiveUrl = `http://10.136.203.20:8000/c1/competitive-drivers`
-const compareUrl = `http://10.136.203.20:8000/c1/funcA/10`
-const ageWisePointsUrl = `http://10.136.203.20:8000/c1/funcB/10`
+const compareUrl = `http://10.136.203.20:8000/c1/funcA/4`
+const ageWisePointsUrl = `http://10.136.203.20:8000/c1/funcB/4`
 
 function PageC1() {
     const [competitiveDrivers, setCompetitiveDrivers] = useState([{driverId: '',name:''}]);
@@ -39,21 +33,21 @@ function PageC1() {
     }
 
     const getComparisonData = async() => {
-        // const response = await axios.get(compareUrl)
+        const response = await axios.get(compareUrl)
         const fakeResponse = [
           {forename: 'Nick',l_point:'101', name:'Monaco Grand Prix', raceid:'2', someone_points: '200', surname: 'Fury', year: '2009'}
         ]
-        setRaceWiseData(fakeResponse)
-        // setRaceWiseData(response.data.result.data)
+        // setRaceWiseData(fakeResponse)
+        setRaceWiseData(response.data.result.data)
     }
     const getAgeWisePoints = async () => {
-        // const response = await axios.get(ageWisePointsUrl)
+        const response = await axios.get(ageWisePointsUrl)
         const fakeResponse = [
           { name:'lewis', score: [32, 56, 45]},
           { name:'driverX', score: [23, 34, 67]}
         ];
-        setAgewisePoints(fakeResponse)
-        // setAgewisePoints(response.data.result.data)
+        // setAgewisePoints(fakeResponse)
+        setAgewisePoints(response.data.result.data)
     }
 
     function generateCompetitveDriversList() {
@@ -127,29 +121,58 @@ function PageC1() {
     )
 }
 
-function raceWiseTable() {
-  return (
-    <TableContainer component={Paper}>
-      <Table sx={{ minWidth: 600 }} size="small" aria-label="a dense table">
-        <TableHead>
-          <TableRow>
-          {Object.keys(raceWiseData[0]).map((heading) => <TableCell style={{border: '1px solid black'}}>{heading.toUpperCase()}</TableCell>)} 
-          </TableRow>
-        </TableHead>
-        <TableBody>
-          {raceWiseData.map((row) => (
-            <TableRow
-              key={row.name}
-              sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
-            >
-              {Object.keys(raceWiseData[0]).map((heading) => <TableCell component="th" scope="row" align="center">{row[heading]}</TableCell>)} 
-              </TableRow>
-            ))}
-        </TableBody>
-      </Table>
-    </TableContainer>
-  );
+function raceWiseComparisonLineChart() {
+  const options = {
+    scales: {
+        y: {
+            beginAtZero: true
           }
+        },
+    };
+
+var raceIdLabel = raceWiseData.map((element, _) => {
+  return (element.raceid +"-"+ element.name)
+})
+
+const data = {
+    labels: raceIdLabel,
+    datasets: [
+      {
+        type: 'line',
+        label: 'Lewis',
+        borderColor: `rgb(${rand()}, ${rand()}, ${rand()})`,
+        borderWidth: 2,
+        fill: false,
+        data: raceWiseData.map((element, _) => {return (element.l_point)}),
+      },
+      {
+        type: 'line',
+        label: raceWiseData[0].forename,
+        borderColor: `rgb(${rand()}, ${rand()}, ${rand()})`,
+        borderWidth: 2,
+        fill: false,
+        data: raceWiseData.map((element, _) => {return (element.someone_points)}),
+      }
+    ]
+    };  
+
+return(
+    <div className="c2-function-components">
+        <div className='header'>
+            <h4 className='title page-title' align='center'> Racewise Comparison</h4>
+            <div className='links'>
+            <a
+                className='btn btn-gh'
+                href='https://github.com/reactchartjs/react-chartjs-2/blob/master/example/src/charts/Line.js'
+            >
+            </a>
+            </div>
+        </div>
+        <Line data={data} options={options} />
+    </div>
+)
+
+}
 
 return (
   <div>
@@ -172,7 +195,7 @@ return (
           display: 'flex',
           flexDirection: 'row'
       }}>
-      {raceWiseTable()}
+      {raceWiseComparisonLineChart()}
       </div>
       <div style={{
           marginTop: 100,
