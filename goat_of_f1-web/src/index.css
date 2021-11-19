@@ -21,14 +21,13 @@ code {
 }
 
 .c2-function-components {
-  width: 70%;
   height: 500;
 }
 
 .explanation-board {
   height: 100%; 
   width: 100%;
-  border: solid 2px #d0d0d2;
+  border: solid 6px #d0d0d2;
   border-bottom-right-radius: 15px;
   padding-top: 15px;
   padding-right: 20px;
@@ -40,12 +39,34 @@ code {
 
 .explanation-board:hover, .explanation-board:active{
   border-color: #e10600;
-  transform: scale(1.3);
+  transform: scale(1.2);
+  background-color: #fff;
 }
 
 .list-item-component:hover {
   transform: scale(1.2);
   font-weight: bold;
+}
+
+.separate-line {
+  border-bottom: solid 10px#15151e;
+}
+
+.main-block {
+  padding-top: 35px;
+  padding-right: 35px;
+  padding-left: 25px;
+  padding-bottom: 25px;
+  border-radius: 25px;
+  border-top: solid 6px #d0d0d2;
+  border-right: solid 6px #d0d0d2;
+  border-left: solid 1px #d0d0d2;
+  border-bottom: solid 1px #d0d0d2;
+  margin-top: 100px;
+  margin-left: 450px;
+  width: 900px;
+  display: flex;
+  flex-direction: column;
 }
 
 @import url('https://fonts.googleapis.com/css2?family=Titillium+Web:wght@600&display=swap');
