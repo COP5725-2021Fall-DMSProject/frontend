@@ -16,7 +16,7 @@ function C2Page() {
     const [constructorList, setConstructorList] = useState([
         {
             'name': '',
-            'avg_pit_time': [],
+            'avg_pits_time': [],
             'budgets': [],
             'errors': []
         }
@@ -98,7 +98,7 @@ function C2Page() {
                 position: 'fixed',
                 left: 75,
                 top: 100,
-                height: 400,
+                height: 350,
                 width: 300,
                 border: 'solid 10px ' + settings.Colors.mainColor,
                 borderTopRightRadius: 25
@@ -121,7 +121,7 @@ function C2Page() {
         const countTeamsPoint = () => {
             let dataPoints = []
             if(focusOneTeam) {
-                const totalCostList = selectedTeam.total_point
+                const totalCostList = selectedTeam.total_points
                 const randomColorString = randDarkColor()
                 dataPoints.push({
                     label: selectedTeam.name.toUpperCase(),
@@ -133,7 +133,7 @@ function C2Page() {
             }
             else {
                 constructorList.map((element, index) => {
-                    const totalCostList = element.total_point
+                    const totalCostList = element.total_points
                     const randomColorString = randDarkColor()
                     dataPoints.push({
                         label: element.name.toUpperCase(),
@@ -154,7 +154,7 @@ function C2Page() {
         }
 
         return(
-            <div>{LineChart(`Total Points (${constructTimeRange()}`, ``, totalPointData, null)}</div>
+            <div>{LineChart(`Total Points (${constructTimeRange()})`, ``, totalPointData, null)}</div>
         )
     }
 
@@ -191,7 +191,7 @@ function C2Page() {
             datasets: [
                 {
                     label: 'Annual Average Pit Stop Time',
-                    data: selectedTeam.avg_pit_time,
+                    data: selectedTeam.avg_pits_time,
                     backgroundColor: [
                         'rgba(255, 99, 132, 0.2)',
                         'rgba(54, 162, 235, 0.2)',
@@ -230,9 +230,9 @@ function C2Page() {
         
         return(
             <div className="c2-function-components">
-                {VerticalBar(`${selectedTeam.name} Bud getStats`, `Budget Increase must be less than 30%`, budgetData, null)}
+                {VerticalBar(`${selectedTeam.name} Budget Stats (€ million)`, `Budget Increase must be less than 30%`, budgetData, null)}
                 <div style={{height: 50}}/>
-                {VerticalBar(`${selectedTeam.name} Pit Stop Stats`, `Avg pit stop time must less than the average`, pitStopData, null)}
+                {VerticalBar(`${selectedTeam.name} Pit Stop Stats (sec)`, `Avg pit stop time must less than the average`, pitStopData, null)}
                 <div style={{height: 50}}/>
                 {VerticalBar(`${selectedTeam.name} Error Stats`, `Team mechanical errors must less than 10 times`, errorData, null)}
             </div>
