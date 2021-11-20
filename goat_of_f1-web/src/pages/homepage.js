@@ -118,6 +118,40 @@ function Homepage() {
                     </div>
                 </div>
             </Carousel.Item>
+            <Carousel.Item>
+                <div class="d-flex justify-content-center">
+                    <div style={{
+                        paddingTop: 20,
+                        paddingRight: 20,
+                        borderTop: 'solid 10px ' + settings.Colors.mainColor,
+                        borderRight: 'solid 10px ' + settings.Colors.mainColor,
+                        borderTopRightRadius: 25
+                    }}>
+                        <Link to={'/c4page-driver-types'} style={{ textDecoration: 'none' }}>
+                            <Card sx={{ maxWidth: 800, backgroundColor:'#38383f'}}>
+                                <CardMedia
+                                    component="img"
+                                    height="400"
+                                    image="./home_crash.jpeg"
+                                    alt="home_crash"
+                                />
+                                <CardContent>
+                                    <Typography 
+                                        gutterBottom variant="h5" component="div"
+                                        sx={{ color: settings.Colors.subColor, fontFamily: settings.Font.secondary }}
+                                    >
+                                        What kind of a driver? 
+                                    </Typography>
+                                    <Typography sx={{ color: settings.Colors.subColor, fontFamily: settings.Font.major, fontSize: 16 }} variant="body2" color="text.secondary">
+                                        Drivers tend to face difficulties on the track such as crashes. 
+                                        How their response to such events defines what kind of a driver they are. 
+                                    </Typography>
+                                </CardContent>
+                            </Card>
+                        </Link>
+                    </div>
+                </div>
+            </Carousel.Item>
           </Carousel>
         );
     }

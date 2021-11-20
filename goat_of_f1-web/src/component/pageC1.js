@@ -10,9 +10,9 @@ import axios from "axios";
 import { randDarkColor } from '../utils/utils'
 const rand = () => Math.floor(Math.random() * 255);
 
-const competitiveUrl = `http://10.136.203.20:8000/c1/competitive-drivers`
-const compareUrl = `http://10.136.203.20:8000/c1/funcA/4`
-const ageWisePointsUrl = `http://10.136.203.20:8000/c1/funcB/4`
+const competitiveUrl = settings.apiHostURL + '/c1/competitive-drivers'
+const compareUrl = settings.apiHostURL + '/c1/funcA/4'
+const ageWisePointsUrl = settings.apiHostURL + '/c1/funcB/4'
 
 function PageC1() {
     const [competitiveDrivers, setCompetitiveDrivers] = useState([{driverId: '',name:''}]);
