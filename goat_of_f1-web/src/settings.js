@@ -5,7 +5,9 @@ export default {
     },
     Colors: {
         'mainColor': '#e10600',
-        'subColor': '#fff'
+        'subColor': '#fff',
+        'thirdColor': '#15151e',
+        'forthColor': '#38383f'
     },
     Font: {
         'major': 'Titillium Web',

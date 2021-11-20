@@ -10,10 +10,19 @@ import { randDarkColor } from '../utils/utils'
 
 import explainBoard from '../component/explainBoard'
 import VerticalBar from '../component/verticalBar'
+import LineChart from '../component/lineChart'
 
 function C2Page() {
-    const [constructorList, setConstructorList] = useState([])
+    const [constructorList, setConstructorList] = useState([
+        {
+            'name': '',
+            'avg_pit_time': [],
+            'budgets': [],
+            'errors': []
+        }
+    ])
     const [selectedTeam, setSelectedTeam] = useState({})
+    const [focusOneTeam, setFocusOneTeam] = useState(false)
     const startYear = 2015
     const endYear = 2017
     
@@ -35,18 +44,47 @@ function C2Page() {
         return `${startYear}-${endYear}`
     }
 
+    
+    const handleClickConstructorList = (index, flag) => {
+        setFocusOneTeam(flag)
+        if(constructorList) {
+            setSelectedTeam(constructorList[index])
+        }
+    }
+
     // Get the investable constructor list
     function generateConstructorList() {
+        const showAllItem = () => {
+            return (
+                <div 
+                    style={{
+                        borderBottom: 'solid 2.5px ' + settings.Colors.mainColor,
+                    }}
+                    onClick={() => {handleClickConstructorList(0, false)}}
+                >
+                    <ListItem className="list-item-component">
+                        <ListItemText
+                            disableTypography
+                            sx={{ fontFamily: settings.Font.secondary + "!important", color: settings.Font.forthColor}}
+                            key={0}
+                            primary="ALL"
+                        />
+                    </ListItem>
+                </div>
+            )
+        }
         const listItem = constructorList.map((element, index) => {
             return(
                 <div 
                     style={{
                         borderBottom: 'solid 2.5px ' + settings.Colors.mainColor,
-                        fontFamily: settings.Font.major
                     }}
+                    onClick={() => {handleClickConstructorList(index, true)}}
                 >
                     <ListItem className="list-item-component">
                         <ListItemText
+                            disableTypography
+                            sx={{ fontFamily: settings.Font.secondary + "!important", color: settings.Font.forthColor}}
                             key={index}
                             primary={element.name.toUpperCase()}
                         />
@@ -66,6 +104,7 @@ function C2Page() {
                 borderTopRightRadius: 25
             }}>
                 <List class="hide-scrollbar" style={{maxHeight: '100%', overflow: 'auto'}}>
+                    {showAllItem()}
                     {listItem}
                 </List>
             </div>
@@ -74,52 +113,59 @@ function C2Page() {
     
     // Function A
     function constructorLineChart() {
-        const options = {
-            scales: {
-                y: {
-                    beginAtZero: true
-                  }
-                }
-            };
-        
         var yearLabel = []
         for(var i = startYear; i <= endYear; i++) {
             yearLabel.push(i)
         }
         
-        const data = {
-            labels: yearLabel,
-            datasets: constructorList.map((element, index) => {
-                const totalCostList = element.total_point
+        const countTeamsPoint = () => {
+            let dataPoints = []
+            if(focusOneTeam) {
+                const totalCostList = selectedTeam.total_point
                 const randomColorString = randDarkColor()
-                return({
-                    label: element.name.toUpperCase(),
+                dataPoints.push({
+                    label: selectedTeam.name.toUpperCase(),
                     data: totalCostList,
                     fill: false,
                     backgroundColor: randomColorString,
                     borderColor: randomColorString,
                 })
-            })
-        };
+            }
+            else {
+                constructorList.map((element, index) => {
+                    const totalCostList = element.total_point
+                    const randomColorString = randDarkColor()
+                    dataPoints.push({
+                        label: element.name.toUpperCase(),
+                        data: totalCostList,
+                        fill: false,
+                        backgroundColor: randomColorString,
+                        borderColor: randomColorString,
+                    })
+                })
+            }
+
+            return dataPoints
+        }
+
+        const totalPointData = {
+            labels: yearLabel,
+            datasets: countTeamsPoint()
+        }
 
         return(
-            <div className="c2-function-components">
-                <div className='header'>
-                    <h1 className='title page-title'> Total Points ({constructTimeRange()})</h1>
-                </div>
-                <Line data={data} options={options} />
-            </div>
+            <div>{LineChart(`Total Points (${constructTimeRange()}`, ``, totalPointData, null)}</div>
         )
     }
 
     // Function B
-    function constructorBudgetBars() {
+    function constructorStatBars() {
         var yearLabel = []
         for(var i = startYear; i <= endYear; i++) {
             yearLabel.push(i)
         }
     
-        const data = {
+        const budgetData = {
             labels: yearLabel,
             datasets: [
                 {
@@ -139,10 +185,56 @@ function C2Page() {
                 },
             ],
         };
+
+        const pitStopData = {
+            labels: yearLabel,
+            datasets: [
+                {
+                    label: 'Annual Average Pit Stop Time',
+                    data: selectedTeam.avg_pit_time,
+                    backgroundColor: [
+                        'rgba(255, 99, 132, 0.2)',
+                        'rgba(54, 162, 235, 0.2)',
+                        'rgba(255, 206, 86, 0.2)',
+                    ],
+                    borderColor: [
+                        'rgba(255, 99, 132, 1)',
+                        'rgba(54, 162, 235, 1)',
+                        'rgba(255, 206, 86, 1)',
+                        ],
+                    borderWidth: 1,
+                },
+            ],
+        };
+
+        const errorData = {
+            labels: yearLabel,
+            datasets: [
+                {
+                    label: 'Annual # of Errors',
+                    data: selectedTeam.errors,
+                    backgroundColor: [
+                        'rgba(255, 99, 132, 0.2)',
+                        'rgba(54, 162, 235, 0.2)',
+                        'rgba(255, 206, 86, 0.2)',
+                    ],
+                    borderColor: [
+                        'rgba(255, 99, 132, 1)',
+                        'rgba(54, 162, 235, 1)',
+                        'rgba(255, 206, 86, 1)',
+                        ],
+                    borderWidth: 1,
+                },
+            ],
+        };
         
         return(
             <div className="c2-function-components">
-                {VerticalBar(`${selectedTeam.name} Stats`, ``, data, null)}
+                {VerticalBar(`${selectedTeam.name} Bud getStats`, `Budget Increase must be less than 30%`, budgetData, null)}
+                <div style={{height: 50}}/>
+                {VerticalBar(`${selectedTeam.name} Pit Stop Stats`, `Avg pit stop time must less than the average`, pitStopData, null)}
+                <div style={{height: 50}}/>
+                {VerticalBar(`${selectedTeam.name} Error Stats`, `Team mechanical errors must less than 10 times`, errorData, null)}
             </div>
         )
     }
@@ -151,12 +243,7 @@ function C2Page() {
         <div>
             <Header/>
             {generateConstructorList()}
-            <div style={{
-                marginTop: 100,
-                marginLeft: 550,
-                display: 'flex',
-                flexDirection: 'column'
-            }}>
+            <div className="main-block">
                 {constructorLineChart()}
                 <div style={{marginTop: 50}} className="c2-function-components">
                     {explainBoard(
@@ -167,24 +254,29 @@ function C2Page() {
                         ]
                     )}
                 </div>
-                <div style={{height: 100}}/>
+            </div>
+            <div style={{marginTop: 50, marginBottom: 50}}/>
+            <div className="main-block">
+                <img 
+                    className="c2-function-components"
+                    src="./team_testing.jpeg" alt="team_testing"
+                    style={{
+                    }}
+                />
                 <div style={{marginTop: 50}} className="c2-function-components">
                     {explainBoard(
                         "More Perspective", 
                         [
-                            "1. Budget",
-                            "2. Pit Stop Time",
-                            "3. Errors" 
+                            "1. Budget - the team's success is not only build by money",
+                            "2. Pit Stop Time - showing the team have great team works",
+                            "3. Errors - show the team has great organizations" 
                         ]
                     )}
                 </div>
                 <div style={{height: 50}}/>
-                {constructorBudgetBars()}
-                <div style={{height: 50}}/>
-                {constructorBudgetBars()}
-                <div style={{height: 50}}/>
-                {constructorBudgetBars()}
+                {constructorStatBars()}
             </div>
+            <div style={{height: 50}}/>
         </div>
     )
 }
