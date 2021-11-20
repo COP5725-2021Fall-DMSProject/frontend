@@ -249,8 +249,9 @@ function C2Page() {
                     {explainBoard(
                         "Total Points Explanation", 
                         [
-                            "1. For each year the increase rate should be over 20%",
-                            "2. Only listing the top K team with the MAX point differences (End - Start)",
+                            "1. Average point should be over 100 points",
+                            "- Try to find the potentials",
+                            "- Middle level team usually will have over 100 points"
                         ]
                     )}
                 </div>
