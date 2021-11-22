@@ -53,16 +53,14 @@ function C2Page() {
     }
 
     // Get the investable constructor list
-    function generateConstructorList() {
+    function generateConstructorList(inputList) {
         const showAllItem = () => {
             return (
                 <div 
-                    style={{
-                        borderBottom: 'solid 2.5px ' + settings.Colors.mainColor,
-                    }}
+                    className="list-item-container"
                     onClick={() => {handleClickConstructorList(0, false)}}
                 >
-                    <ListItem className="list-item-component">
+                    <ListItem>
                         <ListItemText
                             disableTypography
                             sx={{ fontFamily: settings.Font.secondary + "!important", color: settings.Font.forthColor}}
@@ -73,15 +71,13 @@ function C2Page() {
                 </div>
             )
         }
-        const listItem = constructorList.map((element, index) => {
+        const listItem = inputList.map((element, index) => {
             return(
                 <div 
-                    style={{
-                        borderBottom: 'solid 2.5px ' + settings.Colors.mainColor,
-                    }}
+                    className="list-item-container"
                     onClick={() => {handleClickConstructorList(index, true)}}
                 >
-                    <ListItem className="list-item-component">
+                    <ListItem>
                         <ListItemText
                             disableTypography
                             sx={{ fontFamily: settings.Font.secondary + "!important", color: settings.Font.forthColor}}
@@ -242,7 +238,7 @@ function C2Page() {
     return (
         <div>
             <Header/>
-            {generateConstructorList()}
+            {generateConstructorList(constructorList)}
             <div className="main-block">
                 {constructorLineChart()}
                 <div style={{marginTop: 50}} className="c2-function-components">

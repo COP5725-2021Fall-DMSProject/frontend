@@ -43,9 +43,15 @@ code {
   background-color: #fff;
 }
 
-.list-item-component:hover {
+.list-item-container {
+  border-bottom: solid 2.5px #e10600;
+  cursor: pointer;
+}
+
+.list-item-container:hover {
   transform: scale(1.2);
   font-weight: bold;
+  color: #15151e;
 }
 
 .separate-line {
