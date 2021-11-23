@@ -172,7 +172,10 @@ function raceWiseComparisonLineChart() {
                 borderColor: getRegularColarList(1)[0],
                 borderWidth: 2,
                 fill: false,
-                data: raceWiseData.map((element, _) => {return (element.l_point)}),
+                data: raceWiseData.map((element, _) => {
+                    let maxRacePoint = 25
+                    return element.l_point > maxRacePoint ? maxRacePoint : element.l_point
+                }),
             },
             {
                 type: 'line',
@@ -180,13 +183,16 @@ function raceWiseComparisonLineChart() {
                 borderColor: getRegularColarList(1)[1],
                 borderWidth: 2,
                 fill: false,
-                data: raceWiseData.map((element, _) => {return (element.someone_points)}),
+                data: raceWiseData.map((element, _) => {
+                    let maxRacePoint = 25
+                    return element.someone_points > maxRacePoint ? maxRacePoint : element.someone_points
+                }),
             }
         ]
     };  
 
     return(
-        <div style={{width: window ? window.innerWidth*0.75 : 1500}}>
+        <div style={{width: window ? window.innerWidth *0.8 : 1500}}>
             <div className='header'>
                 <h4 className='title page-title' align='center'> Racewise Comparison</h4>
                 <div className='links'>
