@@ -68,11 +68,14 @@ code {
   border-right: solid 6px #d0d0d2;
   border-left: solid 1px #d0d0d2;
   border-bottom: solid 1px #d0d0d2;
-  margin-top: 100px;
   margin-left: 450px;
   width: 900px;
   display: flex;
   flex-direction: column;
+}
+
+.main-block.center {
+  margin-left: 0px;
 }
 
 @import url('https://fonts.googleapis.com/css2?family=Titillium+Web:wght@600&display=swap');

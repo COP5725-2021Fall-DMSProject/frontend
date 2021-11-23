@@ -6,11 +6,12 @@ import ListItem from '@mui/material/ListItem';
 import ListItemText from '@mui/material/ListItemText';
 import settings from "../settings";
 import axios from "axios";
-import { randDarkColor } from '../utils/utils'
+import { randDarkColor, assembleColor, getColorRGBnumber} from '../utils/utils'
 
 import explainBoard from '../component/explainBoard'
 import VerticalBar from '../component/verticalBar'
 import LineChart from '../component/lineChart'
+import GroupBar from '../component/groupBar'
 
 function C2Page() {
     const [constructorList, setConstructorList] = useState([
@@ -44,7 +45,6 @@ function C2Page() {
         return `${startYear}-${endYear}`
     }
 
-    
     const handleClickConstructorList = (index, flag) => {
         setFocusOneTeam(flag)
         if(constructorList) {
@@ -235,11 +235,88 @@ function C2Page() {
         )
     }
 
+    
+    function getPointBudgetRatio(points, budgets) {
+        let totalPoints = 0
+        if(points) {
+            points.map((value) => {
+                totalPoints += value
+            })
+
+            let totalBudgets = 0
+            budgets.map((value) => {
+                totalBudgets += value
+            })
+
+            return totalPoints / totalBudgets
+        }
+        return 0;
+    }
+
+    function getArrayYearWiseAverage(input) {
+        let totalValue = 0
+        input.map((value) => {
+            totalValue += value
+        })
+        return totalValue / input.length
+    }
+
+    function constructSummaryRanking() {
+        const constructDataSet = () => {
+            const dataSet = [
+                {
+                    label: 'Point/Budget Ratio',
+                    data: [],
+                    backgroundColor: 'rgb(54, 162, 235)',
+                    stack: 'Stack 0',
+                },
+                {
+                    label: 'Year-wise Average Pit stop time',
+                    data: [],
+                    backgroundColor: 'rgb(75, 192, 192)',
+                    stack: 'Stack 1',
+                },
+                {
+                    label: 'Year-wise Average Errors',
+                    data: [],
+                    backgroundColor: 'rgb(255, 99, 132)',
+                    stack: 'Stack 2',
+                },
+            ]
+            constructorList.map((element, index) => {
+                const pointBudgetRatio = getPointBudgetRatio(element.total_points, element.budgets)
+                const avgPitStopTime = getArrayYearWiseAverage(element.avg_pits_time) - 21.0
+                const avgErrors = getArrayYearWiseAverage(element.errors)
+
+                dataSet[0].data.push(pointBudgetRatio)
+                dataSet[1].data.push(avgPitStopTime)
+                dataSet[2].data.push(avgErrors)
+            });
+
+            return dataSet
+        }
+
+        const groupBarData = {
+            labels: constructorList.map((element) => {
+                return element.name
+            }),
+            datasets: constructDataSet()
+        } 
+
+        return(
+            <div>
+                {GroupBar(`Constructors Summary`, ``, groupBarData, null)}
+            </div>
+        )
+    }
     return (
         <div>
             <Header/>
             {generateConstructorList(constructorList)}
-            <div className="main-block">
+            <div style={{marginTop: 100}} className="main-block">
+                <h2 className='title page-title' align='left'> Which Constructor (team) is Investable? </h2>
+            </div>
+            <div style={{marginTop: 50}} className="main-block">
                 {constructorLineChart()}
                 <div style={{marginTop: 50}} className="c2-function-components">
                     {explainBoard(
@@ -272,6 +349,10 @@ function C2Page() {
                 </div>
                 <div style={{height: 50}}/>
                 {constructorStatBars()}
+            </div>
+            <div style={{marginTop: 50, marginBottom: 50}}/>
+            <div className="main-block">
+                {constructSummaryRanking()}
             </div>
             <div style={{height: 50}}/>
         </div>
