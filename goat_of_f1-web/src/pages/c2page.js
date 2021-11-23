@@ -6,11 +6,12 @@ import ListItem from '@mui/material/ListItem';
 import ListItemText from '@mui/material/ListItemText';
 import settings from "../settings";
 import axios from "axios";
-import { randDarkColor } from '../utils/utils'
-
+import { getRegularColarList } from '../utils/utils'
 import explainBoard from '../component/explainBoard'
 import VerticalBar from '../component/verticalBar'
 import LineChart from '../component/lineChart'
+import GroupBar from '../component/groupBar'
+import PolarAreaChart from '../component/polarArea'
 
 function C2Page() {
     const [constructorList, setConstructorList] = useState([
@@ -23,11 +24,18 @@ function C2Page() {
     ])
     const [selectedTeam, setSelectedTeam] = useState({})
     const [focusOneTeam, setFocusOneTeam] = useState(false)
+    const [summaryStats, setSummaryStats] = useState({
+        "pointBugdetRatio": [],
+        "yearWiseAvgPitTime": [],
+        "yearWiseErrors": [],
+        "rankScores": []
+    })
     const startYear = 2015
     const endYear = 2017
     
     useEffect(() => {
         getConstructorList();
+        getConstructorsRankingScore();
     }, [])
 
     const getConstructorList = async () => {
@@ -52,6 +60,33 @@ function C2Page() {
         }
     }
 
+    function getConstructorsRankingScore() {
+        const pointBugdetRatioArr = []
+        const yearWiseAvgPitTimeArr = []
+        const yearWiseErrorsArr = []
+        const rankScoresArr = []
+        if(constructorList.length > 0) {
+            constructorList.map((element, index) => {
+                const pointBudgetRatio = getPointBudgetRatio(element.total_points, element.budgets)
+                const avgPitStopTime = getArrayYearWiseAverage(element.avg_pits_time) - 21.0
+                const avgErrors = getArrayYearWiseAverage(element.errors)
+
+                pointBugdetRatioArr.push(pointBudgetRatio)
+                yearWiseAvgPitTimeArr.push(avgPitStopTime)
+                yearWiseErrorsArr.push(avgErrors)
+
+                let score = pointBudgetRatio*10 + 10 - (avgPitStopTime*2) + 12 - avgErrors*3;
+                rankScoresArr.push(score)
+            });
+
+            setSummaryStats({
+                "pointBugdetRatio": pointBugdetRatioArr,
+                "yearWiseAvgPitTime": yearWiseAvgPitTimeArr,
+                "yearWiseErrors": yearWiseErrorsArr,
+                "rankScores": rankScoresArr
+            })
+        }
+    }
     // Get the investable constructor list
     function generateConstructorList() {
         const showAllItem = () => {
@@ -122,7 +157,7 @@ function C2Page() {
             let dataPoints = []
             if(focusOneTeam) {
                 const totalCostList = selectedTeam.total_points
-                const randomColorString = randDarkColor()
+                const randomColorString = getRegularColarList(1)[0]
                 dataPoints.push({
                     label: selectedTeam.name.toUpperCase(),
                     data: totalCostList,
@@ -134,7 +169,7 @@ function C2Page() {
             else {
                 constructorList.map((element, index) => {
                     const totalCostList = element.total_points
-                    const randomColorString = randDarkColor()
+                    const randomColorString = getRegularColarList(1)[index]
                     dataPoints.push({
                         label: element.name.toUpperCase(),
                         data: totalCostList,
@@ -239,11 +274,115 @@ function C2Page() {
         )
     }
 
+    function getPointBudgetRatio(points, budgets) {
+        let totalPoints = 0
+        if(points) {
+            points.map((value) => {
+                totalPoints += value
+            })
+
+            let totalBudgets = 0
+            budgets.map((value) => {
+                totalBudgets += value
+            })
+
+            return totalPoints / totalBudgets
+        }
+        return 0;
+    }
+
+    function getArrayYearWiseAverage(input) {
+        let totalValue = 0
+        input.map((value) => {
+            totalValue += value
+        })
+        return totalValue / input.length
+    }
+
+    function constructSummaryRanking() {
+        const constructDataSet = () => {
+            const dataSet = [
+                {
+                    label: 'Point/Budget Ratio',
+                    data: summaryStats.pointBugdetRatio,
+                    backgroundColor: 'rgb(54, 162, 235)',
+                    stack: 'Stack 0',
+                },
+                {
+                    label: 'Year-wise Average Pit stop time',
+                    data: summaryStats.yearWiseAvgPitTime,
+                    backgroundColor: 'rgb(75, 192, 192)',
+                    stack: 'Stack 1',
+                },
+                {
+                    label: 'Year-wise Average Errors',
+                    data: summaryStats.yearWiseErrors,
+                    backgroundColor: 'rgb(255, 99, 132)',
+                    stack: 'Stack 2',
+                },
+            ]
+
+            return dataSet
+        }
+
+        const groupBarData = {
+            labels: constructorList.map((element) => {
+                return element.name
+            }),
+            datasets: constructDataSet()
+        } 
+
+        return(
+            <div>
+                {GroupBar(`Constructors Summary`, ``, groupBarData, null)}
+            </div>
+        )
+    }
+
+    function constructPolarChartPodium() {
+        const polarData = {
+              labels: constructorList.map((element) => {
+                return element.name
+              }),
+              datasets: [
+                {
+                  label: 'Ranking Scores',
+                  data: summaryStats.rankScores,
+                  backgroundColor: getRegularColarList(),
+                  borderWidth: 1,
+                },
+              ],
+            };
+
+        return(
+            <div>
+                {PolarAreaChart(`Ranking Scores`, ``, polarData, null)}
+                <div style={{marginTop: 50}} className="c2-function-components">
+                    {explainBoard(
+                        "Ranking Score depends on the factor below:", 
+                        [
+                            "1. Total Points",
+                            "2. Budget",
+                            "3. Pit Stop Time",
+                            "4. Errors"
+                        ]
+                    )}
+                </div>
+            </div>
+        )
+    }
+
     return (
         <div>
             <Header/>
-            {generateConstructorList()}
-            <div className="main-block">
+            {generateConstructorList(constructorList)}
+            <div style={{marginTop: 100}} className="main-block">
+                <h2 className='title page-title' align='left'> Which Constructor (team) is Investable? </h2>
+            </div>
+            <div style={{marginTop: 50}} className="main-block">
+                {constructPolarChartPodium()}
+            </div>
+            <div style={{marginTop: 50}} className="main-block">
                 {constructorLineChart()}
                 <div style={{marginTop: 50}} className="c2-function-components">
                     {explainBoard(
@@ -268,9 +407,9 @@ function C2Page() {
                     {explainBoard(
                         "More Perspective", 
                         [
-                            "1. Budget - the team's success is not only build by money",
-                            "2. Pit Stop Time - showing the team have great team works",
-                            "3. Errors - show the team has great organizations" 
+                            "1. Budget - check the financial efficiency",
+                            "2. Pit Stop Time - how's the team chemistry on team works?",
+                            "3. Errors (cause 0 points) - show the team has great organizationsto avoid severe errors" 
                         ]
                     )}
                 </div>
