@@ -23,6 +23,27 @@ ChartJS.register(
 const defaultOptions = {}
 
 // data format example
+<<<<<<< HEAD
+// export const testData = {
+//   labels: ['Thing 1', 'Thing 2', 'Thing 3', 'Thing 4', 'Thing 5', 'Thing 6'],
+//   datasets: [
+//     {
+//       label: '# of Votes',
+//       data: [2, 9, 3, 5, 2, 3],
+//       backgroundColor: 'rgba(255, 99, 132, 0.2)',
+//       borderColor: 'rgba(255, 99, 132, 1)',
+//       borderWidth: 1,
+//     },
+//     {
+//       label: '# of ABC',
+//       data: [5, 7, 6, 5, 2, 10],
+//       backgroundColor: 'rgba(255, 100, 132, 0.3)',
+//       borderColor: 'rgba(255, 99, 132, 1)',
+//       borderWidth: 1,
+//     },
+//   ],
+// };
+=======
 export const testData = {
   labels: ['Thing 1', 'Thing 2', 'Thing 3', 'Thing 4', 'Thing 5', 'Thing 6'],
   datasets: [
@@ -42,6 +63,7 @@ export const testData = {
     },
   ],
 };
+>>>>>>> 7cdf24da2ec20b87e402ddfef1f6812f16eb1fe4
 
 function RadarChart(title, subTitle, inputData, options){
     return (
