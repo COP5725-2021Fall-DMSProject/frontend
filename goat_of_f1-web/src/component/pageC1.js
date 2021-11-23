@@ -8,10 +8,12 @@ import settings from "../settings";
 import "../App.css";
 import axios from "axios";  
 import { randDarkColor } from '../utils/utils'
+import GroupedBar from "./groupBar";
 const rand = () => Math.floor(Math.random() * 255);
 
-const compareUrl = `http://10.136.203.20:8000/c1/funcA/4`
-const ageWisePointsUrl = `http://10.136.203.20:8000/c1/funcB/4`
+const compareUrl = settings.apiHostURL + '/c1/funcA/4'
+const ageWisePointsUrl = settings.apiHostURL + '/c1/funcB/4'
+const competitiveUrl = settings.apiHostURL + '/c1/competitive-drivers'
 
 function PageC1() {
     const [competitiveDriversList, setCompetitiveDrivers] = useState([{driverId: '',name:''}]);
@@ -30,9 +32,8 @@ function PageC1() {
     }, [])
 
     const getCompetitiveDriversData = async () => {
-        const competitiveUrl = settings.apiHostURL + '/c1/competitive-drivers'
         const response = await axios.get(competitiveUrl)
-        setCompetitiveDrivers(response.data.result.drivers)
+        setCompetitiveDrivers(response.data.result.data.drivers)
     }
 
     const getComparisonData = async() => {
@@ -172,7 +173,7 @@ function raceWiseComparisonLineChart() {
     };
 
 var raceIdLabel = raceWiseData.map((element, _) => {
-  return (element.raceid +"-"+ element.name)
+  return (element.year+ "-"+ element.raceid +"-"+ element.name)
 })
 
 const data = {
@@ -215,6 +216,36 @@ return(
 
 }
 
+function CompetitiveGroupedBarChart() {
+    const options = {
+      scales: {
+          y: {
+              beginAtZero: true
+            }
+          },
+      };
+  
+  var driverLabel = competitiveDriversList.map((element, _) => {
+    return (element.name)
+  })
+  
+  const data = {
+      labels: driverLabel,
+      datasets: [
+        {
+          label: 'Comparison with Lewis',
+          borderColor: randDarkColor(),
+          backgroundColor: randDarkColor(),
+          borderWidth: 2,
+          fill: false,
+          data: competitiveDriversList.map((element, _) => {return (element.total_similarity_with_lewis)}),
+        },
+      ]
+      };  
+  
+    return GroupedBar("Similarity Comparison", "", data, options)
+  }
+
     return (
         <div>
                 <Header/>
@@ -224,6 +255,9 @@ return(
                 </div>
                 <div className="main-block">
                     {ageWiseComparisonBarChart()}
+                </div>
+                <div className="main-block">
+                {CompetitiveGroupedBarChart()}
                 </div>
         </div>
     )
