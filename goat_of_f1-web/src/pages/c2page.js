@@ -11,6 +11,7 @@ import { randDarkColor } from '../utils/utils'
 import explainBoard from '../component/explainBoard'
 import VerticalBar from '../component/verticalBar'
 import LineChart from '../component/lineChart'
+import RadarChart from '../component/radarChart'
 
 function C2Page() {
     const [constructorList, setConstructorList] = useState([
@@ -44,7 +45,6 @@ function C2Page() {
         return `${startYear}-${endYear}`
     }
 
-    
     const handleClickConstructorList = (index, flag) => {
         setFocusOneTeam(flag)
         if(constructorList) {
@@ -235,11 +235,41 @@ function C2Page() {
         )
     }
 
+    function constructSummaryRanking() {
+        const radarData = {
+            labels: ['Thing 1', 'Thing 2', 'Thing 3', 'Thing 4', 'Thing 5', 'Thing 6'],
+            datasets: [
+                {
+                label: '# of Votes',
+                data: [2, 9, 3, 5, 2, 3],
+                backgroundColor: 'rgba(255, 99, 132, 0.2)',
+                borderColor: 'rgba(255, 99, 132, 1)',
+                borderWidth: 1,
+                },
+                {
+                label: '# of ABC',
+                data: [5, 7, 6, 5, 2, 10],
+                backgroundColor: 'rgba(255, 100, 132, 0.3)',
+                borderColor: 'rgba(255, 99, 132, 1)',
+                borderWidth: 1,
+                },
+            ],
+        }
+
+        return(
+            <div>
+                {RadarChart(`Rank the Constructors`, ``, radarData, null)}
+            </div>
+        )
+    }
     return (
         <div>
             <Header/>
             {generateConstructorList(constructorList)}
-            <div className="main-block">
+            <div style={{marginTop: 100}} className="main-block">
+                <h2 className='title page-title' align='left'> Which Constructor (team) is Investable? </h2>
+            </div>
+            <div style={{marginTop: 50}} className="main-block">
                 {constructorLineChart()}
                 <div style={{marginTop: 50}} className="c2-function-components">
                     {explainBoard(
@@ -272,6 +302,10 @@ function C2Page() {
                 </div>
                 <div style={{height: 50}}/>
                 {constructorStatBars()}
+            </div>
+            <div style={{marginTop: 50, marginBottom: 50}}/>
+            <div className="main-block">
+                {constructSummaryRanking()}
             </div>
             <div style={{height: 50}}/>
         </div>
