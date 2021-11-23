@@ -6,7 +6,7 @@ import ListItem from '@mui/material/ListItem';
 import ListItemText from '@mui/material/ListItemText';
 import settings from "../settings";
 import axios from "axios";
-import { randDarkColor } from '../utils/utils'
+import { randDarkColor, assembleColor, getColorRGBnumber} from '../utils/utils'
 
 import explainBoard from '../component/explainBoard'
 import VerticalBar from '../component/verticalBar'
@@ -236,25 +236,26 @@ function C2Page() {
     }
 
     function constructSummaryRanking() {
-        const radarData = {
-            labels: ['Thing 1', 'Thing 2', 'Thing 3', 'Thing 4', 'Thing 5', 'Thing 6'],
-            datasets: [
-                {
-                label: '# of Votes',
-                data: [2, 9, 3, 5, 2, 3],
-                backgroundColor: 'rgba(255, 99, 132, 0.2)',
-                borderColor: 'rgba(255, 99, 132, 1)',
-                borderWidth: 1,
-                },
-                {
-                label: '# of ABC',
-                data: [5, 7, 6, 5, 2, 10],
-                backgroundColor: 'rgba(255, 100, 132, 0.3)',
-                borderColor: 'rgba(255, 99, 132, 1)',
-                borderWidth: 1,
-                },
-            ],
+        var yearLabel = []
+        for(var i = startYear; i <= endYear; i++) {
+            yearLabel.push(i)
         }
+
+        const radarData = {
+            labels: yearLabel,
+            datasets: constructorList.map((element, index) => {
+                const totalCostList = element.total_points
+                const randomColorString = randDarkColor()
+                dataPoints.push({
+                    label: element.name.toUpperCase(),
+                    data: totalCostList,
+                    fill: false,
+                    backgroundColor: randomColorString,
+                    borderColor: randomColorString,
+                })
+            })
+            
+        } 
 
         return(
             <div>

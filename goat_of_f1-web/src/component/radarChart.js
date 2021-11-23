@@ -57,4 +57,4 @@ function RadarChart(title, subTitle, inputData, options){
     )
 }
 
-export default RadarChart;
+export default RadarChart

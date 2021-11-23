@@ -13,3 +13,18 @@ export function randDarkColor() {
     }
     return rgb;
 }
+
+export function assembleColor(r, g, b, transparency) {
+  var trans = transparency? transparency : '0.5'; // 50% transparency
+  var color = 'rgba(';
+  color += r + ',';
+  color += g + ',';
+  color += b + ',';
+  color += trans + ')'; // add the transparency
+  return color;
+}
+
+export function getColorRGBnumber() {
+    return Math.floor(Math.random() * 255);
+  }
+  
