@@ -2,7 +2,7 @@ import { SubTitle } from 'chart.js';
 import React from 'react';
 import { Bar } from 'react-chartjs-2';
 
-// const data = {
+// const testdata = {
 //   labels: ['1', '2', '3', '4', '5', '6'],
 //   datasets: [
 //     {
