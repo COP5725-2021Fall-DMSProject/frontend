@@ -11,7 +11,7 @@ import { randDarkColor, assembleColor, getColorRGBnumber} from '../utils/utils'
 import explainBoard from '../component/explainBoard'
 import VerticalBar from '../component/verticalBar'
 import LineChart from '../component/lineChart'
-import RadarChart from '../component/radarChart'
+import GroupBar from '../component/groupBar'
 
 function C2Page() {
     const [constructorList, setConstructorList] = useState([
@@ -235,31 +235,77 @@ function C2Page() {
         )
     }
 
+    
+    function getPointBudgetRatio(points, budgets) {
+        let totalPoints = 0
+        if(points) {
+            points.map((value) => {
+                totalPoints += value
+            })
+
+            let totalBudgets = 0
+            budgets.map((value) => {
+                totalBudgets += value
+            })
+
+            return totalPoints / totalBudgets
+        }
+        return 0;
+    }
+
+    function getArrayYearWiseAverage(input) {
+        let totalValue = 0
+        input.map((value) => {
+            totalValue += value
+        })
+        return totalValue / input.length
+    }
+
     function constructSummaryRanking() {
-        var yearLabel = []
-        for(var i = startYear; i <= endYear; i++) {
-            yearLabel.push(i)
+        const constructDataSet = () => {
+            const dataSet = [
+                {
+                    label: 'Point/Budget Ratio',
+                    data: [],
+                    backgroundColor: 'rgb(54, 162, 235)',
+                    stack: 'Stack 0',
+                },
+                {
+                    label: 'Year-wise Average Pit stop time',
+                    data: [],
+                    backgroundColor: 'rgb(75, 192, 192)',
+                    stack: 'Stack 1',
+                },
+                {
+                    label: 'Year-wise Average Errors',
+                    data: [],
+                    backgroundColor: 'rgb(255, 99, 132)',
+                    stack: 'Stack 2',
+                },
+            ]
+            constructorList.map((element, index) => {
+                const pointBudgetRatio = getPointBudgetRatio(element.total_points, element.budgets)
+                const avgPitStopTime = getArrayYearWiseAverage(element.avg_pits_time) - 21.0
+                const avgErrors = getArrayYearWiseAverage(element.errors)
+
+                dataSet[0].data.push(pointBudgetRatio)
+                dataSet[1].data.push(avgPitStopTime)
+                dataSet[2].data.push(avgErrors)
+            });
+
+            return dataSet
         }
 
-        const radarData = {
-            labels: yearLabel,
-            datasets: constructorList.map((element, index) => {
-                const totalCostList = element.total_points
-                const randomColorString = randDarkColor()
-                dataPoints.push({
-                    label: element.name.toUpperCase(),
-                    data: totalCostList,
-                    fill: false,
-                    backgroundColor: randomColorString,
-                    borderColor: randomColorString,
-                })
-            })
-            
+        const groupBarData = {
+            labels: constructorList.map((element) => {
+                return element.name
+            }),
+            datasets: constructDataSet()
         } 
 
         return(
             <div>
-                {RadarChart(`Rank the Constructors`, ``, radarData, null)}
+                {GroupBar(`Constructors Summary`, ``, groupBarData, null)}
             </div>
         )
     }

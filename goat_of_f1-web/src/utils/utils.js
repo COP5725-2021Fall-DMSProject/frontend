@@ -26,5 +26,5 @@ export function assembleColor(r, g, b, transparency) {
 
 export function getColorRGBnumber() {
     return Math.floor(Math.random() * 255);
-  }
+}
   
