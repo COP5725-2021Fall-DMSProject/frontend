@@ -35,7 +35,6 @@ function C2Page() {
     
     useEffect(() => {
         getConstructorList();
-        getConstructorsRankingScore();
     }, [])
 
     const getConstructorList = async () => {
@@ -45,6 +44,7 @@ function C2Page() {
             setConstructorList(response.data.result.data.constructors)
         }
         let defaultTeam = response.data.result.data.constructors ? response.data.result.data.constructors[0] : {'name': 'None'}
+        getConstructorsRankingScore(response.data.result.data.constructors);
         setSelectedTeam(defaultTeam)
     }
 
@@ -52,7 +52,6 @@ function C2Page() {
         return `${startYear}-${endYear}`
     }
 
-    
     const handleClickConstructorList = (index, flag) => {
         setFocusOneTeam(flag)
         if(constructorList) {
@@ -60,13 +59,13 @@ function C2Page() {
         }
     }
 
-    function getConstructorsRankingScore() {
+    function getConstructorsRankingScore(inputList) {
         const pointBugdetRatioArr = []
         const yearWiseAvgPitTimeArr = []
         const yearWiseErrorsArr = []
         const rankScoresArr = []
-        if(constructorList.length > 0) {
-            constructorList.map((element, index) => {
+        if(inputList.length > 0) {
+            inputList.map((element, index) => {
                 const pointBudgetRatio = getPointBudgetRatio(element.total_points, element.budgets)
                 const avgPitStopTime = getArrayYearWiseAverage(element.avg_pits_time) - 21.0
                 const avgErrors = getArrayYearWiseAverage(element.errors)
@@ -88,16 +87,14 @@ function C2Page() {
         }
     }
     // Get the investable constructor list
-    function generateConstructorList() {
+    function generateConstructorList(inputList) {
         const showAllItem = () => {
             return (
                 <div 
-                    style={{
-                        borderBottom: 'solid 2.5px ' + settings.Colors.mainColor,
-                    }}
+                    className="list-item-container"
                     onClick={() => {handleClickConstructorList(0, false)}}
                 >
-                    <ListItem className="list-item-component">
+                    <ListItem>
                         <ListItemText
                             disableTypography
                             sx={{ fontFamily: settings.Font.secondary + "!important", color: settings.Font.forthColor}}
@@ -108,15 +105,13 @@ function C2Page() {
                 </div>
             )
         }
-        const listItem = constructorList.map((element, index) => {
+        const listItem = inputList.map((element, index) => {
             return(
                 <div 
-                    style={{
-                        borderBottom: 'solid 2.5px ' + settings.Colors.mainColor,
-                    }}
+                    className="list-item-container"
                     onClick={() => {handleClickConstructorList(index, true)}}
                 >
-                    <ListItem className="list-item-component">
+                    <ListItem>
                         <ListItemText
                             disableTypography
                             sx={{ fontFamily: settings.Font.secondary + "!important", color: settings.Font.forthColor}}
@@ -415,6 +410,10 @@ function C2Page() {
                 </div>
                 <div style={{height: 50}}/>
                 {constructorStatBars()}
+            </div>
+            <div style={{marginTop: 50, marginBottom: 50}}/>
+            <div className="main-block">
+                {constructSummaryRanking()}
             </div>
             <div style={{height: 50}}/>
         </div>
