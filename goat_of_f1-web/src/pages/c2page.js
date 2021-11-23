@@ -6,17 +6,18 @@ import ListItem from '@mui/material/ListItem';
 import ListItemText from '@mui/material/ListItemText';
 import settings from "../settings";
 import axios from "axios";
-import { randDarkColor } from '../utils/utils'
+import { randDarkColor, assembleColor, getColorRGBnumber} from '../utils/utils'
 
 import explainBoard from '../component/explainBoard'
 import VerticalBar from '../component/verticalBar'
 import LineChart from '../component/lineChart'
+import GroupBar from '../component/groupBar'
 
 function C2Page() {
     const [constructorList, setConstructorList] = useState([
         {
             'name': '',
-            'avg_pit_time': [],
+            'avg_pits_time': [],
             'budgets': [],
             'errors': []
         }
@@ -44,7 +45,6 @@ function C2Page() {
         return `${startYear}-${endYear}`
     }
 
-    
     const handleClickConstructorList = (index, flag) => {
         setFocusOneTeam(flag)
         if(constructorList) {
@@ -53,16 +53,14 @@ function C2Page() {
     }
 
     // Get the investable constructor list
-    function generateConstructorList() {
+    function generateConstructorList(inputList) {
         const showAllItem = () => {
             return (
                 <div 
-                    style={{
-                        borderBottom: 'solid 2.5px ' + settings.Colors.mainColor,
-                    }}
+                    className="list-item-container"
                     onClick={() => {handleClickConstructorList(0, false)}}
                 >
-                    <ListItem className="list-item-component">
+                    <ListItem>
                         <ListItemText
                             disableTypography
                             sx={{ fontFamily: settings.Font.secondary + "!important", color: settings.Font.forthColor}}
@@ -73,15 +71,13 @@ function C2Page() {
                 </div>
             )
         }
-        const listItem = constructorList.map((element, index) => {
+        const listItem = inputList.map((element, index) => {
             return(
                 <div 
-                    style={{
-                        borderBottom: 'solid 2.5px ' + settings.Colors.mainColor,
-                    }}
+                    className="list-item-container"
                     onClick={() => {handleClickConstructorList(index, true)}}
                 >
-                    <ListItem className="list-item-component">
+                    <ListItem>
                         <ListItemText
                             disableTypography
                             sx={{ fontFamily: settings.Font.secondary + "!important", color: settings.Font.forthColor}}
@@ -98,7 +94,7 @@ function C2Page() {
                 position: 'fixed',
                 left: 75,
                 top: 100,
-                height: 400,
+                height: 350,
                 width: 300,
                 border: 'solid 10px ' + settings.Colors.mainColor,
                 borderTopRightRadius: 25
@@ -121,7 +117,7 @@ function C2Page() {
         const countTeamsPoint = () => {
             let dataPoints = []
             if(focusOneTeam) {
-                const totalCostList = selectedTeam.total_point
+                const totalCostList = selectedTeam.total_points
                 const randomColorString = randDarkColor()
                 dataPoints.push({
                     label: selectedTeam.name.toUpperCase(),
@@ -133,7 +129,7 @@ function C2Page() {
             }
             else {
                 constructorList.map((element, index) => {
-                    const totalCostList = element.total_point
+                    const totalCostList = element.total_points
                     const randomColorString = randDarkColor()
                     dataPoints.push({
                         label: element.name.toUpperCase(),
@@ -154,7 +150,7 @@ function C2Page() {
         }
 
         return(
-            <div>{LineChart(`Total Points (${constructTimeRange()}`, ``, totalPointData, null)}</div>
+            <div>{LineChart(`Total Points (${constructTimeRange()})`, ``, totalPointData, null)}</div>
         )
     }
 
@@ -191,7 +187,7 @@ function C2Page() {
             datasets: [
                 {
                     label: 'Annual Average Pit Stop Time',
-                    data: selectedTeam.avg_pit_time,
+                    data: selectedTeam.avg_pits_time,
                     backgroundColor: [
                         'rgba(255, 99, 132, 0.2)',
                         'rgba(54, 162, 235, 0.2)',
@@ -230,27 +226,105 @@ function C2Page() {
         
         return(
             <div className="c2-function-components">
-                {VerticalBar(`${selectedTeam.name} Bud getStats`, `Budget Increase must be less than 30%`, budgetData, null)}
+                {VerticalBar(`${selectedTeam.name} Budget Stats (€ million)`, `Budget Increase must be less than 30%`, budgetData, null)}
                 <div style={{height: 50}}/>
-                {VerticalBar(`${selectedTeam.name} Pit Stop Stats`, `Avg pit stop time must less than the average`, pitStopData, null)}
+                {VerticalBar(`${selectedTeam.name} Pit Stop Stats (sec)`, `Avg pit stop time must less than the average`, pitStopData, null)}
                 <div style={{height: 50}}/>
                 {VerticalBar(`${selectedTeam.name} Error Stats`, `Team mechanical errors must less than 10 times`, errorData, null)}
             </div>
         )
     }
 
+    
+    function getPointBudgetRatio(points, budgets) {
+        let totalPoints = 0
+        if(points) {
+            points.map((value) => {
+                totalPoints += value
+            })
+
+            let totalBudgets = 0
+            budgets.map((value) => {
+                totalBudgets += value
+            })
+
+            return totalPoints / totalBudgets
+        }
+        return 0;
+    }
+
+    function getArrayYearWiseAverage(input) {
+        let totalValue = 0
+        input.map((value) => {
+            totalValue += value
+        })
+        return totalValue / input.length
+    }
+
+    function constructSummaryRanking() {
+        const constructDataSet = () => {
+            const dataSet = [
+                {
+                    label: 'Point/Budget Ratio',
+                    data: [],
+                    backgroundColor: 'rgb(54, 162, 235)',
+                    stack: 'Stack 0',
+                },
+                {
+                    label: 'Year-wise Average Pit stop time',
+                    data: [],
+                    backgroundColor: 'rgb(75, 192, 192)',
+                    stack: 'Stack 1',
+                },
+                {
+                    label: 'Year-wise Average Errors',
+                    data: [],
+                    backgroundColor: 'rgb(255, 99, 132)',
+                    stack: 'Stack 2',
+                },
+            ]
+            constructorList.map((element, index) => {
+                const pointBudgetRatio = getPointBudgetRatio(element.total_points, element.budgets)
+                const avgPitStopTime = getArrayYearWiseAverage(element.avg_pits_time) - 21.0
+                const avgErrors = getArrayYearWiseAverage(element.errors)
+
+                dataSet[0].data.push(pointBudgetRatio)
+                dataSet[1].data.push(avgPitStopTime)
+                dataSet[2].data.push(avgErrors)
+            });
+
+            return dataSet
+        }
+
+        const groupBarData = {
+            labels: constructorList.map((element) => {
+                return element.name
+            }),
+            datasets: constructDataSet()
+        } 
+
+        return(
+            <div>
+                {GroupBar(`Constructors Summary`, ``, groupBarData, null)}
+            </div>
+        )
+    }
     return (
         <div>
             <Header/>
-            {generateConstructorList()}
-            <div className="main-block">
+            {generateConstructorList(constructorList)}
+            <div style={{marginTop: 100}} className="main-block">
+                <h2 className='title page-title' align='left'> Which Constructor (team) is Investable? </h2>
+            </div>
+            <div style={{marginTop: 50}} className="main-block">
                 {constructorLineChart()}
                 <div style={{marginTop: 50}} className="c2-function-components">
                     {explainBoard(
                         "Total Points Explanation", 
                         [
-                            "1. For each year the increase rate should be over 20%",
-                            "2. Only listing the top K team with the MAX point differences (End - Start)",
+                            "1. Average point should be over 100 points",
+                            "- Try to find the potentials",
+                            "- Middle level team usually will have over 100 points"
                         ]
                     )}
                 </div>
@@ -275,6 +349,10 @@ function C2Page() {
                 </div>
                 <div style={{height: 50}}/>
                 {constructorStatBars()}
+            </div>
+            <div style={{marginTop: 50, marginBottom: 50}}/>
+            <div className="main-block">
+                {constructSummaryRanking()}
             </div>
             <div style={{height: 50}}/>
         </div>
