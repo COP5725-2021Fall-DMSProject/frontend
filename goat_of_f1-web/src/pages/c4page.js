@@ -149,7 +149,7 @@ function C4Page() {
             datasets: [
               {
                 label: 'Aggressive performers',
-                data: riskyDriversStats.aggressive.points,
+                data: riskyDriversStats.aggressive.ratio,
                 fill: false,
                 backgroundColor: [
                     'rgba(255, 99, 132, 0.2)',
@@ -172,7 +172,7 @@ function C4Page() {
             datasets: [
               {
                 label: 'Risky performers',
-                data: riskyDriversStats.risky.points,
+                data: riskyDriversStats.risky.ratio,
                 fill: false,
                 backgroundColor: [
                     'rgba(255, 99, 132, 0.2)',
@@ -190,12 +190,18 @@ function C4Page() {
             ],
           };
 
+          const uselessRatioArray = riskyDriversStats.useless.ratio
+          var maxRisk = Math.max.apply(Math, uselessRatioArray)
+          for (var i=0; i< uselessRatioArray.length;i++) {
+            uselessRatioArray[i] = maxRisk - uselessRatioArray[i]
+          }
+          console.log(uselessRatioArray)
           const uselessData = {
             labels: riskyDriversStats.useless.name,
             datasets: [
               {
                 label: 'Bad performers',
-                data: riskyDriversStats.useless.points,
+                data: riskyDriversStats.useless.ratio,
                 fill: false,
                 backgroundColor: [
                     'rgba(255, 99, 132, 0.2)',
