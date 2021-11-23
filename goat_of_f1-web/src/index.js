@@ -10,6 +10,7 @@ import Homepage from './pages/homepage';
 import C1Page from './pages/c1page';
 import C2Page from './pages/c2page';
 import C3Page from './pages/c3page';
+import C4Page from './pages/c4page';
 import Driver from './pages/driver';
 import reportWebVitals from './reportWebVitals';
 
@@ -22,6 +23,7 @@ ReactDOM.render(
       <Route path="/c1page-next-hamilton" element={<C1Page/>} />
       <Route path="/c2page-investable-constructor" element={<C2Page/>} />
       <Route path="/c3page-lapwise-positions" element={<C3Page/>} />
+      <Route path="/c4page-driver-types" element={<C4Page/>} />
     </Routes>
   </BrowserRouter>,
   document.getElementById('root')
