@@ -83,7 +83,7 @@ function C4Page() {
         },
       };
       return(
-        <div className="c2-function-components">
+        <div className="main-function-subcomponents">
           <div className='header'>
             <h4 className='title page-title' align='center'>Points Comparison</h4>
             <div className='links'>
@@ -126,7 +126,7 @@ function C4Page() {
         },
       };
       return(
-        <div className="c2-function-components">
+        <div className="main-function-subcomponents">
           <div className='header'>
             <h4 className='title page-title' align='center'>Crash Comparison</h4>
             <div className='links'>
@@ -219,7 +219,7 @@ function C4Page() {
             ],
           };
           return(
-            <div className="c2-function-components">
+            <div className="main-function-subcomponents">
                 {VerticalBar(`Aggressive Driver Stats`, `Aggressive Drivers`, aggressiveData, null)}
                 <div style={{height: 50}}/>
                 {VerticalBar(`Risky Driver Stats`, `Risky Drivers`, riskyData, null)}

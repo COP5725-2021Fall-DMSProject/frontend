@@ -147,7 +147,7 @@
 //     };
     
 //     return(
-//         <div className="c2-function-components">
+//         <div className="main-function-subcomponents">
 //             <div className='header'>
 //                 <h4 className='title page-title' align='center'> Points Comparison (2015-2017)</h4>
 //                 <div className='links'>
@@ -199,7 +199,7 @@
 //     };  
 
 // return(
-//     <div className="c2-function-components">
+//     <div className="main-function-subcomponents">
 //         <div className='header'>
 //             <h4 className='title page-title' align='center'> Racewise Comparison</h4>
 //             <div className='links'>

@@ -20,8 +20,19 @@ code {
   font-family: 'Audiowide';
 }
 
-.c2-function-components {
+.main-function-subcomponents {
   height: 500;
+}
+
+.fixed-clickable-list {
+  position: fixed;
+  font-size: 20px;
+  left: 120px;
+  top: 100px;
+  height: 500px;
+  width: 360px;
+  border: solid 10px #e10600;
+  border-top-right-radius: 25px;
 }
 
 .explanation-board {
@@ -68,8 +79,15 @@ code {
   border-right: solid 6px #d0d0d2;
   border-left: solid 1px #d0d0d2;
   border-bottom: solid 1px #d0d0d2;
-  margin-left: 450px;
-  width: 900px;
+  margin-left: 600px;
+  width: 960px;
+  display: flex;
+  flex-direction: column;
+}
+
+.sub-block {
+  margin-left: 600px;
+  width: 960px;
   display: flex;
   flex-direction: column;
 }

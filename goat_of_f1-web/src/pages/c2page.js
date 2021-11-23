@@ -124,15 +124,7 @@ function C2Page() {
         })
 
         return (
-            <div style={{
-                position: 'fixed',
-                left: 75,
-                top: 100,
-                height: 350,
-                width: 300,
-                border: 'solid 10px ' + settings.Colors.mainColor,
-                borderTopRightRadius: 25
-            }}>
+            <div className="fixed-clickable-list">
                 <List class="hide-scrollbar" style={{maxHeight: '100%', overflow: 'auto'}}>
                     {showAllItem()}
                     {listItem}
@@ -259,7 +251,7 @@ function C2Page() {
         };
         
         return(
-            <div className="c2-function-components">
+            <div className="main-function-subcomponents">
                 {VerticalBar(`${selectedTeam.name} Budget Stats (€ million)`, `Budget Increase must be less than 30%`, budgetData, null)}
                 <div style={{height: 50}}/>
                 {VerticalBar(`${selectedTeam.name} Pit Stop Stats (sec)`, `Avg pit stop time must less than the average`, pitStopData, null)}
@@ -352,7 +344,7 @@ function C2Page() {
         return(
             <div>
                 {PolarAreaChart(`Ranking Scores`, ``, polarData, null)}
-                <div style={{marginTop: 50}} className="c2-function-components">
+                <div style={{marginTop: 50}} className="main-function-subcomponents">
                     {explainBoard(
                         "Ranking Score depends on the factor below:", 
                         [
@@ -379,7 +371,7 @@ function C2Page() {
             </div>
             <div style={{marginTop: 50}} className="main-block">
                 {constructorLineChart()}
-                <div style={{marginTop: 50}} className="c2-function-components">
+                <div style={{marginTop: 50}} className="main-function-subcomponents">
                     {explainBoard(
                         "Total Points Explanation", 
                         [
@@ -393,12 +385,12 @@ function C2Page() {
             <div style={{marginTop: 50, marginBottom: 50}}/>
             <div className="main-block">
                 <img 
-                    className="c2-function-components"
+                    className="main-function-subcomponents"
                     src="./team_testing.jpeg" alt="team_testing"
                     style={{
                     }}
                 />
-                <div style={{marginTop: 50}} className="c2-function-components">
+                <div style={{marginTop: 50}} className="main-function-subcomponents">
                     {explainBoard(
                         "More Perspective", 
                         [

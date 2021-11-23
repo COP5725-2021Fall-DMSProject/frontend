@@ -7,67 +7,64 @@ import ListItemText from '@mui/material/ListItemText';
 import settings from "../settings";
 import "../App.css";
 import axios from "axios";  
-import { randDarkColor } from '../utils/utils'
+import { randDarkColor, getRegularColarList } from '../utils/utils'
 import GroupedBar from "../component/groupBar";
-const rand = () => Math.floor(Math.random() * 255);
-
-const compareUrl = settings.apiHostURL + '/c1/funcA/4'
-const ageWisePointsUrl = settings.apiHostURL + '/c1/funcB/4'
-const competitiveUrl = settings.apiHostURL + '/c1/competitive-drivers'
+import explainBoard from '../component/explainBoard'
 
 function C1Page() {
     const [competitiveDriversList, setCompetitiveDrivers] = useState([{driverId: '',name:''}]);
     const [raceWiseData, setRaceWiseData] = useState([{forename: '',l_point:'', name:'', raceid:'', someone_points: '', surname: '', year: ''}]);
     const [ageWisePoints, setAgewisePoints] = useState([{name:'', score:[]}]);
-    const [focusOneDriver, setFocusOneDriver] = useState(false)
-    const [selectedDriver, setSelectedDriver] = useState({})
 
     const startYear = 2015
     const endYear = 2017
 
     useEffect(() => {
         getCompetitiveDriversData();
-        getComparisonData();
-        getAgeWisePoints();
     }, [])
 
     const getCompetitiveDriversData = async () => {
+        const competitiveUrl = settings.apiHostURL + '/c1/competitive-drivers'
         const response = await axios.get(competitiveUrl)
         setCompetitiveDrivers(response.data.result.data.drivers)
+        console.log(response.data.result.data.drivers)
+        setUpTheSelectDriver(0, response.data.result.data.drivers)
     }
 
-    const getComparisonData = async() => {
+    const setUpTheSelectDriver = async function(index, driverArr) {
+        if(driverArr.length > 0) {
+            getComparisonData(driverArr[index].driverid)
+            getAgeWisePoints(driverArr[index].driverid)
+        }
+    }
+
+    const getComparisonData = async function(driverid) {
+        const compareUrl = settings.apiHostURL + `/c1/funcA/${driverid}`
         const response = await axios.get(compareUrl)
-        const fakeResponse = [
-          {forename: 'Nick',l_point:'101', name:'Monaco Grand Prix', raceid:'2', someone_points: '200', surname: 'Fury', year: '2009'}
-        ]
+        // const fakeResponse = [
+        // {forename: 'Nick',l_point:'101', name:'Monaco Grand Prix', raceid:'2', someone_points: '200', surname: 'Fury', year: '2009'}
+        // ]
         // setRaceWiseData(fakeResponse)
         setRaceWiseData(response.data.result.data)
     }
 
-    const getAgeWisePoints = async () => {
+    const getAgeWisePoints = async function(driverid){
+        const ageWisePointsUrl = settings.apiHostURL + `/c1/funcB/${driverid}`
         const response = await axios.get(ageWisePointsUrl)
-        const fakeResponse = [
-          { name:'lewis', score: [32, 56, 45]},
-          { name:'driverX', score: [23, 34, 67]}
-        ];
+        // const fakeResponse = [
+        // { name:'lewis', score: [32, 56, 45]},
+        // { name:'driverX', score: [23, 34, 67]}
+        // ];
         // setAgewisePoints(fakeResponse)
         setAgewisePoints(response.data.result.data)
     }
-
-    const handleClickDriverList = (index, flag) => {
-        setFocusOneDriver(flag)
-        if(competitiveDriversList) {
-            setSelectedDriver(competitiveDriversList[index])
-        }
-    }
-
+    
     function generateCompetitiveDriversList(inputList) {
         const showAllItem = () => {
             return (
                 <div 
                     className="list-item-container"
-                    onClick={() => {handleClickDriverList(0, false)}}
+                    onClick={() => {setUpTheSelectDriver(0, competitiveDriversList)}}
                 >
                     <ListItem>
                         <ListItemText
@@ -84,7 +81,7 @@ function C1Page() {
             return(
                 <div 
                     className="list-item-container"
-                    onClick={() => {handleClickDriverList(index, true)}}
+                    onClick={() => {setUpTheSelectDriver(index, competitiveDriversList)}}
                 >
                     <ListItem>
                         <ListItemText
@@ -99,15 +96,7 @@ function C1Page() {
         })
 
         return (
-            <div style={{
-                position: 'fixed',
-                left: 75,
-                top: 100,
-                height: 350,
-                width: 300,
-                border: 'solid 10px ' + settings.Colors.mainColor,
-                borderTopRightRadius: 25
-            }}>
+            <div className="fixed-clickable-list">
                 <List class="hide-scrollbar" style={{maxHeight: '100%', overflow: 'auto'}}>
                     {showAllItem()}
                     {listItem}
@@ -126,28 +115,26 @@ function C1Page() {
         };
     
     var yearLabel = []
-    for(var i = startYear; i <= endYear; i++) {
-      yearLabel.push(i)
+    for(var i = 1; i <= 3; i++) {
+       yearLabel.push(`Career Year ${i}`)
     }
 
     const data = {
         labels: yearLabel,
         datasets: 
-            ageWisePoints.map((element, _) => {
-              console.log(element)
-            const randomColorString = randDarkColor()
+            ageWisePoints.map((element, index) => {
             return({
                 label: element.name,
                 data: element.score,
                 fill: false,
-                backgroundColor: randomColorString,
-                borderColor: randomColorString
+                backgroundColor: getRegularColarList(1)[index],
+                borderColor: getRegularColarList(1)[index]
               })
             })    
-    };
+        };
     
     return(
-        <div className="c2-function-components">
+        <div className="main-function-subcomponents">
             <div className='header'>
                 <h4 className='title page-title' align='center'> Points Comparison (2015-2017)</h4>
                 <div className='links'>
@@ -164,55 +151,55 @@ function C1Page() {
 }
 
 function raceWiseComparisonLineChart() {
-  const options = {
-    scales: {
-        y: {
-            beginAtZero: true
-          }
-        },
-    };
+    const options = {
+        scales: {
+            y: {
+                beginAtZero: true
+            }
+            },
+        };
 
-var raceIdLabel = raceWiseData.map((element, _) => {
-  return (element.year+ "-"+ element.raceid +"-"+ element.name)
-})
+    var raceIdLabel = raceWiseData.map((element, _) => {
+    return (element.year +" "+ element.name + ` (${element.raceid})`)
+    })
 
-const data = {
-    labels: raceIdLabel,
-    datasets: [
-      {
-        type: 'line',
-        label: 'Lewis',
-        borderColor: `rgb(${rand()}, ${rand()}, ${rand()})`,
-        borderWidth: 2,
-        fill: false,
-        data: raceWiseData.map((element, _) => {return (element.l_point)}),
-      },
-      {
-        type: 'line',
-        label: raceWiseData[0].forename,
-        borderColor: `rgb(${rand()}, ${rand()}, ${rand()})`,
-        borderWidth: 2,
-        fill: false,
-        data: raceWiseData.map((element, _) => {return (element.someone_points)}),
-      }
-    ]
+    const racewiseData = {
+        labels: raceIdLabel,
+        datasets: [
+            {
+                type: 'line',
+                label: 'Lewis',
+                borderColor: getRegularColarList(1)[0],
+                borderWidth: 2,
+                fill: false,
+                data: raceWiseData.map((element, _) => {return (element.l_point)}),
+            },
+            {
+                type: 'line',
+                label: raceWiseData[0].forename,
+                borderColor: getRegularColarList(1)[1],
+                borderWidth: 2,
+                fill: false,
+                data: raceWiseData.map((element, _) => {return (element.someone_points)}),
+            }
+        ]
     };  
 
-return(
-    <div className="c2-function-components">
-        <div className='header'>
-            <h4 className='title page-title' align='center'> Racewise Comparison</h4>
-            <div className='links'>
-            <a
-                className='btn btn-gh'
-                href='https://github.com/reactchartjs/react-chartjs-2/blob/master/example/src/charts/Line.js'
-            >
-            </a>
+    return(
+        <div style={{width: window ? window.innerWidth*0.75 : 1500}}>
+            <div className='header'>
+                <h4 className='title page-title' align='center'> Racewise Comparison</h4>
+                <div className='links'>
+                <a
+                    className='btn btn-gh'
+                    href='https://github.com/reactchartjs/react-chartjs-2/blob/master/example/src/charts/Line.js'
+                >
+                </a>
+                </div>
             </div>
+            <Line data={racewiseData} options={options} />
         </div>
-        <Line data={data} options={options} />
-    </div>
-)
+    )
 
 }
 
@@ -232,15 +219,19 @@ function CompetitiveGroupedBarChart() {
   const data = {
       labels: driverLabel,
       datasets: [
-        {
-          label: 'Comparison with Lewis',
-          borderColor: randDarkColor(),
-          backgroundColor: randDarkColor(),
-          borderWidth: 2,
-          fill: false,
-          data: competitiveDriversList.map((element, _) => {return (element.total_similarity_with_lewis)}),
-        },
-      ]
+            {
+                label: 'Comparison with Lewis',
+                borderColor: getRegularColarList(0.7)[1],
+                backgroundColor: getRegularColarList(0.7)[1],
+                borderWidth: 2,
+                fill: false,
+                data: competitiveDriversList.map((element, _) => {
+                    let maxSimilarity = 1
+                    let value = element.total_similarity_with_lewis
+                    return value > maxSimilarity ? maxSimilarity : value
+                }),
+            },
+        ]
       };  
   
     return GroupedBar("Similarity Comparison", "", data, options)
@@ -248,17 +239,55 @@ function CompetitiveGroupedBarChart() {
 
     return (
         <div>
-                <Header/>
-                {generateCompetitiveDriversList(competitiveDriversList)}
-                <div className="main-block">
-                    {raceWiseComparisonLineChart()}
+            <Header/>
+            <div style={{marginTop: 100}} className="main-block">
+                <h2 className='title page-title' align='left'> Who's the next Lewis Hamilton? </h2>
+            </div>
+            <div style={{marginTop: 50}} className="main-block">
+
+            </div>
+            {generateCompetitiveDriversList(competitiveDriversList)}
+            <div style={{marginTop: 50}} className="main-block">
+                {ageWiseComparisonBarChart()}
+                <div style={{marginTop: 50}} className="main-function-subcomponents">
+                    {explainBoard(
+                        "Points Comparison Explanation", 
+                        [
+                            "Lewis Points vs Selected Driver Points with following condition",
+                            "1. First 3 career of the driver careers total points > W% Lewis's Points"
+                        ]
+                    )}
                 </div>
-                <div className="main-block">
-                    {ageWiseComparisonBarChart()}
+            </div>
+            <div style={{marginTop: 50, overflowX: 'scroll'}} className="main-block">
+                {raceWiseComparisonLineChart()}
+            </div>
+            <div style={{marginTop: 50}} className="sub-block">
+                <div className="main-function-subcomponents">
+                    {explainBoard(
+                        "Racewise Comparison Explanation", 
+                        [
+                            "Lewis vs Selected Driver",
+                            "Compare the points between 2 drivers with conditions below:",
+                            "1. Both attend to the race (map with raceID)",
+                            "2. Both points cannot be 0",
+                            "3. The Total Points have to be > K% Lewis's Points"
+                        ]
+                    )}
                 </div>
-                <div className="main-block">
+            </div>
+            <div style={{marginTop: 50}} className="main-block">
                 {CompetitiveGroupedBarChart()}
+                <div style={{marginTop: 50}} className="main-function-subcomponents">
+                {explainBoard(
+                    "Similarity Comparison", 
+                    [
+                        "Lewis vs Selected Driver according to the upper perspectives.",
+                        "Summarize the Similarity."
+                    ]
+                )}
                 </div>
+            </div>
         </div>
     )
 
