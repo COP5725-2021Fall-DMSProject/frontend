@@ -13,3 +13,29 @@ export function randDarkColor() {
     }
     return rgb;
 }
+
+export function assembleColor(r, g, b, transparency) {
+  var trans = transparency? transparency : '0.5'; // 50% transparency
+  var color = 'rgba(';
+  color += r + ',';
+  color += g + ',';
+  color += b + ',';
+  color += trans + ')'; // add the transparency
+  return color;
+}
+
+export function getColorRGBnumber() {
+    return Math.floor(Math.random() * 255);
+}
+
+export function getRegularColarList(setTrans) {
+    let trans = setTrans ? setTrans : 0.5 
+    return [
+        `rgba(255, 99, 132, ${trans})`,
+        `rgba(54, 162, 235, ${trans})`,
+        `rgba(255, 206, 86, ${trans})`,
+        `rgba(75, 192, 192, ${trans})`,
+        `rgba(153, 102, 255, ${trans})`,
+        `rgba(255, 159, 64, ${trans})`,
+    ]
+}
