@@ -15,12 +15,15 @@ function C1Page() {
     const [competitiveDriversList, setCompetitiveDrivers] = useState([{driverId: '',name:''}]);
     const [raceWiseData, setRaceWiseData] = useState([{forename: '',l_point:'', name:'', raceid:'', someone_points: '', surname: '', year: ''}]);
     const [ageWisePoints, setAgewisePoints] = useState([{name:'', score:[]}]);
+    const [lapwiseRacewiseData, setlapwiseRacewiseData] = useState([{index: 0, l_lap_time_in_sec: 0.0,lewis_forename: '',lewis_surname: '',
+    name: '', raceid: 0, someone_forename: '',someone_lap_time_in_sec: 0, someone_surname: '',year: 2000}])
 
     const startYear = 2015
     const endYear = 2017
 
     useEffect(() => {
         getCompetitiveDriversData();
+        getLapwiseRacewiseComparisonData();
     }, [])
 
     const getCompetitiveDriversData = async () => {
@@ -59,6 +62,40 @@ function C1Page() {
         setAgewisePoints(response.data.result.data)
     }
     
+    const getLapwiseRacewiseComparisonData = async () => {
+        // const lapCompareUrl = settings.apiHostURL + `/c1/funcC/${driverid}`
+        // const response = await axios.get(lapCompareUrl)
+        const fakeResponse = [{
+            "index": 0, 
+            "l_lap_time_in_sec": 981.1406896552, 
+            "lewis_forename": "Lewis", 
+            "lewis_surname": "Hamilton", 
+            "name": "Australian Grand Prix", 
+            "raceid": 18, 
+            "someone_forename": "Nick", 
+            "someone_lap_time_in_sec": 982.0851724138, 
+            "someone_surname": "Heidfeld", 
+            "year": 2008
+          },
+          {
+            "index": 1, 
+            "l_lap_time_in_sec": 1134.0756818182, 
+            "lewis_forename": "Lewis", 
+            "lewis_surname": "Hamilton", 
+            "name": "Belgian Grand Prix", 
+            "raceid": 30, 
+            "someone_forename": "Nick", 
+            "someone_lap_time_in_sec": 1133.8129545455, 
+            "someone_surname": "Heidfeld", 
+            "year": 2008
+          }
+    
+    ]
+        // console.log(response.data.result.data)
+        setlapwiseRacewiseData(fakeResponse)
+        // setlapwiseRacewiseData(response.data.result.data)
+    }
+
     function generateCompetitiveDriversList(inputList) {
         const showAllItem = () => {
             return (
@@ -243,6 +280,45 @@ function CompetitiveGroupedBarChart() {
     return GroupedBar("Similarity Comparison", "", data, options)
   }
 
+  function LapwiseRacewiseGroupedBarChart() {
+    const options = {
+      scales: {
+          y: {
+              beginAtZero: true
+            }
+          },
+      };
+  
+  var raceLabel = lapwiseRacewiseData.map((element, _) => {
+    return (element.raceid + "-" + element.name)
+  })
+  
+  const data = {
+      labels: raceLabel,
+      datasets: [
+        {
+            label: lapwiseRacewiseData[0].lewis_forename + " " + lapwiseRacewiseData[0].lewis_surname,
+            borderColor: getRegularColarList(0.7)[1],
+            backgroundColor: getRegularColarList(0.7)[1],
+            borderWidth: 2,
+            fill: false,
+            data: lapwiseRacewiseData.map((element, _) => element.l_lap_time_in_sec),
+        },
+            {
+                label: lapwiseRacewiseData[0].someone_forename + " " + lapwiseRacewiseData[0].someone_surname,
+                borderColor: getRegularColarList(0.7)[1],
+                backgroundColor: getRegularColarList(0.7)[1],
+                borderWidth: 2,
+                fill: false,
+                data: lapwiseRacewiseData.map((element, _) => element.someone_lap_time_in_sec),
+            },
+        ]
+      };  
+  
+    return GroupedBar("Racewise Laptime Comparison", "", data, options)
+  }
+
+
     return (
         <div>
             <Header/>
@@ -290,6 +366,18 @@ function CompetitiveGroupedBarChart() {
                     [
                         "Lewis vs Selected Driver according to the upper perspectives.",
                         "Summarize the Similarity."
+                    ]
+                )}
+                </div>
+            </div>
+            <div style={{marginTop: 50}} className="main-block">
+                {LapwiseRacewiseGroupedBarChart()}
+                <div style={{marginTop: 50}} className="main-function-subcomponents">
+                {explainBoard(
+                    "Racewise Laptime Comparison", 
+                    [
+                        "Lewis vs Selected Driver according to the upper perspectives.",
+                        "Summarize the lap time variations in every race."
                     ]
                 )}
                 </div>
