@@ -23,7 +23,7 @@ function C1Page() {
 
     useEffect(() => {
         getCompetitiveDriversData();
-        getLapwiseRacewiseComparisonData();
+        // getLapwiseRacewiseComparisonData();
     }, [])
 
     const getCompetitiveDriversData = async () => {
@@ -38,6 +38,7 @@ function C1Page() {
         if(driverArr.length > 0) {
             getComparisonData(driverArr[index].driverid)
             getAgeWisePoints(driverArr[index].driverid)
+            getLapwiseRacewiseComparisonData(driverArr[index].driverid)
         }
     }
 
@@ -62,7 +63,7 @@ function C1Page() {
         setAgewisePoints(response.data.result.data)
     }
     
-    const getLapwiseRacewiseComparisonData = async () => {
+    const getLapwiseRacewiseComparisonData = async function(driverid) {
         // const lapCompareUrl = settings.apiHostURL + `/c1/funcC/${driverid}`
         // const response = await axios.get(lapCompareUrl)
         const fakeResponse = [{
@@ -145,10 +146,29 @@ function C1Page() {
   function ageWiseComparisonBarChart() {
     const options = {
         scales: {
-            y: {
-                beginAtZero: true
+            yAxes: {
+              title: {
+                  display: true,
+                  text: "Y-Axis-Label",
+                  font: {
+                      size: 20
+                  },
+              },
+            //   ticks: {
+            //       precision: 0
+            //   },
+              beginAtZero: true
+            },
+            xAxes: {
+              title: {
+                  display: true,
+                  text: "X-Axis-Label",
+                  font: {
+                      size: 20
+                  }
               }
-            }
+          },
+        } 
         };
     
     var yearLabel = []
@@ -190,10 +210,29 @@ function C1Page() {
 function raceWiseComparisonLineChart() {
     const options = {
         scales: {
-            y: {
-                beginAtZero: true
-            }
+            yAxes: {
+              title: {
+                  display: true,
+                  text: "Y-Axis-Label",
+                  font: {
+                      size: 20
+                  },
+              },
+            //   ticks: {
+            //       precision: 0
+            //   },
+              beginAtZero: true
             },
+            xAxes: {
+              title: {
+                  display: true,
+                  text: "X-Axis-Label",
+                  font: {
+                      size: 20
+                  }
+              }
+          },
+        } 
         };
 
     var raceIdLabel = raceWiseData.map((element, _) => {
@@ -248,11 +287,30 @@ function raceWiseComparisonLineChart() {
 
 function CompetitiveGroupedBarChart() {
     const options = {
-      scales: {
-          y: {
+        scales: {
+            yAxes: {
+              title: {
+                  display: true,
+                  text: "Y-Axis-Label",
+                  font: {
+                      size: 20
+                  },
+              },
+            //   ticks: {
+            //       precision: 0
+            //   },
               beginAtZero: true
-            }
+            },
+            xAxes: {
+              title: {
+                  display: true,
+                  text: "X-Axis-Label",
+                  font: {
+                      size: 20
+                  }
+              }
           },
+        } 
       };
   
   var driverLabel = competitiveDriversList.map((element, _) => {
@@ -282,11 +340,30 @@ function CompetitiveGroupedBarChart() {
 
   function LapwiseRacewiseGroupedBarChart() {
     const options = {
-      scales: {
-          y: {
+        scales: {
+            yAxes: {
+              title: {
+                  display: true,
+                  text: "Points",
+                  font: {
+                      size: 20
+                  },
+              },
+              ticks: {
+                  precision: 0
+              },
               beginAtZero: true
-            }
+            },
+            xAxes: {
+              title: {
+                  display: true,
+                  text: "Race",
+                  font: {
+                      size: 20
+                  }
+              }
           },
+        } 
       };
   
   var raceLabel = lapwiseRacewiseData.map((element, _) => {
