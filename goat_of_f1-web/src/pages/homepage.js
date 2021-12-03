@@ -140,7 +140,7 @@ function Homepage() {
                                         gutterBottom variant="h5" component="div"
                                         sx={{ color: settings.Colors.subColor, fontFamily: settings.Font.secondary }}
                                     >
-                                        What kind of a driver? 
+                                        Risky Driver? 
                                     </Typography>
                                     <Typography sx={{ color: settings.Colors.subColor, fontFamily: settings.Font.major, fontSize: 16 }} variant="body2" color="text.secondary">
                                         Drivers tend to face difficulties on the track such as crashes. 

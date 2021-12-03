@@ -10,7 +10,6 @@ import axios from "axios";
 import { randDarkColor, getRegularColarList } from '../utils/utils'
 import GroupedBar from "../component/groupBar";
 import explainBoard from '../component/explainBoard'
-import { height } from "@mui/system";
 
 function C1Page() {
     const [competitiveDriversList, setCompetitiveDrivers] = useState([{driverId: '',name:''}]);
@@ -38,6 +37,7 @@ function C1Page() {
         const response = await axios.get(competitiveUrl)
         setCompetitiveDrivers(response.data.result.data.drivers)
         setUpTheSelectDriver(0, response.data.result.data.drivers)
+        console.log(competitiveDriversList)
     }
 
     const setUpTheSelectDriver = async function(index, driverArr) {
@@ -61,10 +61,8 @@ function C1Page() {
     }
     
     const getLapwiseRacewiseComparisonData = async function(driverid) {
-        console.log("getLapwiseRacewiseComparisonData: " + driverid);
         const lapCompareUrl = settings.apiHostURL + `/c1/funcC/${driverid}`
         const response = await axios.get(lapCompareUrl)
-        console.log(response.data.result.data)
         setlapwiseRacewiseData(response.data.result.data)
     }
 
@@ -73,7 +71,7 @@ function C1Page() {
             return (
                 <div 
                     className="list-item-container"
-                    onClick={() => {setUpTheSelectDriver(0, competitiveDriversList)}}
+                    onClick={() => {setUpTheSelectDriver(0, inputList)}}
                 >
                     <ListItem>
                         <ListItemText
@@ -90,7 +88,7 @@ function C1Page() {
             return(
                 <div 
                     className="list-item-container"
-                    onClick={() => {setUpTheSelectDriver(index, competitiveDriversList)}}
+                    onClick={() => {setUpTheSelectDriver(index, inputList)}}
                 >
                     <ListItem>
                         <ListItemText
@@ -198,7 +196,7 @@ function raceWiseComparisonLineChart() {
               }
           },
         } 
-        };
+    };
 
     var raceIdLabel = raceWiseData.map((element, _) => {
     return (element.year +" "+ element.name + ` (${element.raceid})`)

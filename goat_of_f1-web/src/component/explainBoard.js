@@ -13,7 +13,8 @@ export default function explainBoard(title, descriptions) {
             {descriptions.map((row) => {
                 return (
                     <div style={{ 
-                        fontFamily: settings.Font.major
+                        fontFamily: settings.Font.major,
+                        fontSize: 20
                     }}>
                         {row}
                     </div>
