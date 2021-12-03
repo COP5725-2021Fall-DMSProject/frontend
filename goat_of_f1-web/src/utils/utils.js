@@ -39,3 +39,4 @@ export function getRegularColarList(setTrans) {
         `rgba(255, 159, 64, ${trans})`,
     ]
 }
+  

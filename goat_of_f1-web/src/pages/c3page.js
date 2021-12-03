@@ -218,7 +218,7 @@ function C3Page() {
         };
 
         return(
-          <div className="c2-function-components">
+        <div className="main-function-subcomponents">
           <div className='header'>
               <h4 className='title page-title' align='center'> Defensive Track Record</h4>
               <div className='links'>
@@ -308,49 +308,25 @@ function C3Page() {
       )
       
   }
-
-      return(
-        <div>
-        <Header/>
-        <div style={{
-          marginTop: 100,
-          marginLeft: 100,
-          display: 'flex',
-          flexDirection: 'column'
-      }}>
-      <div style={{height: 100}}/>
+  
+  return(
+    <div>
+      <Header/>
+      <div style={{marginTop: 100}} className="main-block">
         {PlotTopDefenders()}
       </div>
-        <div style={{
-          marginTop: 100,
-          marginLeft: 100,
-          display: 'flex',
-          flexDirection: 'column'
-      }}>
-      <div style={{height: 100}}/>
+      <div style={{marginTop: 50}} className="main-block">
         {console.log(topDefenders)}
         {/* {(topDefenders != null && topDefenders.name.length) ? generateDefensiveDriversList(topDefenders.name) : null} */}
       </div>
-      <div style={{
-          marginTop: 100,
-          marginLeft: 100,
-          display: 'flex',
-          flexDirection: 'column'
-      }}>
-      <div style={{height: 100}}/>
+      <div style={{marginTop: 50}} className="main-block">
         {PlotTopDefensiveRecord()}
       </div>
-      <div style={{
-          marginTop: 100,
-          marginLeft: 100,
-          display: 'flex',
-          flexDirection: 'column'
-      }}>
-      <div style={{height: 100}}/>
+      <div style={{marginTop: 50}} className="main-block">
         {PlotDefenseRecordDetailLineChart()}
       </div>
-      </div>
-      )
+    </div>
+  )
 }
       
 export default C3Page;

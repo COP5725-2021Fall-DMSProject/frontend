@@ -1,5 +1,6 @@
 import React from 'react';
 import { Bar } from 'react-chartjs-2';
+import settings from '../settings';
 
 const defaultOptions = {
   scales: {
@@ -17,8 +18,8 @@ function VerticalBar(title, subTitle, data, options){
     return (
         <div>
             <div className='header'>
-            <h1 className='title'>{title}</h1>
-            <div className='links'>
+            <h1 className='title' style={{fontFamily: settings.Font.secondary}}>{title}</h1>
+            <div className='links' style={{fontFamily: settings.Font.major, fontSize: 20}}>
                 {subTitle}
             </div>
             </div>

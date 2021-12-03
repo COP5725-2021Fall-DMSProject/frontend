@@ -38,10 +38,10 @@ function Homepage() {
                                         gutterBottom variant="h5" component="div"
                                         sx={{ color: settings.Colors.subColor, fontFamily: settings.Font.secondary }}
                                     >
-                                        Who's the next Hamilton?
+                                        Who's the next Lewis Hamilton?
                                     </Typography>
                                     <Typography sx={{ color: settings.Colors.subColor, fontFamily: settings.Font.major, fontSize: 16 }} variant="body2" color="text.secondary">
-                                        Hamilton holds the Most Drivers’ World Championships (7 Championships). 
+                                        Lewis holds the Most Drivers’ World Championships (7 Championships). 
                                         This page is goint to show uou - who's will possibly the next Hamilton.
                                     </Typography>
                                 </CardContent>
@@ -72,7 +72,7 @@ function Homepage() {
                                         gutterBottom variant="h5" component="div"
                                         sx={{ color: settings.Colors.subColor, fontFamily: settings.Font.secondary }}
                                     >
-                                        Who’s an Investable Constructor? 
+                                        Which Constructor (team) is Investable?
                                     </Typography>
                                     <Typography sx={{ color: settings.Colors.subColor, fontFamily: settings.Font.major, fontSize: 16 }} variant="body2" color="text.secondary">
                                         F1 racing is rising to be extremely popular around the world. 
@@ -111,6 +111,40 @@ function Homepage() {
                                     <Typography sx={{ color: settings.Colors.subColor, fontFamily: settings.Font.major, fontSize: 16 }} variant="body2" color="text.secondary">
                                         Drivers try to defend their positions by consistently blocking other drivers. 
                                         This page provides insights on such drivers on a lapwsie scale. 
+                                    </Typography>
+                                </CardContent>
+                            </Card>
+                        </Link>
+                    </div>
+                </div>
+            </Carousel.Item>
+            <Carousel.Item>
+                <div class="d-flex justify-content-center">
+                    <div style={{
+                        paddingTop: 20,
+                        paddingRight: 20,
+                        borderTop: 'solid 10px ' + settings.Colors.mainColor,
+                        borderRight: 'solid 10px ' + settings.Colors.mainColor,
+                        borderTopRightRadius: 25
+                    }}>
+                        <Link to={'/c4page-driver-types'} style={{ textDecoration: 'none' }}>
+                            <Card sx={{ maxWidth: 800, backgroundColor:'#38383f'}}>
+                                <CardMedia
+                                    component="img"
+                                    height="400"
+                                    image="./home_crash.jpeg"
+                                    alt="home_crash"
+                                />
+                                <CardContent>
+                                    <Typography 
+                                        gutterBottom variant="h5" component="div"
+                                        sx={{ color: settings.Colors.subColor, fontFamily: settings.Font.secondary }}
+                                    >
+                                        What kind of a driver? 
+                                    </Typography>
+                                    <Typography sx={{ color: settings.Colors.subColor, fontFamily: settings.Font.major, fontSize: 16 }} variant="body2" color="text.secondary">
+                                        Drivers tend to face difficulties on the track such as crashes. 
+                                        How their response to such events defines what kind of a driver they are. 
                                     </Typography>
                                 </CardContent>
                             </Card>
