@@ -10,24 +10,57 @@ import ListItem from '@mui/material/ListItem';
 import ListItemText from '@mui/material/ListItemText';
 
 function C3Page() {
-    const [topDefenders, setTopDefenders] = useState([{name: [],driver_id: [],defend_point:[]}]);
-    const [topDefensiveRecord, setTopDefensiveRecord] = useState([{year:[],defender_id:[],defender_name : [],opponent_id : [],
-      opponent_name : [],teammate_id : [],teammate_name : [],race_id : [],race_name : [],defend_point : []}]);
-    const [defenseRecordDetail, setDefenseRecordDetail] = useState([])
+    const [topDefenders, setTopDefenders] = useState({name: [],driver_id: [],defend_point:[]});
+    const [topDefensiveRecord, setTopDefensiveRecord] = useState({year:[], defender_id:[], defender_name :[], opponent_id:[],
+      opponent_name:[], teammate_id :[], teammate_name :[], race_id :[], race_name :[], defend_point:[]});
+    const [defenseRecordDetail, setDefenseRecordDetail] = useState({race_id:0,race_name:"",lap: [1],defender_name: "",defender_id : 0,
+    defender_position : [],opponent_name: "",opponent_id : 0,opponent_position : [],teammate_name : "",teammate_id : 0,
+    teammate_position : []  })
 
     useEffect(() => {
         getTopDefenders();
-        // getDefensiveRecord();
-        getDefenseRecordDetail();
     }, [])
 
     const getTopDefenders = async () => {
       const topDefendersUrl = settings.apiHostURL + '/c3/top10defender'
       // const response = await axios.get(topDefendersUrl)
-      const fakeResponse = {
-        name: ["Elon Musk", "Nick Young","Ryan Kelly"],
-        driver_id: [750, 999,487],
-        defend_point: [321, 300,200]
+    const fakeResponse = {
+      defend_point: [
+        8687, 
+        8132, 
+        7412, 
+        6732, 
+        6338, 
+        4788, 
+        4669, 
+        4554, 
+        4433, 
+        4232
+      ], 
+      driver_id: [
+        13, 
+        22, 
+        18, 
+        8, 
+        14, 
+        17, 
+        15, 
+        21, 
+        3, 
+        2
+      ], 
+      name: [
+        "Felipe Massa", 
+        "Rubens Barrichello", 
+        "Jenson Button", 
+        "Kimi R\u00e4ikk\u00f6nen", 
+        "David Coulthard", 
+        "Mark Webber", 
+        "Jarno Trulli", 
+        "Giancarlo Fisichella", 
+        "Nico Rosberg", 
+        "Nick Heidfeld"
+      ]
     };
       // setTopDefenders(response.data.result.data)
       setTopDefenders(fakeResponse)
@@ -38,31 +71,150 @@ function C3Page() {
   const setUpTheSelectDriver = async function(index, defenderArr) {
     if(defenderArr.length > 0) {
       getDefensiveRecord(defenderArr[index])
+      getDefenseRecordDetail();
     }
 }
-
   const getDefensiveRecord = async function(defender_id) {
     const topDefensiveUrl = settings.apiHostURL + `/c3/top10record/${defender_id}`
     // const response = await axios.get(topDefensiveUrl)
-    const fakeResponse = {       
-      year:[2015,2016,2017,2018, 2019],
-      defender_id:["a", "b", "c", "d", "e"],
-      defender_name : ["AAA", "BBB", "CCC", "DDD", "EEE"],
-      opponent_id : [234, 567, 891, 246, 423],
-      opponent_name : ["aaaa", 'bbbb', 'cccc', 'dddd', 'eeee'],
-      teammate_id : [1, 2, 3, 4, 5],
-      teammate_name : ["nnnn", "oooo", "pppp", "qqqq", "rrrr"],
-      race_id : [222, 333, 444, 555, 666],
-      race_name : ["first", "second", "third", "fourth", "fifth"],
-      defend_point : [2, 6, 12, 5, 9],
-      }
+    const fakeResponse = {
+      defend_point: [
+        61, 
+        58, 
+        55, 
+        54, 
+        54, 
+        51, 
+        51, 
+        50, 
+        49, 
+        48
+      ], 
+      defender_id: [
+        13, 
+        13, 
+        13, 
+        13, 
+        13, 
+        13, 
+        13, 
+        13, 
+        13, 
+        13
+      ], 
+      defender_name: [
+        "Felipe Massa", 
+        "Felipe Massa", 
+        "Felipe Massa", 
+        "Felipe Massa", 
+        "Felipe Massa", 
+        "Felipe Massa", 
+        "Felipe Massa", 
+        "Felipe Massa", 
+        "Felipe Massa", 
+        "Felipe Massa"
+      ], 
+      opponent_id: [
+        808, 
+        807, 
+        16, 
+        49, 
+        3, 
+        1, 
+        8, 
+        808, 
+        17, 
+        8
+      ], 
+      opponent_name: [
+        "Vitaly Petrov", 
+        "Nico H\u00fclkenberg", 
+        "Adrian Sutil", 
+        "Heinz-Harald Frentzen", 
+        "Nico Rosberg", 
+        "Lewis Hamilton", 
+        "Kimi R\u00e4ikk\u00f6nen", 
+        "Vitaly Petrov", 
+        "Mark Webber", 
+        "Kimi R\u00e4ikk\u00f6nen"
+      ], 
+      race_id: [
+        348, 
+        943, 
+        341, 
+        128, 
+        870, 
+        21, 
+        876, 
+        351, 
+        6, 
+        58
+      ], 
+      race_name: [
+        "Hungarian Grand Prix", 
+        "Mexican Grand Prix", 
+        "Spanish Grand Prix", 
+        "Spanish Grand Prix", 
+        "Hungarian Grand Prix", 
+        "Spanish Grand Prix", 
+        "Indian Grand Prix", 
+        "Singapore Grand Prix", 
+        "Monaco Grand Prix", 
+        "Spanish Grand Prix"
+      ], 
+      teammate_id: [
+        4, 
+        822, 
+        4, 
+        2, 
+        4, 
+        8, 
+        4, 
+        4, 
+        8, 
+        30
+      ], 
+      teammate_name: [
+        "Fernando Alonso", 
+        "Valtteri Bottas", 
+        "Fernando Alonso", 
+        "Nick Heidfeld", 
+        "Fernando Alonso", 
+        "Kimi R\u00e4ikk\u00f6nen", 
+        "Fernando Alonso", 
+        "Fernando Alonso", 
+        "Kimi R\u00e4ikk\u00f6nen", 
+        "Michael Schumacher"
+      ], 
+      year: [
+        2010, 
+        2015, 
+        2010, 
+        2002, 
+        2012, 
+        2008, 
+        2012, 
+        2010, 
+        2009, 
+        2006
+      ]
+}
       // setTopDefensiveRecord(response.data.result.data)
       setTopDefensiveRecord(fakeResponse)
+      setUpTheSelectRace(0, fakeResponse.race_name, fakeResponse.defender_name, fakeResponse.opponent_name, fakeResponse.teammate_name)
   
   }
 
-  const getDefenseRecordDetail = async () => {
-    // const defensiveDetailUrl = settings.apiHostURL + '/c3/recorddetail?race_id=&defender_id=&opponent_id=&teammate_id='
+  const setUpTheSelectRace = async function(index, raceArr, defenderArr, opponentArr, teamMateArr) {
+    console.log(index, raceArr[index], defenderArr[index], opponentArr[index], teamMateArr[index])
+    if(raceArr.length > 0) {
+      getDefenseRecordDetail(raceArr[index], defenderArr[index], opponentArr[index], teamMateArr[index])
+    }
+  }
+
+  const getDefenseRecordDetail = async function(raceId, defenderId, opponentId, teammateId) {
+    const defensiveDetailUrl = settings.apiHostURL + `/c3/recorddetail?race_id=${raceId}&defender_id=${defenderId}
+    &opponent_id=${opponentId}&teammate_id=${teammateId}`
     // const response = await axios.get(defensiveDetailUrl)
     const fakeResponse = {
       race_id:123,
@@ -106,10 +258,11 @@ function C3Page() {
                     size: 20
                 }
             }
+          },
         },
-      },
       indexAxis: 'y',
-      };
+    };
+
     const data = {
         labels: topDefenders.name,
         datasets: [
@@ -135,24 +288,24 @@ function C3Page() {
         return (
             <div 
                 className="list-item-container"
-                onClick={() => {setUpTheSelectDriver(0, topDefensiveRecord.name)}}
+                onClick={() => {setUpTheSelectDriver(0, inputList)}}
             >
                 <ListItem>
                     <ListItemText
                         disableTypography
                         sx={{ fontFamily: settings.Font.secondary + "!important", color: settings.Font.forthColor}}
                         key={0}
-                        primary="ALL"
+                        primary="Top Defenders"
                     />
                 </ListItem>
             </div>
         )
     }
-    const listItem = inputList.forEach((element, index) => {
+    const listItem = inputList.map((element, index) => {
         return(
             <div 
                 className="list-item-container"
-                onClick={() => {setUpTheSelectDriver(index, topDefenders.name)}}
+                onClick={() => {setUpTheSelectDriver(index, inputList)}}
             >
                 <ListItem>
                     <ListItemText
@@ -176,6 +329,53 @@ function C3Page() {
     )
 }
 
+function generateRacewiseDefenseList(inputRecord) {
+  const showAllItem = () => {
+      return (
+          <div 
+              className="list-item-container"
+              onClick={() => {setUpTheSelectRace(0, inputRecord.race_name, inputRecord.defender_name, inputRecord.opponent_name, inputRecord.teammate_name)}}
+          >
+              <ListItem>
+                  <ListItemText
+                      disableTypography
+                      sx={{ fontFamily: settings.Font.secondary + "!important", color: settings.Font.forthColor}}
+                      key={0}
+                      primary="Defensive Races"
+                  />
+              </ListItem>
+          </div>
+      )
+  }
+  const listItem = inputRecord.race_name.map((element, index) => {
+      return(
+          <div 
+              className="list-item-container"
+              onClick={() => {setUpTheSelectRace(index, inputRecord.race_name, inputRecord.defender_name,
+                 inputRecord.opponent_name, inputRecord.teammate_name)}}
+          >
+              <ListItem>
+                  <ListItemText
+                      disableTypography
+                      sx={{ fontFamily: settings.Font.secondary + "!important", color: settings.Font.forthColor}}
+                      key={index}
+                      primary={element}
+                  />
+              </ListItem>
+          </div>
+      )
+  });
+
+  return (
+      <div className="fixed-clickable-list">
+          <List class="hide-scrollbar" style={{maxHeight: '100%', overflow: 'auto'}}>
+              {showAllItem()}
+              {listItem}
+          </List>
+      </div>
+  )
+}
+
   function PlotTopDefensiveRecord() {
     const options = {
       scales: {
@@ -195,16 +395,20 @@ function C3Page() {
         xAxes: {
           title: {
               display: true,
-              text: "Year",
+              text: "Race",
               font: {
                   size: 20
               }
           }
       },
     }
-      };
+  };
+    var raceYearLabel = [];
+    for(var i = 0; i < topDefensiveRecord.race_name.length; i++) {
+      raceYearLabel.push(topDefensiveRecord.race_name[i] + " - (" + topDefensiveRecord.year[i] + ")")
+    }
       const data = {
-        labels: topDefensiveRecord.year,
+        labels: raceYearLabel,
         datasets: [
           {
             label: 'Defensive Track Record',
@@ -316,11 +520,13 @@ function C3Page() {
         {PlotTopDefenders()}
       </div>
       <div style={{marginTop: 50}} className="main-block">
-        {console.log(topDefenders)}
-        {/* {(topDefenders != null && topDefenders.name.length) ? generateDefensiveDriversList(topDefenders.name) : null} */}
+        {generateDefensiveDriversList(topDefenders.name)}
       </div>
       <div style={{marginTop: 50}} className="main-block">
         {PlotTopDefensiveRecord()}
+      </div>
+      <div style={{marginTop: 100}} className="main-block">
+        {generateRacewiseDefenseList(topDefensiveRecord)}
       </div>
       <div style={{marginTop: 50}} className="main-block">
         {PlotDefenseRecordDetailLineChart()}
