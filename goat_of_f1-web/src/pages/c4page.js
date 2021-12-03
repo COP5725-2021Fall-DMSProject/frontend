@@ -2,46 +2,59 @@ import React, { useState, useEffect } from "react";
 import Header from '../component/header'
 import VerticalBar from '../component/verticalBar'
 import settings from "../settings";
+import explainBoard from '../component/explainBoard'
 import axios from "axios";
 import { Radar } from "react-chartjs-2";
+import List from '@mui/material/List';
+import ListItem from '@mui/material/ListItem';
+import ListItemText from '@mui/material/ListItemText';
 
 function C4Page() {
     const crashingDriversUrl = settings.apiHostURL + '/c4/crashing-driver-lists'
     const riskyDriverUrl = settings.apiHostURL + '/c4/funcA/3'
 
+    const [riskyDriversList, setRiskyDrivers] = useState([{driverId: '',name:''}]);
+    const [aggressiveDriversList, setAggressiveDrivers] = useState([{driverId: '',name:''}]);
     const [riskyDriversStats, setRiskyDriversStats] = useState({})
-    const [driverStats, setdriverStats] = useState({})
+    const [driverStats, setDriverStats] = useState({})
 
     useEffect(() => {
         getRiskyDrivers();
-        getDriverStats();
     }, [])
 
-    const getRiskyDrivers = async() => {
-        const response = await axios.get(crashingDriversUrl)
-        const fakeResponse = 
-            {
-                "aggressive": {"crashes": [2, 4], "driver_id": [888, 777], "name": ["Jim", "Ryan"], "points": [20, 20], "ratio": [10, 5]}, 
-                "risky": {"crashes": [1, 2], "driver_id": [888, 777], "name": ["YM", "Anmol"], "points": [100, 100], "ratio": [0.01, 0.02]}, 
-                "useless": {"crashes": [20, 20], "driver_id": [888, 777], "name": ["Jim", "Ryan"], "points": [5, 5], "ratio": [0, 0]},
-            };
-        
-        setRiskyDriversStats(response.data.result.data)
-        // setRiskyDriversStats(fakeResponse)
+    const setUpTheSelectDriver = async function(index, driverArr) {
+      if(driverArr.length > 0) {
+        getDriverStats(driverArr[index].driverId)
+      }
     }
 
-    const getDriverStats = async() => {
-      // console.log(driverStats)
-      const response = await axios.get(riskyDriverUrl)
-      const fakeResponse = {
-        "name": "Nick Heidfeld",
-        "driver_id" : 2,                     
-        "year":[2015,2016,2017],
-        "points":[30,40,45],
-        "crash":[3,1,2]
+    const createDriversObjList = (inputList) => {
+      let driversObjList = []
+      for (let i = 0; i < inputList.driver_id.length; i++) {
+        driversObjList.push({
+          'driverId': inputList.driver_id[i],
+          'name': inputList.name[i]
+        })
       }
-      setdriverStats(response.data.result.data)
-      // setdriverStats(fakeResponse)
+      return driversObjList
+    }
+
+    const getRiskyDrivers = async() => {
+        const crashingDriversUrl = settings.apiHostURL + '/c4/crashing-driver-lists'
+        const response = await axios.get(crashingDriversUrl)
+        
+        setRiskyDriversStats(response.data.result.data)
+        let riskyDriversObjList = createDriversObjList(response.data.result.data.risky)
+        setRiskyDrivers(riskyDriversObjList)
+        let aggressiveDriverObjList = createDriversObjList(response.data.result.data.aggressive)
+        setAggressiveDrivers(aggressiveDriverObjList)
+        getDriverStats(riskyDriversObjList[0].driverId);
+    }
+
+    const getDriverStats = async(driverId) => {
+      const riskyDriverUrl = settings.apiHostURL + `/c4/funcA/${driverId}`
+      const response = await axios.get(riskyDriverUrl)
+      setDriverStats(response.data.result.data)
     }
 
     function driverStatistics() {
@@ -85,7 +98,7 @@ function C4Page() {
       return(
         <div className="main-function-subcomponents">
           <div className='header'>
-            <h4 className='title page-title' align='center'>Points Comparison</h4>
+            <h2 className='title page-title' align='center'>Year-wise # of Points</h2>
             <div className='links'>
               <a
                 className='btn btn-gh'
@@ -128,7 +141,7 @@ function C4Page() {
       return(
         <div className="main-function-subcomponents">
           <div className='header'>
-            <h4 className='title page-title' align='center'>Crash Comparison</h4>
+            <h2 className='title page-title' align='center'>Year-wise # of Crash</h2>
             <div className='links'>
               <a
                 className='btn btn-gh'
@@ -218,33 +231,129 @@ function C4Page() {
               }
             ],
           };
+
           return(
             <div className="main-function-subcomponents">
-                {VerticalBar(`Aggressive Driver Stats`, `Aggressive Drivers`, aggressiveData, null)}
-                <div style={{height: 50}}/>
                 {VerticalBar(`Risky Driver Stats`, `Risky Drivers`, riskyData, null)}
+                <div style={{marginTop: 50}} className="main-function-subcomponents">
+                    {explainBoard(
+                        "", 
+                        [
+                            "Top Risky Driver:",
+                            "  - Driver's with crash record and points record",
+                            "  - Crash record > 3 over his career",
+                            "  - (Crash / Points) Ratio in Descending Order"
+                        ]
+                    )}
+                </div>
+                <div style={{height: 50}}/>
+                {VerticalBar(`Aggressive Driver Stats`, `Aggressive Drivers`, aggressiveData, null)}
+                <div style={{marginTop: 50}} className="main-function-subcomponents">
+                    {explainBoard(
+                        "", 
+                        [
+                            "Top Aggressive Driver:",
+                            "  - Driver's with crash record and points record",
+                            "  - (Points / Crash) Ratio in Descending Order"
+                        ]
+                    )}
+                </div>
                 <div style={{height: 50}}/>
                 {VerticalBar(`Crazy Driver Stats`, `Crazy Drivers`, uselessData, null)}
             </div>
-        )
+          )
+        }
+        
+        function generateDriversList(inputRiskyList, inputAggressiveList) {
+            const riskyListItem = inputRiskyList.map((element, index) => {
+                return(
+                    <div 
+                        className="list-item-container"
+                        onClick={() => {setUpTheSelectDriver(index, inputRiskyList)}}
+                    >
+                        <ListItem>
+                            <ListItemText
+                                disableTypography
+                                sx={{ fontFamily: settings.Font.secondary + "!important", color: settings.Font.forthColor}}
+                                key={index}
+                                primary={element.name.toUpperCase()}
+                            />
+                        </ListItem>
+                    </div>
+                )
+            })
 
-          };
+            const aggressiveListItem = inputAggressiveList.map((element, index) => {
+              return(
+                  <div 
+                      className="list-item-container"
+                      onClick={() => {setUpTheSelectDriver(index, inputAggressiveList)}}
+                  >
+                      <ListItem>
+                          <ListItemText
+                              disableTypography
+                              sx={{ fontFamily: settings.Font.secondary + "!important", color: settings.Font.forthColor}}
+                              key={index}
+                              primary={element.name.toUpperCase()}
+                          />
+                      </ListItem>
+                  </div>
+              )
+            })
     
-            return(
-              <div>
+            return (
+                <div className="fixed-clickable-list">
+                    <List class="hide-scrollbar" style={{maxHeight: '100%', overflow: 'auto'}}>
+                        <h2 style={{marginTop: 15, fontFamily: settings.Font.secondary}}> Risky </h2>
+                        {riskyListItem}
+                        <h2 style={{marginTop: 50, fontFamily: settings.Font.secondary}}> Aggressive </h2>
+                        {aggressiveListItem}
+                    </List>
+                </div>
+            )
+        }
+
+        return(
+            <div>
               <Header/>
-              <div className="main-block">
-              <div>
-              {Object.keys(driverStats).length > 0 ? driverStatistics() : null}
+              <div style={{marginTop: 100}} className="main-block">
+                <h1 className='title page-title' align='left'> Risky Driver? </h1>
+                <div style={{marginTop: 50}} className="main-function-subcomponents">
+                    {explainBoard(
+                        "Driver who has crash records", 
+                        [
+                            "Crash records --> Retire from race not causing by Mechanical Error",
+                            "Toxic to the team, low score point with multiple crash record --> Risky Driver",
+                            "Valuable but with crash record --> Aggressive Driver"
+                        ]
+                    )}
+                </div>
               </div>
-              <div>
-              {Object.keys(driverStats).length > 0 ? driverCrashStatistics() : null}
+              {generateDriversList(riskyDriversList, aggressiveDriversList)}
+              <div style={{marginTop: 50}} className="main-block">
+                <div style={{display: "flex", flexDirection: "row", justifyContent: "center"}}>
+                  <div style={{ paddingRight: 35, borderRight: "solid 6px #d0d0d2" }}>
+                    {Object.keys(driverStats).length > 0 ? driverStatistics() : null}
+                  </div>
+                  <div style={{ paddingLeft: 35 }}>
+                    {Object.keys(driverStats).length > 0 ? driverCrashStatistics() : null}
+                  </div>
+                </div>
+                <div style={{marginTop: 50}} className="main-function-subcomponents">
+                    {explainBoard(
+                        "Y", 
+                        [
+                            "213",
+                            "123"
+                        ]
+                    )}
+                </div>
               </div>
-              <div style={{height: 50}}/>
+              <div style={{marginTop: 50}} className="main-block">
                 {Object.keys(riskyDriversStats).length > 0 ? riskyDriverStatistics() : null}
               </div>
-              </div>
+            </div>
           );
-    }
+      }
 
 export default C4Page

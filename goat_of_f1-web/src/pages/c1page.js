@@ -15,9 +15,18 @@ function C1Page() {
     const [competitiveDriversList, setCompetitiveDrivers] = useState([{driverId: '',name:''}]);
     const [raceWiseData, setRaceWiseData] = useState([{forename: '',l_point:'', name:'', raceid:'', someone_points: '', surname: '', year: ''}]);
     const [ageWisePoints, setAgewisePoints] = useState([{name:'', score:[]}]);
-
-    const startYear = 2015
-    const endYear = 2017
+    const [lapwiseRacewiseData, setlapwiseRacewiseData] = useState([{
+        "index": 0, 
+        "l_lap_time_in_sec": 0, 
+        "lewis_forename": "Lewis", 
+        "lewis_surname": "Hamilton", 
+        "name": "", 
+        "raceid": 0, 
+        "someone_forename": "", 
+        "someone_lap_time_in_sec": 0, 
+        "someone_surname": "", 
+        "year": 0
+      }])
 
     useEffect(() => {
         getCompetitiveDriversData();
@@ -27,44 +36,42 @@ function C1Page() {
         const competitiveUrl = settings.apiHostURL + '/c1/competitive-drivers'
         const response = await axios.get(competitiveUrl)
         setCompetitiveDrivers(response.data.result.data.drivers)
-        console.log(response.data.result.data.drivers)
         setUpTheSelectDriver(0, response.data.result.data.drivers)
+        console.log(competitiveDriversList)
     }
 
     const setUpTheSelectDriver = async function(index, driverArr) {
         if(driverArr.length > 0) {
             getComparisonData(driverArr[index].driverid)
             getAgeWisePoints(driverArr[index].driverid)
+            getLapwiseRacewiseComparisonData(driverArr[index].driverid)
         }
     }
 
     const getComparisonData = async function(driverid) {
         const compareUrl = settings.apiHostURL + `/c1/funcA/${driverid}`
         const response = await axios.get(compareUrl)
-        // const fakeResponse = [
-        // {forename: 'Nick',l_point:'101', name:'Monaco Grand Prix', raceid:'2', someone_points: '200', surname: 'Fury', year: '2009'}
-        // ]
-        // setRaceWiseData(fakeResponse)
         setRaceWiseData(response.data.result.data)
     }
 
     const getAgeWisePoints = async function(driverid){
         const ageWisePointsUrl = settings.apiHostURL + `/c1/funcB/${driverid}`
         const response = await axios.get(ageWisePointsUrl)
-        // const fakeResponse = [
-        // { name:'lewis', score: [32, 56, 45]},
-        // { name:'driverX', score: [23, 34, 67]}
-        // ];
-        // setAgewisePoints(fakeResponse)
         setAgewisePoints(response.data.result.data)
     }
     
+    const getLapwiseRacewiseComparisonData = async function(driverid) {
+        const lapCompareUrl = settings.apiHostURL + `/c1/funcC/${driverid}`
+        const response = await axios.get(lapCompareUrl)
+        setlapwiseRacewiseData(response.data.result.data)
+    }
+
     function generateCompetitiveDriversList(inputList) {
         const showAllItem = () => {
             return (
                 <div 
                     className="list-item-container"
-                    onClick={() => {setUpTheSelectDriver(0, competitiveDriversList)}}
+                    onClick={() => {setUpTheSelectDriver(0, inputList)}}
                 >
                     <ListItem>
                         <ListItemText
@@ -81,7 +88,7 @@ function C1Page() {
             return(
                 <div 
                     className="list-item-container"
-                    onClick={() => {setUpTheSelectDriver(index, competitiveDriversList)}}
+                    onClick={() => {setUpTheSelectDriver(index, inputList)}}
                 >
                     <ListItem>
                         <ListItemText
@@ -108,10 +115,26 @@ function C1Page() {
   function ageWiseComparisonBarChart() {
     const options = {
         scales: {
-            y: {
-                beginAtZero: true
+            yAxes: {
+              title: {
+                  display: true,
+                  text: "Y-Axis-Label",
+                  font: {
+                      size: 20
+                  },
+              },
+              beginAtZero: true
+            },
+            xAxes: {
+              title: {
+                  display: true,
+                  text: "X-Axis-Label",
+                  font: {
+                      size: 20
+                  }
               }
-            }
+          },
+        } 
         };
     
     var yearLabel = []
@@ -136,7 +159,7 @@ function C1Page() {
     return(
         <div className="main-function-subcomponents">
             <div className='header'>
-                <h4 className='title page-title' align='center'> Points Comparison (2015-2017)</h4>
+                <h2 className='title page-title' align='center'> Points Comparison (2015-2017)</h2>
                 <div className='links'>
                 <a
                     className='btn btn-gh'
@@ -153,11 +176,27 @@ function C1Page() {
 function raceWiseComparisonLineChart() {
     const options = {
         scales: {
-            y: {
-                beginAtZero: true
-            }
+            yAxes: {
+              title: {
+                  display: true,
+                  text: "Y-Axis-Label",
+                  font: {
+                      size: 20
+                  },
+              },
+              beginAtZero: true
             },
-        };
+            xAxes: {
+              title: {
+                  display: true,
+                  text: "X-Axis-Label",
+                  font: {
+                      size: 20
+                  }
+              }
+          },
+        } 
+    };
 
     var raceIdLabel = raceWiseData.map((element, _) => {
     return (element.year +" "+ element.name + ` (${element.raceid})`)
@@ -194,7 +233,7 @@ function raceWiseComparisonLineChart() {
     return(
         <div style={{width: window ? window.innerWidth *0.8 : 1500}}>
             <div className='header'>
-                <h4 className='title page-title' align='center'> Racewise Comparison</h4>
+                <h2 className='title page-title' align='center'> Racewise Comparison</h2>
                 <div className='links'>
                 <a
                     className='btn btn-gh'
@@ -211,11 +250,27 @@ function raceWiseComparisonLineChart() {
 
 function CompetitiveGroupedBarChart() {
     const options = {
-      scales: {
-          y: {
+        scales: {
+            yAxes: {
+              title: {
+                  display: true,
+                  text: "Avarage Similarity (1.0 = 100%)",
+                  font: {
+                      size: 20
+                  },
+              },
               beginAtZero: true
-            }
+            },
+            xAxes: {
+              title: {
+                  display: true,
+                  text: "Drivers",
+                  font: {
+                      size: 20
+                  }
+              }
           },
+        } 
       };
   
   var driverLabel = competitiveDriversList.map((element, _) => {
@@ -243,14 +298,75 @@ function CompetitiveGroupedBarChart() {
     return GroupedBar("Similarity Comparison", "", data, options)
   }
 
+  function LapwiseRacewiseGroupedBarChart() {
+    const options = {
+        scales: {
+            yAxes: {
+              title: {
+                  display: true,
+                  text: "Total Lap Time (sec)",
+                  font: {
+                      size: 20
+                  },
+              },
+              ticks: {
+                  precision: 0
+              },
+              beginAtZero: true
+            },
+            xAxes: {
+              title: {
+                  display: true,
+                  text: "Race",
+                  font: {
+                      size: 20
+                  }
+              }
+          },
+        } 
+      };
+  
+    var raceLabel = lapwiseRacewiseData.map((element, _) => {
+        return (element.raceid + "-" + element.name)
+    })
+  
+    const data = {
+        labels: raceLabel,
+        datasets: [
+            {
+                label: lapwiseRacewiseData[0].lewis_forename + " " + lapwiseRacewiseData[0].lewis_surname,
+                borderColor: getRegularColarList(0.7)[0],
+                backgroundColor: getRegularColarList(0.7)[0],
+                borderWidth: 2,
+                fill: false,
+                data: lapwiseRacewiseData.map((element, _) => element.l_lap_time_in_sec),
+            },
+            {
+                label: lapwiseRacewiseData[0].someone_forename + " " + lapwiseRacewiseData[0].someone_surname,
+                borderColor: getRegularColarList(0.7)[1],
+                backgroundColor: getRegularColarList(0.7)[1],
+                borderWidth: 2,
+                fill: false,
+                data: lapwiseRacewiseData.map((element, _) => element.someone_lap_time_in_sec)
+            }
+        ]};  
+    
+    return (
+        <div style={{
+            width: window ? Math.max(1500, window.innerWidth) : 2000,
+            height: 400 
+        }}>
+            {GroupedBar("Racewise Laptime Comparison", "", data, options)}
+        </div>
+    )
+  }
+
+
     return (
         <div>
             <Header/>
             <div style={{marginTop: 100}} className="main-block">
-                <h2 className='title page-title' align='left'> Who's the next Lewis Hamilton? </h2>
-            </div>
-            <div style={{marginTop: 50}} className="main-block">
-
+                <h1 className='title page-title' align='left'> Who's the next Lewis Hamilton? </h1>
             </div>
             {generateCompetitiveDriversList(competitiveDriversList)}
             <div style={{marginTop: 50}} className="main-block">
@@ -282,6 +398,21 @@ function CompetitiveGroupedBarChart() {
                     )}
                 </div>
             </div>
+            <div style={{marginTop: 50, overflowX: 'scroll'}} className="main-block">
+                {LapwiseRacewiseGroupedBarChart()}
+            </div>
+            <div style={{marginTop: 50}} className="sub-block">
+                <div className="main-function-subcomponents">
+                    {explainBoard(
+                    "Racewise Laptime Comparison", 
+                    [
+                        "Lewis vs Selected Driver according to the upper perspectives.",
+                        "1. Summarize the total lap time variations in every race.",
+                        "2. To check how much slower or faster do the diver usually perform while racing with Lewis"
+                    ]
+                )}
+                </div>
+            </div>
             <div style={{marginTop: 50}} className="main-block">
                 {CompetitiveGroupedBarChart()}
                 <div style={{marginTop: 50}} className="main-function-subcomponents">
@@ -289,7 +420,11 @@ function CompetitiveGroupedBarChart() {
                     "Similarity Comparison", 
                     [
                         "Lewis vs Selected Driver according to the upper perspectives.",
-                        "Summarize the Similarity."
+                        "Summarize the Similarity with conditions below:",
+                        "1. Total Points Comparison in first 3 careers",
+                        "2. Total Racewise Score Comparison",
+                        "3. (Check) Total Racewise Laptime Comparison" 
+                        
                     ]
                 )}
                 </div>
