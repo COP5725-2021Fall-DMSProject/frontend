@@ -57,6 +57,16 @@ function C4Page() {
       setDriverStats(response.data.result.data)
     }
 
+    const radarOptions = {
+      scales: {
+        r: {
+          beginAtZero: true,
+          min:  0,
+          max:  10, 
+        },
+      },
+    };
+    
     function driverStatistics() {
       const lables = driverStats.year
       const data = {
@@ -70,31 +80,7 @@ function C4Page() {
         },
       ]
       };
-      const config = {
-        type: 'radar',
-        data: data,
-        options: {
-          responsive: true,
-          scales: {
-            yAxes: [{
-              ticks: {
-                min: 0,
-              }
-            }],
-            xAxes: [{
-              ticks: {
-                min: 0,
-              }
-            }]
-        },
-          plugins: {
-            title: {
-              display: true,
-              text: 'Chart.js Radar Chart'
-            }
-          },
-        },
-      };
+      
       return(
         <div className="main-function-subcomponents">
           <div className='header'>
@@ -107,7 +93,7 @@ function C4Page() {
               </a>
             </div>
           </div>
-          <Radar data={data} config={config} />
+          <Radar data={data} option={radarOptions} />
           </div>
       );
     };
@@ -125,19 +111,7 @@ function C4Page() {
         },
       ]
       };
-      const config = {
-        type: 'radar',
-        data: data,
-        options: {
-          responsive: true,
-          plugins: {
-            title: {
-              display: true,
-              text: 'Chart.js Radar Chart'
-            }
-          }
-        },
-      };
+
       return(
         <div className="main-function-subcomponents">
           <div className='header'>
@@ -150,13 +124,12 @@ function C4Page() {
               </a>
             </div>
           </div>
-          <Radar data={data} config={config} />
+          <Radar data={data} option={radarOptions} />
           </div>
       );
     };
 
     function riskyDriverStatistics() {
-        console.log(riskyDriversStats)
         const aggressiveData = {
             labels: riskyDriversStats.aggressive.name,
             datasets: [
@@ -208,7 +181,7 @@ function C4Page() {
           for (var i=0; i< uselessRatioArray.length;i++) {
             uselessRatioArray[i] = maxRisk - uselessRatioArray[i]
           }
-          console.log(uselessRatioArray)
+
           const uselessData = {
             labels: riskyDriversStats.useless.name,
             datasets: [
@@ -231,10 +204,55 @@ function C4Page() {
               }
             ],
           };
+          
+          const riskyDriverOptions = {
+            scales: {
+                yAxes: {
+                  title: {
+                      display: true,
+                      text: "Crash / Points",
+                      font: {
+                        size: 16,
+                      },
+                  },
+                  beginAtZero: true
+                }
+              }
+          };
 
+          const aggressiveDriverOptions = {
+            scales: {
+                yAxes: {
+                  title: {
+                      display: true,
+                      text: "Points / Crash",
+                      font: {
+                        size: 16,
+                      },
+                  },
+                  beginAtZero: true
+                }
+              }
+          };
+
+          const crazyDriverOptions = {
+            scales: {
+                yAxes: {
+                  title: {
+                      display: true,
+                      text: "Points / Crash",
+                      font: {
+                        size: 16,
+                      },
+                  },
+                  beginAtZero: true
+                }
+              }
+          };
+    
           return(
             <div className="main-function-subcomponents">
-                {VerticalBar(`Risky Driver Stats`, `Risky Drivers`, riskyData, null)}
+                {VerticalBar(`Risky Driver Stats`, `Risky Drivers`, riskyData, riskyDriverOptions)}
                 <div style={{marginTop: 50}} className="main-function-subcomponents">
                     {explainBoard(
                         "", 
@@ -242,24 +260,24 @@ function C4Page() {
                             "Top Risky Driver:",
                             "  - Driver's with crash record and points record",
                             "  - Crash record > 3 over his career",
-                            "  - (Crash / Points) Ratio in Descending Order"
+                            "  - Crash / Points Ratio in  Descending Order"
                         ]
                     )}
                 </div>
                 <div style={{height: 50}}/>
-                {VerticalBar(`Aggressive Driver Stats`, `Aggressive Drivers`, aggressiveData, null)}
+                {VerticalBar(`Aggressive Driver Stats`, `Aggressive Drivers`, aggressiveData, aggressiveDriverOptions)}
                 <div style={{marginTop: 50}} className="main-function-subcomponents">
                     {explainBoard(
                         "", 
                         [
                             "Top Aggressive Driver:",
                             "  - Driver's with crash record and points record",
-                            "  - (Points / Crash) Ratio in Descending Order"
+                            "  - Points / Crash Ratio in Descending Order"
                         ]
                     )}
                 </div>
                 <div style={{height: 50}}/>
-                {VerticalBar(`Crazy Driver Stats`, `Crazy Drivers`, uselessData, null)}
+                {VerticalBar(`Crazy Driver Stats`, `Crazy Drivers`, uselessData, crazyDriverOptions)}
             </div>
           )
         }
@@ -322,9 +340,9 @@ function C4Page() {
                     {explainBoard(
                         "Driver who has crash records", 
                         [
-                            "Crash records --> Retire from race not causing by Mechanical Error",
+                            "Crash Records --> Retire from race not causing by Mechanical Error",
                             "Toxic to the team, low score point with multiple crash record --> Risky Driver",
-                            "Valuable but with crash record --> Aggressive Driver"
+                            "Valuable but with Crash Records --> Aggressive Driver"
                         ]
                     )}
                 </div>
@@ -341,16 +359,25 @@ function C4Page() {
                 </div>
                 <div style={{marginTop: 50}} className="main-function-subcomponents">
                     {explainBoard(
-                        "Y", 
+                        "Select Target Driver from the Driver List", 
                         [
-                            "213",
-                            "123"
+                            "Left: YearWise Number of Points ",
+                            "Right: YearWise Number of Crashs"
                         ]
                     )}
                 </div>
               </div>
               <div style={{marginTop: 50}} className="main-block">
                 {Object.keys(riskyDriversStats).length > 0 ? riskyDriverStatistics() : null}
+                <div style={{marginTop: 50}} className="main-function-subcomponents">
+                    {explainBoard(
+                        "Crazy Drivers", 
+                        [
+                          "Drivers who earn very less points (<10 points) but with over 3 crashes",
+                          "Points / Crash Ratio"
+                        ]
+                    )}
+                </div>
               </div>
             </div>
           );
