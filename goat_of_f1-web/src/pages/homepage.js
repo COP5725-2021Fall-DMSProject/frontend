@@ -38,10 +38,10 @@ function Homepage() {
                                         gutterBottom variant="h5" component="div"
                                         sx={{ color: settings.Colors.subColor, fontFamily: settings.Font.secondary }}
                                     >
-                                        Who's the next Hamilton?
+                                        Who's the next Lewis Hamilton?
                                     </Typography>
                                     <Typography sx={{ color: settings.Colors.subColor, fontFamily: settings.Font.major, fontSize: 16 }} variant="body2" color="text.secondary">
-                                        Hamilton holds the Most Drivers’ World Championships (7 Championships). 
+                                        Lewis holds the Most Drivers’ World Championships (7 Championships). 
                                         This page is goint to show uou - who's will possibly the next Hamilton.
                                     </Typography>
                                 </CardContent>

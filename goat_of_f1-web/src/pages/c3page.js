@@ -59,9 +59,9 @@ function C3Page() {
       };
 
         return(
-        <div className="c2-function-components">
+        <div className="main-function-subcomponents">
           <div className='header'>
-            <h4 className='title page-title' align='center'>Lap wise comparison</h4>
+            <h2 className='title page-title' align='center'>Lap wise comparison</h2>
             <div className='links'>
               <a
                 className='btn btn-gh'
