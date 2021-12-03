@@ -60,10 +60,8 @@ function C1Page() {
     }
     
     const getLapwiseRacewiseComparisonData = async function(driverid) {
-        console.log("getLapwiseRacewiseComparisonData: " + driverid);
         const lapCompareUrl = settings.apiHostURL + `/c1/funcC/${driverid}`
         const response = await axios.get(lapCompareUrl)
-        console.log(response.data.result.data)
         setlapwiseRacewiseData(response.data.result.data)
     }
 
@@ -72,7 +70,7 @@ function C1Page() {
             return (
                 <div 
                     className="list-item-container"
-                    onClick={() => {setUpTheSelectDriver(0, competitiveDriversList)}}
+                    onClick={() => {setUpTheSelectDriver(0, inputList)}}
                 >
                     <ListItem>
                         <ListItemText
@@ -89,7 +87,7 @@ function C1Page() {
             return(
                 <div 
                     className="list-item-container"
-                    onClick={() => {setUpTheSelectDriver(index, competitiveDriversList)}}
+                    onClick={() => {setUpTheSelectDriver(index, inputList)}}
                 >
                     <ListItem>
                         <ListItemText
@@ -119,9 +117,9 @@ function C1Page() {
             yAxes: {
               title: {
                   display: true,
-                  text: "Y-Axis-Label",
+                  text: "Total Points",
                   font: {
-                      size: 20
+                      size: 16
                   },
               },
               beginAtZero: true
@@ -129,9 +127,9 @@ function C1Page() {
             xAxes: {
               title: {
                   display: true,
-                  text: "X-Axis-Label",
+                  text: "First 3 Career Year",
                   font: {
-                      size: 20
+                      size: 16
                   }
               }
           },
@@ -160,7 +158,7 @@ function C1Page() {
     return(
         <div className="main-function-subcomponents">
             <div className='header'>
-                <h4 className='title page-title' align='center'> Points Comparison (2015-2017)</h4>
+                <h2 className='title page-title' align='center'> Points Comparison (2015-2017)</h2>
                 <div className='links'>
                 <a
                     className='btn btn-gh'
@@ -180,9 +178,9 @@ function raceWiseComparisonLineChart() {
             yAxes: {
               title: {
                   display: true,
-                  text: "Y-Axis-Label",
+                  text: "Points",
                   font: {
-                      size: 20
+                      size: 16
                   },
               },
               beginAtZero: true
@@ -190,14 +188,14 @@ function raceWiseComparisonLineChart() {
             xAxes: {
               title: {
                   display: true,
-                  text: "X-Axis-Label",
+                  text: "Grand Prix (Race)",
                   font: {
-                      size: 20
+                      size: 16
                   }
               }
           },
         } 
-        };
+    };
 
     var raceIdLabel = raceWiseData.map((element, _) => {
     return (element.year +" "+ element.name + ` (${element.raceid})`)
@@ -234,7 +232,7 @@ function raceWiseComparisonLineChart() {
     return(
         <div style={{width: window ? window.innerWidth *0.8 : 1500}}>
             <div className='header'>
-                <h4 className='title page-title' align='center'> Racewise Comparison</h4>
+                <h2 className='title page-title' align='center'> Racewise Comparison</h2>
                 <div className='links'>
                 <a
                     className='btn btn-gh'
@@ -255,9 +253,9 @@ function CompetitiveGroupedBarChart() {
             yAxes: {
               title: {
                   display: true,
-                  text: "Y-Axis-Label",
+                  text: "Avarage Similarity (1.0 = 100%)",
                   font: {
-                      size: 20
+                      size: 16
                   },
               },
               beginAtZero: true
@@ -265,9 +263,9 @@ function CompetitiveGroupedBarChart() {
             xAxes: {
               title: {
                   display: true,
-                  text: "X-Axis-Label",
+                  text: "Drivers",
                   font: {
-                      size: 20
+                      size: 16
                   }
               }
           },
@@ -307,7 +305,7 @@ function CompetitiveGroupedBarChart() {
                   display: true,
                   text: "Total Lap Time (sec)",
                   font: {
-                      size: 20
+                      size: 16
                   },
               },
               ticks: {
@@ -320,7 +318,7 @@ function CompetitiveGroupedBarChart() {
                   display: true,
                   text: "Race",
                   font: {
-                      size: 20
+                      size: 16
                   }
               }
           },
@@ -348,12 +346,15 @@ function CompetitiveGroupedBarChart() {
                 backgroundColor: getRegularColarList(0.7)[1],
                 borderWidth: 2,
                 fill: false,
-                data: [lapwiseRacewiseData.map((element, _) => element.someone_lap_time_in_sec)]
+                data: lapwiseRacewiseData.map((element, _) => element.someone_lap_time_in_sec)
             }
         ]};  
     
     return (
-        <div style={{width: window ? window.innerWidth : 2000}}>
+        <div style={{
+            width: window ? Math.max(1500, window.innerWidth) : 2000,
+            height: 400 
+        }}>
             {GroupedBar("Racewise Laptime Comparison", "", data, options)}
         </div>
     )
@@ -364,10 +365,7 @@ function CompetitiveGroupedBarChart() {
         <div>
             <Header/>
             <div style={{marginTop: 100}} className="main-block">
-                <h2 className='title page-title' align='left'> Who's the next Lewis Hamilton? </h2>
-            </div>
-            <div style={{marginTop: 50}} className="main-block">
-
+                <h1 className='title page-title' align='left'> Who's the next Lewis Hamilton? </h1>
             </div>
             {generateCompetitiveDriversList(competitiveDriversList)}
             <div style={{marginTop: 50}} className="main-block">
@@ -394,7 +392,8 @@ function CompetitiveGroupedBarChart() {
                             "Compare the points between 2 drivers with conditions below:",
                             "1. Both attend to the race (map with raceID)",
                             "2. Both points cannot be 0",
-                            "3. The Total Points have to be > K% Lewis's Points"
+                            "3. The Total Points have to be > K% Lewis's Points",
+                            "4. Order in Ascending order according to year and raceId"
                         ]
                     )}
                 </div>
@@ -408,7 +407,8 @@ function CompetitiveGroupedBarChart() {
                     "Racewise Laptime Comparison", 
                     [
                         "Lewis vs Selected Driver according to the upper perspectives.",
-                        "Summarize the total lap time variations in every race."
+                        "1. Summarize the total lap time variations in every race.",
+                        "2. To check how much slower or faster do the diver usually perform while racing with Lewis"
                     ]
                 )}
                 </div>
@@ -420,7 +420,11 @@ function CompetitiveGroupedBarChart() {
                     "Similarity Comparison", 
                     [
                         "Lewis vs Selected Driver according to the upper perspectives.",
-                        "Summarize the Similarity."
+                        "Summarize the Similarity with conditions below:",
+                        "1. Total Points Comparison in first 3 careers",
+                        "2. Total Racewise Score Comparison",
+                        "3. (Check) Total Racewise Laptime Comparison" 
+                        
                     ]
                 )}
                 </div>
