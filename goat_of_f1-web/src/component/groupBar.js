@@ -42,7 +42,7 @@ function GroupedBar(title, subTitle, data, options){
     return (
         <div>
             <div className='header'>
-                <h1 className='title'>{title}</h1>
+                <h2 className='title page-title' align='center'>{title}</h2>
                 <div className='links'>
                     <a
                     className='btn btn-gh'

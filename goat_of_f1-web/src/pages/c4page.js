@@ -85,7 +85,7 @@ function C4Page() {
       return(
         <div className="main-function-subcomponents">
           <div className='header'>
-            <h4 className='title page-title' align='center'>Points Comparison</h4>
+            <h2 className='title page-title' align='center'>Points Comparison</h2>
             <div className='links'>
               <a
                 className='btn btn-gh'
@@ -128,7 +128,7 @@ function C4Page() {
       return(
         <div className="main-function-subcomponents">
           <div className='header'>
-            <h4 className='title page-title' align='center'>Crash Comparison</h4>
+            <h2 className='title page-title' align='center'>Crash Comparison</h2>
             <div className='links'>
               <a
                 className='btn btn-gh'
