@@ -37,7 +37,6 @@ function C1Page() {
         const response = await axios.get(competitiveUrl)
         setCompetitiveDrivers(response.data.result.data.drivers)
         setUpTheSelectDriver(0, response.data.result.data.drivers)
-        console.log(competitiveDriversList)
     }
 
     const setUpTheSelectDriver = async function(index, driverArr) {
@@ -118,9 +117,9 @@ function C1Page() {
             yAxes: {
               title: {
                   display: true,
-                  text: "Y-Axis-Label",
+                  text: "Total Points",
                   font: {
-                      size: 20
+                      size: 16
                   },
               },
               beginAtZero: true
@@ -128,9 +127,9 @@ function C1Page() {
             xAxes: {
               title: {
                   display: true,
-                  text: "X-Axis-Label",
+                  text: "First 3 Career Year",
                   font: {
-                      size: 20
+                      size: 16
                   }
               }
           },
@@ -179,9 +178,9 @@ function raceWiseComparisonLineChart() {
             yAxes: {
               title: {
                   display: true,
-                  text: "Y-Axis-Label",
+                  text: "Points",
                   font: {
-                      size: 20
+                      size: 16
                   },
               },
               beginAtZero: true
@@ -189,9 +188,9 @@ function raceWiseComparisonLineChart() {
             xAxes: {
               title: {
                   display: true,
-                  text: "X-Axis-Label",
+                  text: "Grand Prix (Race)",
                   font: {
-                      size: 20
+                      size: 16
                   }
               }
           },
@@ -256,7 +255,7 @@ function CompetitiveGroupedBarChart() {
                   display: true,
                   text: "Avarage Similarity (1.0 = 100%)",
                   font: {
-                      size: 20
+                      size: 16
                   },
               },
               beginAtZero: true
@@ -266,7 +265,7 @@ function CompetitiveGroupedBarChart() {
                   display: true,
                   text: "Drivers",
                   font: {
-                      size: 20
+                      size: 16
                   }
               }
           },
@@ -306,7 +305,7 @@ function CompetitiveGroupedBarChart() {
                   display: true,
                   text: "Total Lap Time (sec)",
                   font: {
-                      size: 20
+                      size: 16
                   },
               },
               ticks: {
@@ -319,7 +318,7 @@ function CompetitiveGroupedBarChart() {
                   display: true,
                   text: "Race",
                   font: {
-                      size: 20
+                      size: 16
                   }
               }
           },
@@ -393,7 +392,8 @@ function CompetitiveGroupedBarChart() {
                             "Compare the points between 2 drivers with conditions below:",
                             "1. Both attend to the race (map with raceID)",
                             "2. Both points cannot be 0",
-                            "3. The Total Points have to be > K% Lewis's Points"
+                            "3. The Total Points have to be > K% Lewis's Points",
+                            "4. Order in Ascending order according to year and raceId"
                         ]
                     )}
                 </div>
