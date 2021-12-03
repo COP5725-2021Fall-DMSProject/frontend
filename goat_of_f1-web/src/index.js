@@ -11,6 +11,7 @@ import C1Page from './pages/c1page';
 import C2Page from './pages/c2page';
 import C3Page from './pages/c3page';
 import C4Page from './pages/c4page';
+import C5Page from './pages/c5page';
 import Driver from './pages/driver';
 import reportWebVitals from './reportWebVitals';
 
@@ -24,6 +25,7 @@ ReactDOM.render(
       <Route path="/c2page-investable-constructor" element={<C2Page/>} />
       <Route path="/c3page-lapwise-positions" element={<C3Page/>} />
       <Route path="/c4page-driver-types" element={<C4Page/>} />
+      <Route path="/c5page-spoilers" element={<C5Page/>} />
     </Routes>
   </BrowserRouter>,
   document.getElementById('root')

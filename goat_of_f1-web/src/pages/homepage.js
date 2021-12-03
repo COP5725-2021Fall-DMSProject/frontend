@@ -152,6 +152,40 @@ function Homepage() {
                     </div>
                 </div>
             </Carousel.Item>
+            <Carousel.Item>
+                <div class="d-flex justify-content-center">
+                    <div style={{
+                        paddingTop: 20,
+                        paddingRight: 20,
+                        borderTop: 'solid 10px ' + settings.Colors.mainColor,
+                        borderRight: 'solid 10px ' + settings.Colors.mainColor,
+                        borderTopRightRadius: 25
+                    }}>
+                        <Link to={'/c5page-spoilers'} style={{ textDecoration: 'none' }}>
+                            <Card sx={{ maxWidth: 800, backgroundColor:'#38383f'}}>
+                                <CardMedia
+                                    component="img"
+                                    height="400"
+                                    image="./spoilers.jpeg"
+                                    alt="home_spoiler"
+                                />
+                                <CardContent>
+                                    <Typography 
+                                        gutterBottom variant="h5" component="div"
+                                        sx={{ color: settings.Colors.subColor, fontFamily: settings.Font.secondary }}
+                                    >
+                                        What kind of a driver? 
+                                    </Typography>
+                                    <Typography sx={{ color: settings.Colors.subColor, fontFamily: settings.Font.major, fontSize: 16 }} variant="body2" color="text.secondary">
+                                        Not all drivers finish in a better position. 
+                                        Sometimes even the qualifying position doesn't help in deciding the driver's final position. 
+                                    </Typography>
+                                </CardContent>
+                            </Card>
+                        </Link>
+                    </div>
+                </div>
+            </Carousel.Item>
           </Carousel>
         );
     }
