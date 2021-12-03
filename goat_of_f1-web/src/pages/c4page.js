@@ -16,7 +16,7 @@ function C4Page() {
     const [riskyDriversList, setRiskyDrivers] = useState([{driverId: '',name:''}]);
     const [aggressiveDriversList, setAggressiveDrivers] = useState([{driverId: '',name:''}]);
     const [riskyDriversStats, setRiskyDriversStats] = useState({})
-    const [driverStats, setdriverStats] = useState({})
+    const [driverStats, setDriverStats] = useState({})
 
     useEffect(() => {
         getRiskyDrivers();
@@ -28,38 +28,33 @@ function C4Page() {
       }
     }
 
-
-    const createRiskyDriversObjList = (inputList) => {
-      let RiskyDriversObjList = []
+    const createDriversObjList = (inputList) => {
+      let driversObjList = []
       for (let i = 0; i < inputList.driver_id.length; i++) {
-        RiskyDriversObjList.push({
+        driversObjList.push({
           'driverId': inputList.driver_id[i],
           'name': inputList.name[i]
         })
       }
-      return RiskyDriversObjList
+      return driversObjList
     }
 
     const getRiskyDrivers = async() => {
         const crashingDriversUrl = settings.apiHostURL + '/c4/crashing-driver-lists'
         const response = await axios.get(crashingDriversUrl)
-        const fakeResponse = 
-            {
-                "aggressive": {"crashes": [2, 4], "driver_id": [888, 777], "name": ["Jim", "Ryan"], "points": [20, 20], "ratio": [10, 5]}, 
-                "risky": {"crashes": [1, 2], "driver_id": [888, 777], "name": ["YM", "Anmol"], "points": [100, 100], "ratio": [0.01, 0.02]}, 
-                "useless": {"crashes": [20, 20], "driver_id": [888, 777], "name": ["Jim", "Ryan"], "points": [5, 5], "ratio": [0, 0]},
-            };
         
         setRiskyDriversStats(response.data.result.data)
-        let riskyDriversObjList = createRiskyDriversObjList(response.data.result.data.risky);
+        let riskyDriversObjList = createDriversObjList(response.data.result.data.risky)
         setRiskyDrivers(riskyDriversObjList)
+        let aggressiveDriverObjList = createDriversObjList(response.data.result.data.aggressive)
+        setAggressiveDrivers(aggressiveDriverObjList)
         getDriverStats(riskyDriversObjList[0].driverId);
     }
 
-    const getDriverStats = async(driverid) => {
-      const riskyDriverUrl = settings.apiHostURL + `/c4/funcA/${driverid}`
+    const getDriverStats = async(driverId) => {
+      const riskyDriverUrl = settings.apiHostURL + `/c4/funcA/${driverId}`
       const response = await axios.get(riskyDriverUrl)
-      setdriverStats(response.data.result.data)
+      setDriverStats(response.data.result.data)
     }
 
     function driverStatistics() {
@@ -269,12 +264,12 @@ function C4Page() {
           )
         }
         
-        function generateDriversList(inputList) {
-            const listItem = inputList.map((element, index) => {
+        function generateDriversList(inputRiskyList, inputAggressiveList) {
+            const riskyListItem = inputRiskyList.map((element, index) => {
                 return(
                     <div 
                         className="list-item-container"
-                        onClick={() => {setUpTheSelectDriver(index, inputList)}}
+                        onClick={() => {setUpTheSelectDriver(index, inputRiskyList)}}
                     >
                         <ListItem>
                             <ListItemText
@@ -287,11 +282,32 @@ function C4Page() {
                     </div>
                 )
             })
+
+            const aggressiveListItem = inputAggressiveList.map((element, index) => {
+              return(
+                  <div 
+                      className="list-item-container"
+                      onClick={() => {setUpTheSelectDriver(index, inputAggressiveList)}}
+                  >
+                      <ListItem>
+                          <ListItemText
+                              disableTypography
+                              sx={{ fontFamily: settings.Font.secondary + "!important", color: settings.Font.forthColor}}
+                              key={index}
+                              primary={element.name.toUpperCase()}
+                          />
+                      </ListItem>
+                  </div>
+              )
+            })
     
             return (
                 <div className="fixed-clickable-list">
                     <List class="hide-scrollbar" style={{maxHeight: '100%', overflow: 'auto'}}>
-                        {listItem}
+                        <h2 style={{marginTop: 15, fontFamily: settings.Font.secondary}}> Risky </h2>
+                        {riskyListItem}
+                        <h2 style={{marginTop: 50, fontFamily: settings.Font.secondary}}> Aggressive </h2>
+                        {aggressiveListItem}
                     </List>
                 </div>
             )
@@ -313,7 +329,7 @@ function C4Page() {
                     )}
                 </div>
               </div>
-              {generateDriversList(riskyDriversList)}
+              {generateDriversList(riskyDriversList, aggressiveDriversList)}
               <div style={{marginTop: 50}} className="main-block">
                 <div style={{display: "flex", flexDirection: "row", justifyContent: "center"}}>
                   <div style={{ paddingRight: 35, borderRight: "solid 6px #d0d0d2" }}>
