@@ -1,6 +1,7 @@
-import React, { useState, useEffect} from "react";
+import React, { useState} from "react";
 import Header from '../component/header'
-import { Card, CardMedia, CardContent, Typography, CardActionArea} from '@mui/material'
+import Bottom from '../component/bottom'
+import { Card, CardMedia, CardContent, Typography} from '@mui/material'
 import settings from '../settings'
 import { Carousel, Row } from 'react-bootstrap'
 import 'bootstrap/dist/css/bootstrap.min.css';
@@ -487,7 +488,8 @@ function Homepage() {
                     </div>
                 </div>
             </div>
-
+            
+            <Bottom/>
         </div>
     )
 }
