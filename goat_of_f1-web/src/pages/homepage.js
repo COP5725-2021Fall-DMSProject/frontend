@@ -106,7 +106,7 @@ function Homepage() {
                                         gutterBottom variant="h5" component="div"
                                         sx={{ color: settings.Colors.subColor, fontFamily: settings.Font.secondary }}
                                     >
-                                        Which driver is a good defender? 
+                                        Which driver is good at defending?
                                     </Typography>
                                     <Typography sx={{ color: settings.Colors.subColor, fontFamily: settings.Font.major, fontSize: 16 }} variant="body2" color="text.secondary">
                                         Drivers try to defend their positions by consistently blocking other drivers. 

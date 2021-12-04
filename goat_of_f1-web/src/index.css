@@ -35,6 +35,19 @@ code {
   border-top-right-radius: 25px;
 }
 
+.clickable-list-container {
+  position: fixed;
+  left: 120px;
+}
+
+.clickable-list {
+  font-size: 20px;
+  height: 280px;
+  width: 360px;
+  border: solid 10px #e10600;
+  border-top-right-radius: 25px;
+}
+
 .explanation-board {
   height: 100%; 
   width: 100%;
