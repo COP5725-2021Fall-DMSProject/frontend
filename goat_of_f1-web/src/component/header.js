@@ -13,7 +13,7 @@ function Header() {
             window.scrollTo(0, 800);
         }
         else if (scrollState.scrollTo == "AboutUs") {
-            window.scrollTo(0, 2200);
+            window.scrollTo(0, 2120);
         }
     }, [scrollState.scrollTo]);
 
