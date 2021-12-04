@@ -248,7 +248,7 @@ function Homepage() {
                 flexDirection: 'column',
                 marginTop: 50,
                 backgroundColor:'#000',
-                height: 1300
+                height: 1200
             }}>
                 <div 
                     className= "page-title"
@@ -375,7 +375,7 @@ function Homepage() {
                 flexDirection: 'column',
                 marginTop: 50,
                 backgroundColor:'#000',
-                height: 1300
+                height: 850
             }}>
                 <div 
                     className= "page-title"

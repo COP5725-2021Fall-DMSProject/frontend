@@ -12,6 +12,9 @@ function Header() {
         else if (scrollState.scrollTo == "Introduction") {
             window.scrollTo(0, 800);
         }
+        else if (scrollState.scrollTo == "AboutUs") {
+            window.scrollTo(0, 2200);
+        }
     }, [scrollState.scrollTo]);
 
     function handleQueryClick() {
@@ -20,6 +23,10 @@ function Header() {
 
     function handleIntroClick() {
         setScrollState({ scrollTo: "Introduction" });
+    }
+
+    function handleAboutUsClick() {
+        setScrollState({ scrollTo: "AboutUs" });
     }
 
     return (
@@ -79,6 +86,7 @@ function Header() {
                                 fontSize: settings.HeaderText.fontSize,
                                 color: settings.Colors.subColor
                             }}
+                            onClick={handleAboutUsClick}
                         >
                             About Us 
                         </Button>
