@@ -13,15 +13,15 @@ function C3Page() {
     const [topDefenders, setTopDefenders] = useState({name: [],driver_id: [],defend_point:[]});
     const [topDefensiveRecord, setTopDefensiveRecord] = useState({year:[], defender_id:[], defender_name :[], opponent_id:[],
       opponent_name:[], teammate_id :[], teammate_name :[], race_id :[], race_name :[], defend_point:[]});
-    const [defenseRecordDetail, setDefenseRecordDetail] = useState({race_id:0,race_name:"",lap: [1],defender_name: "",defender_id : 0,
-    defender_position : [],opponent_name: "",opponent_id : 0, opponent_position : [],teammate_name : "",teammate_id : 0,
-    teammate_position : []  })
+    const [defenseRecordDetail, setDefenseRecordDetail] = useState({})
+    const [driverList, setDriverList] = useState([{driverId: '', name: ''}]);
+    const [raceInfoList, setRaceInfoList] = useState([{raceId: '', name: ''}]);
 
-    const [driverList, setDriverList] = useState([{driverId: '',name:''}]);
-    const [raceInfoList, setRaceInfoList] = useState([{driverId: '',name:''}]);
+    const [selectDriverName, setSelectedDriverName] = useState('')
+    const [selectRaceName, setSelectRaceName] = useState('')
 
     useEffect(() => {
-        getTopDefenders();
+        getTopDefenders()
     }, [])
 
     const createDriversObjList = (inputList) => {
@@ -35,35 +35,51 @@ function C3Page() {
       return driversObjList
     }
 
+    const createRaceObjList = (inputList) => {
+      let raceObjList = []
+      for (let i = 0; i < inputList.race_id.length; i++) {
+        let namePrefix = inputList.race_name[i].split(" ")[0]
+        raceObjList.push({
+          'raceId': inputList.race_id[i],
+          'name': inputList.year[i] + " " + namePrefix
+        })
+      }
+      return raceObjList
+    }
+
     const getTopDefenders = async () => {
       const topDefendersUrl = settings.apiHostURL + '/c3/top10defender'
       const response = await axios.get(topDefendersUrl)
 
       setTopDefenders(response.data.result.data)
       let driversObjList = createDriversObjList(response.data.result.data)
-      console.log(driversObjList)
-      setDriverList(driversObjList)
-      // setUpTheSelectDriver(0, response.data.result.data.name)
+      setDriverList(createDriversObjList(response.data.result.data))
+      getDefensiveRecord(driversObjList[0].driverId);
+      setSelectedDriverName(driversObjList[0].name);
     }
 
     const setUpTheSelectDriver = async function(index, defenderArr) {
       if(defenderArr.length > 0) {
-        getDefensiveRecord(defenderArr[index])
-        getDefenseRecordDetail();
+        getDefensiveRecord(defenderArr[index].driverId)
+        setSelectedDriverName(defenderArr[index].name);
       }
     }
 
     const getDefensiveRecord = async function(defender_id) {
       const topDefensiveUrl = settings.apiHostURL + `/c3/top10record/${defender_id}`
       const response = await axios.get(topDefensiveUrl)
-      const fakeResponse = response.data.result.data
-      setTopDefensiveRecord(fakeResponse)
-      setUpTheSelectRace(0, fakeResponse.race_name, fakeResponse.defender_name, fakeResponse.opponent_name, fakeResponse.teammate_name)
+      const responseData = response.data.result.data
+
+      setTopDefensiveRecord(responseData)
+
+      let raceObjList = createRaceObjList(responseData)
+      setRaceInfoList(raceObjList)
+      setUpTheSelectRace(0, responseData.race_id, responseData.defender_id, responseData.opponent_id, responseData.teammate_id)
     }
 
   const setUpTheSelectRace = async function(index, raceArr, defenderArr, opponentArr, teamMateArr) {
-    console.log(index, raceArr[index], defenderArr[index], opponentArr[index], teamMateArr[index])
-    if(raceArr.length > 0) {
+    if(raceArr != null && raceArr.length > 0) {
+      setSelectRaceName(raceInfoList[0].name)
       getDefenseRecordDetail(raceArr[index], defenderArr[index], opponentArr[index], teamMateArr[index])
     }
   }
@@ -125,12 +141,40 @@ function C3Page() {
   }
 
   function generateDefensiveDriversList(inputList) {
-    console.log(inputList)
+    const listItem = inputList.map((element, index) => {
+      return(
+          <div 
+              className="list-item-container"
+              onClick={() => {setUpTheSelectDriver(index, inputList)}}
+          >
+              <ListItem>
+                  <ListItemText
+                      disableTypography
+                      sx={{ fontFamily: settings.Font.secondary + "!important", color: settings.Font.forthColor}}
+                      key={index}
+                      primary={element.name.toUpperCase()}
+                  />
+              </ListItem>
+          </div>
+      )
+    })
+
+    return (
+        <div className="clickable-list">
+            <List class="hide-scrollbar" style={{maxHeight: '100%', overflow: 'auto'}}>
+                {listItem}
+            </List>
+        </div>
+    )
+  }
+
+  function generateRaceWiseDefenseList(inputList, inputRecord) {
     const listItem = inputList.map((element, index) => {
         return(
             <div 
                 className="list-item-container"
-                // onClick={() => {setUpTheSelectDriver(index, inputList)}}
+                onClick={() => {setUpTheSelectRace(index, inputRecord.race_id, inputRecord.defender_id,
+                  inputRecord.opponent_id, inputRecord.teammate_id)}}
             >
                 <ListItem>
                     <ListItemText
@@ -151,35 +195,6 @@ function C3Page() {
             </List>
         </div>
     )
-}
-
-function generateRacewiseDefenseList(inputRecord) {
-  const listItem = inputRecord.race_name.map((element, index) => {
-      return(
-          <div 
-              className="list-item-container"
-              onClick={() => {setUpTheSelectRace(index, inputRecord.race_name, inputRecord.defender_name,
-                 inputRecord.opponent_name, inputRecord.teammate_name)}}
-          >
-              <ListItem>
-                  <ListItemText
-                      disableTypography
-                      sx={{ fontFamily: settings.Font.secondary + "!important", color: settings.Font.forthColor}}
-                      key={index}
-                      primary={element}
-                  />
-              </ListItem>
-          </div>
-      )
-  });
-
-  return (
-      <div className="clickable-list">
-          <List class="hide-scrollbar" style={{maxHeight: '100%', overflow: 'auto'}}>
-              {listItem}
-          </List>
-      </div>
-  )
 }
 
   function PlotTopDefensiveRecord() {
@@ -209,15 +224,16 @@ function generateRacewiseDefenseList(inputRecord) {
       },
     }
   };
+
     var raceYearLabel = [];
     for(var i = 0; i < topDefensiveRecord.race_name.length; i++) {
-      raceYearLabel.push(topDefensiveRecord.race_name[i] + " - (" + topDefensiveRecord.year[i] + ")")
+      raceYearLabel.push(topDefensiveRecord.year[i] + " " + topDefensiveRecord.race_name[i])
     }
       const data = {
         labels: raceYearLabel,
           datasets: [
             {
-              label: 'Defensive Track Record',
+              label: 'RaceWise Defensive Points',
               data: topDefensiveRecord.defend_point,
               borderColor: randDarkColor(),
               fill: false,
@@ -230,7 +246,7 @@ function generateRacewiseDefenseList(inputRecord) {
         return(
         <div className="main-function-subcomponents">
           <div className='header'>
-              <h4 className='title page-title' align='center'> Defensive Track Record</h4>
+              <h4 className='title page-title' align='center'> {`[${selectDriverName}]'s Defensive Track Record`} </h4>
               <div className='links'>
               <a
                   className='btn btn-gh'
@@ -277,24 +293,24 @@ function generateRacewiseDefenseList(inputRecord) {
         datasets: [
           {
             type: 'line',
-            label: defenseRecordDetail.defender_name,
-            borderColor: randDarkColor(),
+            label: `(Defenser) ${defenseRecordDetail.defender_name}`,
+            borderColor: getRegularColarList(1)[0],
             borderWidth: 2,
             fill: false,
             data: defenseRecordDetail.defender_position,
           },
           {
             type: 'line',
-            label: defenseRecordDetail.opponent_name,
-            borderColor: randDarkColor(),
+            label: `(Opponent) ${defenseRecordDetail.opponent_name}`,
+            borderColor: getRegularColarList(1)[1],
             borderWidth: 2,
             fill: false,
             data: defenseRecordDetail.opponent_position,
           },
           {
             type: 'line',
-            label: defenseRecordDetail.teammate_name,
-            borderColor: randDarkColor(),
+            label: `(Teammate) ${defenseRecordDetail.teammate_name}`,
+            borderColor: getRegularColarList(1)[3],
             borderWidth: 2,
             fill: false,
             data: defenseRecordDetail.teammate_position,
@@ -304,7 +320,7 @@ function generateRacewiseDefenseList(inputRecord) {
         return(
           <div className="c2-function-components">
               <div className='header'>
-                  <h4 className='title page-title' align='center'> Defense Record Detail</h4>
+                  <h4 className='title page-title' align='center'> {`[${selectDriverName}]'s LapWise Defense on [${selectRaceName}]`}</h4>
                   <div className='links'>
                   <a
                       className='btn btn-gh'
@@ -330,7 +346,7 @@ function generateRacewiseDefenseList(inputRecord) {
           </div>
           <div style={{marginTop: 20}}>
             <h2 style={{fontFamily: settings.Font.secondary, marginBottom: 10}}> Select Race </h2>
-            {generateRacewiseDefenseList(topDefensiveRecord)}
+            {generateRaceWiseDefenseList(raceInfoList, topDefensiveRecord)}
           </div>
         </div>
 
@@ -345,7 +361,7 @@ function generateRacewiseDefenseList(inputRecord) {
             {PlotTopDefensiveRecord()}
           </div>
           <div style={{marginTop: 50}} className="main-block">
-            {PlotDefenseRecordDetailLineChart()}
+            {Object.keys(defenseRecordDetail).length > 0 ? PlotDefenseRecordDetailLineChart() : null}
           </div>
         </div>
 
