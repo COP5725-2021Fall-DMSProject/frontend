@@ -48,7 +48,7 @@ function C4Page() {
         setRiskyDrivers(riskyDriversObjList)
         let aggressiveDriverObjList = createDriversObjList(response.data.result.data.aggressive)
         setAggressiveDrivers(aggressiveDriverObjList)
-        getDriverStats(riskyDriversObjList[0].driverId);
+        getDriverStats(aggressiveDriverObjList[0].driverId);
     }
 
     const getDriverStats = async(driverId) => {
@@ -255,12 +255,11 @@ function C4Page() {
                 {VerticalBar(`Risky Driver Stats`, `Risky Drivers`, riskyData, riskyDriverOptions)}
                 <div style={{marginTop: 50}} className="main-function-subcomponents">
                     {explainBoard(
-                        "", 
+                        "Graph A - Top Risky Driver", 
                         [
-                            "Top Risky Driver:",
-                            "  - Driver's with crash record and points record",
-                            "  - Crash record > 3 over his career",
-                            "  - Crash / Points Ratio in  Descending Order"
+                            "[Crash / Points Ratio] in  Descending Order",
+                            "1. Driver's with crash record and points record",
+                            "2. Points > 10 over his career, or else driver will belong to crazy"
                         ]
                     )}
                 </div>
@@ -268,11 +267,10 @@ function C4Page() {
                 {VerticalBar(`Aggressive Driver Stats`, `Aggressive Drivers`, aggressiveData, aggressiveDriverOptions)}
                 <div style={{marginTop: 50}} className="main-function-subcomponents">
                     {explainBoard(
-                        "", 
+                        "Graph B - Top Aggressive Driver",
                         [
-                            "Top Aggressive Driver:",
-                            "  - Driver's with crash record and points record",
-                            "  - Points / Crash Ratio in Descending Order"
+                          "[Points / Crash Ratio] in Descending Order",
+                          "1. Driver's with crash record and points record"
                         ]
                     )}
                 </div>
@@ -335,14 +333,20 @@ function C4Page() {
             <div>
               <Header/>
               <div style={{marginTop: 100}} className="main-block">
-                <h1 className='title page-title' align='left'> Risky Driver? </h1>
+                <h1 className='title page-title' align='left'> Risky Driver? Aggressive Driver? Crazy Driver? </h1>
                 <div style={{marginTop: 50}} className="main-function-subcomponents">
                     {explainBoard(
                         "Driver who has crash records", 
                         [
-                            "Crash Records --> Retire from race not causing by Mechanical Error",
-                            "Toxic to the team, low score point with multiple crash record --> Risky Driver",
-                            "Valuable but with Crash Records --> Aggressive Driver"
+                            "Wha is Crash Records?",
+                            " - Retire from race causing Driver (crash, accident)",
+                            "-------",
+                            "1. Graph A Risky Driver",
+                            "   - Toxic to the team, low score point with multiple crash record",
+                            "2. Graph B Aggressive Driver",
+                            "   - Aggressive driver with great driving skill",
+                            "3. Graph C Crazy Driver",
+                            "   - There talent was born to crash"
                         ]
                     )}
                 </div>
@@ -371,10 +375,10 @@ function C4Page() {
                 {Object.keys(riskyDriversStats).length > 0 ? riskyDriverStatistics() : null}
                 <div style={{marginTop: 50}} className="main-function-subcomponents">
                     {explainBoard(
-                        "Crazy Drivers", 
+                        "Graph C - Crazy Drivers", 
                         [
-                          "Drivers who earn very less points (<10 points) but with over 3 crashes",
-                          "Points / Crash Ratio"
+                          "[Points / Crash Ratio] in Descending Order",
+                          "1. Drivers who earn very less points (<10 points) but with over 3 crashes"
                         ]
                     )}
                 </div>

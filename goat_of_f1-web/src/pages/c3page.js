@@ -8,6 +8,7 @@ import { Line } from "react-chartjs-2";
 import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
 import ListItemText from '@mui/material/ListItemText';
+import explainBoard from '../component/explainBoard'
 
 function C3Page() {
     const [topDefenders, setTopDefenders] = useState({name: [],driver_id: [],defend_point:[]});
@@ -79,7 +80,7 @@ function C3Page() {
 
   const setUpTheSelectRace = async function(index, raceArr, defenderArr, opponentArr, teamMateArr) {
     if(raceArr != null && raceArr.length > 0) {
-      setSelectRaceName(raceInfoList[0].name)
+      setSelectRaceName(raceInfoList[index].name)
       getDefenseRecordDetail(raceArr[index], defenderArr[index], opponentArr[index], teamMateArr[index])
     }
   }
@@ -246,7 +247,7 @@ function C3Page() {
         return(
         <div className="main-function-subcomponents">
           <div className='header'>
-              <h4 className='title page-title' align='center'> {`[${selectDriverName}]'s Defensive Track Record`} </h4>
+              <h4 className='title page-title' align='center'> {`[${selectDriverName}]'s Top 10 Defensive Race Record`} </h4>
               <div className='links'>
               <a
                   className='btn btn-gh'
@@ -353,6 +354,18 @@ function C3Page() {
         <div >
           <div style={{marginTop: 100}} className="main-block">
             <h1 className='title page-title' align='left'> Which driver is good at defending? </h1>
+            <div style={{marginTop: 50}} className="main-function-subcomponents">
+                    {explainBoard(
+                        "Defender", 
+                        [
+                          "Legendary drivers usually sacrifice for the team to block others for teammate.",
+                          "Evaluate the defending effort by the conditions below",
+                          "(1) Consecutively block the same opponent more than 4 + X lap.",
+                          "(2) At the meanwhile, Teammates must be above the defender.",
+                          "==> Get X points",
+                        ]
+                    )}
+                </div>
           </div>
           <div style={{marginTop: 50}} className="main-block">
             {PlotTopDefenders()}
@@ -364,7 +377,7 @@ function C3Page() {
             {Object.keys(defenseRecordDetail).length > 0 ? PlotDefenseRecordDetailLineChart() : null}
           </div>
         </div>
-
+        <div style={{marginTop: 50}}/>
       </div>
     </div>
   )

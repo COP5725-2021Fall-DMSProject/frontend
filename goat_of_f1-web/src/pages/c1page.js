@@ -158,7 +158,7 @@ function C1Page() {
     return(
         <div className="main-function-subcomponents">
             <div className='header'>
-                <h2 className='title page-title' align='center'> Points Comparison (2015-2017)</h2>
+                <h2 className='title page-title' align='center'> Graph A - Points Comparison (First 3 Career)</h2>
                 <div className='links'>
                 <a
                     className='btn btn-gh'
@@ -232,7 +232,7 @@ function raceWiseComparisonLineChart() {
     return(
         <div style={{width: window ? window.innerWidth *0.8 : 1500}}>
             <div className='header'>
-                <h2 className='title page-title' align='center'> Racewise Comparison</h2>
+                <h2 className='title page-title' align='center'> Graph B - Racewise Comparison</h2>
                 <div className='links'>
                 <a
                     className='btn btn-gh'
@@ -366,16 +366,38 @@ function CompetitiveGroupedBarChart() {
             <Header/>
             <div style={{marginTop: 100}} className="main-block">
                 <h1 className='title page-title' align='left'> Who's the next Lewis Hamilton? </h1>
+                <div style={{marginTop: 50}} className="main-function-subcomponents">
+                    {explainBoard(
+                        "Choose the top 10 most similar Drivers", 
+                        [
+                            "The result is outcome from the combination of Graph A, B, and C"
+                        ]
+                    )}
+                </div>
             </div>
             {generateCompetitiveDriversList(competitiveDriversList)}
+            <div style={{marginTop: 50}} className="main-block">
+                {CompetitiveGroupedBarChart()}
+                <div style={{marginTop: 50}} className="main-function-subcomponents">
+                {explainBoard(
+                    "Similarity Comparison", 
+                    [
+                        "1. Graph A - Points Comparison Explanation",
+                        "2. Graph B - Racewise Comparison Explanation",
+                        "3. Graph C - Racewise LapTime Comparison" 
+                    ]
+                )}
+                </div>
+            </div>
             <div style={{marginTop: 50}} className="main-block">
                 {ageWiseComparisonBarChart()}
                 <div style={{marginTop: 50}} className="main-function-subcomponents">
                     {explainBoard(
-                        "Points Comparison Explanation", 
+                        "Graph A - Points Comparison Explanation", 
                         [
-                            "Lewis Points vs Selected Driver Points with following condition",
-                            "1. First 3 career of the driver careers total points > W% Lewis's Points"
+                            "1. X = First 3 career of the driver careers points",
+                            "2. Y = First 3 career of Lewis's Points",
+                            "Result: Sub Similarity = X / Y Ratio"
                         ]
                     )}
                 </div>
@@ -386,14 +408,17 @@ function CompetitiveGroupedBarChart() {
             <div style={{marginTop: 50}} className="sub-block">
                 <div className="main-function-subcomponents">
                     {explainBoard(
-                        "Racewise Comparison Explanation", 
+                        "Graph B - Racewise Comparison Explanation", 
                         [
                             "Lewis vs Selected Driver",
                             "Compare the points between 2 drivers with conditions below:",
                             "1. Both attend to the race (map with raceID)",
                             "2. Both points cannot be 0",
-                            "3. The Total Points have to be > K% Lewis's Points",
-                            "4. Order in Ascending order according to year and raceId"
+                            "3. Order in Ascending order according to year and raceId",
+                            "---------",
+                            "X = Total points of Selected Driver",
+                            "Y = Total points of Lewis's",
+                            "Result: Sub Similarity = X / Y Ratio"
                         ]
                     )}
                 </div>
@@ -404,27 +429,16 @@ function CompetitiveGroupedBarChart() {
             <div style={{marginTop: 50}} className="sub-block">
                 <div className="main-function-subcomponents">
                     {explainBoard(
-                    "Racewise Laptime Comparison", 
+                    "Graph C - Racewise LapTime Comparison", 
                     [
-                        "Lewis vs Selected Driver according to the upper perspectives.",
-                        "1. Summarize the total lap time variations in every race.",
-                        "2. To check how much slower or faster do the diver usually perform while racing with Lewis"
-                    ]
-                )}
-                </div>
-            </div>
-            <div style={{marginTop: 50}} className="main-block">
-                {CompetitiveGroupedBarChart()}
-                <div style={{marginTop: 50}} className="main-function-subcomponents">
-                {explainBoard(
-                    "Similarity Comparison", 
-                    [
-                        "Lewis vs Selected Driver according to the upper perspectives.",
-                        "Summarize the Similarity with conditions below:",
-                        "1. Total Points Comparison in first 3 careers",
-                        "2. Total Racewise Score Comparison",
-                        "3. (Check) Total Racewise Laptime Comparison" 
-                        
+                        "Lewis vs Selected Driver",
+                        "Compare the drivers lap time with Lewis in the same lap count",
+                        "1. Must finished the same lap count",
+                        "2. Lap count will effect the car's and driver's condition",
+                        "---------",
+                        "X = Total LapTime race of Selected Driver",
+                        "Y = Total LapTime race of Lewis's",
+                        "Result: Sub Similarity = X / Y Ratio"
                     ]
                 )}
                 </div>
