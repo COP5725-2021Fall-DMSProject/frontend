@@ -176,7 +176,7 @@ function C2Page() {
         }
 
         return(
-            <div>{LineChart(`Total Points (${constructTimeRange()})`, ``, totalPointData, null)}</div>
+            <div>{LineChart(`Graph A - Total Points (${constructTimeRange()})`, ``, totalPointData, null)}</div>
         )
     }
 
@@ -191,7 +191,7 @@ function C2Page() {
             labels: yearLabel,
             datasets: [
                 {
-                    label: 'Annual Team Budgets',
+                    label: 'Graph B - Annual Team Budgets',
                     data: selectedTeam.budgets,
                     backgroundColor: [
                         'rgba(255, 99, 132, 0.2)',
@@ -212,7 +212,7 @@ function C2Page() {
             labels: yearLabel,
             datasets: [
                 {
-                    label: 'Annual Average Pit Stop Time',
+                    label: 'Graph C - Annual Average Pit Stop Time',
                     data: selectedTeam.avg_pits_time,
                     backgroundColor: [
                         'rgba(255, 99, 132, 0.2)',
@@ -233,7 +233,7 @@ function C2Page() {
             labels: yearLabel,
             datasets: [
                 {
-                    label: 'Annual # of Errors',
+                    label: 'Graph D - Annual # of Errors',
                     data: selectedTeam.errors,
                     backgroundColor: [
                         'rgba(255, 99, 132, 0.2)',
@@ -256,7 +256,7 @@ function C2Page() {
                 <div style={{height: 50}}/>
                 {VerticalBar(`${selectedTeam.name} Pit Stop Stats (sec)`, `Avg pit stop time must less than the average`, pitStopData, null)}
                 <div style={{height: 50}}/>
-                {VerticalBar(`${selectedTeam.name} Error Stats`, `Team mechanical errors must less than 10 times`, errorData, null)}
+                {VerticalBar(`${selectedTeam.name} Error Stats`, `Team mechanical errors time must less than the average`, errorData, null)}
             </div>
         )
     }
@@ -346,12 +346,11 @@ function C2Page() {
                 {PolarAreaChart(`Ranking Scores`, ``, polarData, null)}
                 <div style={{marginTop: 50}} className="main-function-subcomponents">
                     {explainBoard(
-                        "Ranking Score depends on the factor below:", 
+                        "Ranking Score depends on the outcome value of Constructors Summary", 
                         [
-                            "1. Total Points",
-                            "2. Budget",
-                            "3. Pit Stop Time",
-                            "4. Errors"
+                            "1. Points / Budget Ratio - Money Efficiency",
+                            "2. YearWise PitStop time - Team effort",
+                            "3. YearWise Errors - Organization"
                         ]
                     )}
                 </div>
@@ -365,22 +364,34 @@ function C2Page() {
             {generateConstructorList(constructorList)}
             <div style={{marginTop: 100}} className="main-block">
                 <h2 className='title page-title' align='left'> Which Constructor (team) is Investable? </h2>
+                <div style={{marginTop: 50}} className="main-function-subcomponents">
+                    {explainBoard(
+                        "List the Team with Great Potential", 
+                        [
+                            "The result is shown as a rank score with multiple evaluation"
+                        ]
+                    )}
+                </div>
             </div>
             <div style={{marginTop: 50}} className="main-block">
                 {constructPolarChartPodium()}
             </div>
             <div style={{marginTop: 50}} className="main-block">
-                {constructorLineChart()}
+                {constructSummaryRanking()}
                 <div style={{marginTop: 50}} className="main-function-subcomponents">
                     {explainBoard(
-                        "Total Points Explanation", 
+                        "The ratio is count by the data from Graph A, B and C", 
                         [
-                            "1. Average point should be over 100 points",
-                            "- Try to find the potentials",
-                            "- Middle level team usually will have over 100 points"
+                            "1. Graph A - Total Points from 2015 - 2017",
+                            "2. Graph B - Budget Stats from 2015 - 2017",
+                            "3. Graph C - Pit Stop Time from 2015 - 2017",
+                            "4. Graph D - Errors Time from 2015 - 2017"
                         ]
                     )}
                 </div>
+            </div>
+            <div style={{marginTop: 50}} className="main-block">
+                {constructorLineChart()}
             </div>
             <div style={{marginTop: 50, marginBottom: 50}}/>
             <div className="main-block">
@@ -392,11 +403,11 @@ function C2Page() {
                 />
                 <div style={{marginTop: 50}} className="main-function-subcomponents">
                     {explainBoard(
-                        "More Perspective", 
+                        "More Perspectives from 2015 - 2017", 
                         [
-                            "1. Budget - check the financial efficiency",
-                            "2. Pit Stop Time - how's the team chemistry on team works?",
-                            "3. Errors (cause 0 points) - show the team has great organizationsto avoid severe errors" 
+                            "1. Graph B Budget Stats - [Max - Min] difference cannot grow over 30%",
+                            "2. Graph C Pit Stop Time - Smaller than average",
+                            "3. Graph D Errors (cause 0 points) - Smaller than average, and the error must be [Team Error]" 
                         ]
                     )}
                 </div>
@@ -404,10 +415,6 @@ function C2Page() {
                 {constructorStatBars()}
             </div>
             <div style={{marginTop: 50, marginBottom: 50}}/>
-            <div className="main-block">
-                {constructSummaryRanking()}
-            </div>
-            <div style={{height: 50}}/>
         </div>
     )
 }
