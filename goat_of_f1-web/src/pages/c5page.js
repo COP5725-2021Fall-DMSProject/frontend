@@ -23,9 +23,7 @@ function C5Page() {
         const topSpoilersUrl = settings.apiHostURL + '/c5/top10spoiler'
         const response = await axios.get(topSpoilersUrl)
         setTopSpoilers(response.data.result.data)
-        // setTopSpoilers(fakeResponse)
         setUpTheSelectDriver(0, response.data.result.data.driver_id)
-        // setUpTheSelectDriver(0, fakeResponse.driver_id)
     }
 
     const setUpTheSelectDriver = async function(index, spoilerArr) {
@@ -85,7 +83,7 @@ function C5Page() {
         
         return(
           <div className="c2-function-components">
-              {VerticalBar(`Top 10 Spoilers`, ``, data, options)}
+              {VerticalBar(`Graph A - Top 10 Spoilers`, ``, data, options)}
           </div>
       )
     }
@@ -175,7 +173,7 @@ function C5Page() {
             };
             return(
                 <div>
-                    {GroupBar(`Spoiler Summary`, ``, data, options)}
+                    {GroupBar(`Graph B - Spoiler Summary`, ``, data, options)}
                 </div>
             )
     }
@@ -193,17 +191,14 @@ function C5Page() {
             <h1 className='title page-title' align='left'> Who's a Spoiler?</h1>
             <div style={{marginTop: 50}} className="main-function-subcomponents">
                 {explainBoard(
-                    "Driver who has crash records", 
+                    "Driver who has a spoils the fan with Final Result", 
                     [
-                        "Wha is Crash Records?",
-                        " - Retire from race causing Driver (crash, accident)",
-                        "-------",
-                        "1. Graph A Risky Driver",
-                        "   - Toxic to the team, low score point with multiple crash record",
-                        "2. Graph B Aggressive Driver",
-                        "   - Aggressive driver with great driving skill",
-                        "3. Graph C Crazy Driver",
-                        "   - There talent was born to crash"
+                        "Qualifying",
+                        " - Pregame before the official game to decide the starting position",
+                        "------------------------------------------------------------------",
+                        "Find out the drivers who suppose to earn more points in Games.",
+                        "1. Graph A - Top 10 spoilers",
+                        "2. Graph B - Get the Qualifiying result and compare with the Official Game"
                     ]
                 )}
             </div>
@@ -214,6 +209,7 @@ function C5Page() {
           <div style={{marginTop: 50}} className="main-block">
             {PlotSpoilerRecordDetailGroupedBarChart()}
           </div>
+          <div style={{marginTop: 100}} />
         </div>
       )
 }
