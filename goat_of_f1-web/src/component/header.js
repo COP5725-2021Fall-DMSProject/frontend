@@ -1,79 +1,92 @@
-import React, { Component } from 'react'
+import React, { useEffect } from 'react'
 import { AppBar, Toolbar, Button } from '@mui/material'
 import settings from '../settings'
 import { Link } from 'react-router-dom'
 
-class Header extends Component {
-    constructor(props) {
-        super(props)
+function Header() {
+    const [scrollState, setScrollState] = React.useState({ scrollTo: "" });
+    React.useEffect(() => {
+        if (scrollState.scrollTo == "Query") {
+          window.scrollTo(0, 0);
+        }
+        else if (scrollState.scrollTo == "Introduction") {
+            window.scrollTo(0, 800);
+        }
+    }, [scrollState.scrollTo]);
+
+    function handleQueryClick() {
+        setScrollState({ scrollTo: "Query" });
     }
-    render() {
-        return (
-            <React.Fragment>
-                <AppBar position="fixed" 
-                    style={{
-                        background: settings.Colors['mainColor'],
-                        height: 71,
-                        display: 'flex',
-                        justifyContent: 'center'
-                    }}
-                >
-                        
-                    <Toolbar variant="dense">
-                        <img 
-                            src="./f1_logo.svg" alt="Formula 1"
+
+    function handleIntroClick() {
+        setScrollState({ scrollTo: "Introduction" });
+    }
+
+    return (
+        <React.Fragment>
+            <AppBar position="fixed" 
+                style={{
+                    background: settings.Colors['mainColor'],
+                    height: 71,
+                    display: 'flex',
+                    justifyContent: 'center'
+                }}
+            >
+                    
+                <Toolbar variant="dense">
+                    <img 
+                        src="./f1_logo.svg" alt="Formula 1"
+                        style={{
+                            width: 130,
+                            height: 32.5
+                        }}
+                    />
+                    <div style={{position: 'absolute', right: 150}}>
+                        <Button 
                             style={{
-                                width: 130,
-                                height: 32.5
+                                fontFamily: settings.Font.major,
+                                fontSize: settings.HeaderText.fontSize,
+                                color: settings.Colors.subColor
                             }}
-                        />
-                        <div style={{position: 'absolute', right: 150}}>
-                            <Button 
-                                style={{
-                                    fontFamily: settings.Font.major,
-                                    fontSize: settings.HeaderText.fontSize,
-                                    color: settings.Colors.subColor
-                                }}
-                                component={Link}
-                                to="/" 
-                            >
-                                Home 
-                            </Button>
-                            <Button 
-                                style={{
-                                    fontFamily: settings.Font.major,
-                                    fontSize: settings.HeaderText.fontSize,
-                                    color: settings.Colors.subColor
-                                }}
-                                component={Link}
-                                to="/driver"                          
-                            >
-                                Driver 
-                            </Button>
-                            <Button 
-                                style={{
-                                    fontFamily: settings.Font.major,
-                                    fontSize: settings.HeaderText.fontSize,
-                                    color: settings.Colors.subColor
-                                }}
-                            >
-                                F1 Query 
-                            </Button>
-                            <Button 
-                                style={{
-                                    fontFamily: settings.Font.major,
-                                    fontSize: settings.HeaderText.fontSize,
-                                    color: settings.Colors.subColor
-                                }}
-                            >
-                                About Us 
-                            </Button>
-                        </div>
-                    </Toolbar>
-                </AppBar>
-            </React.Fragment>
-        )
-    }
+                            component={Link}
+                            to="/" 
+                        >
+                            Home 
+                        </Button>
+                        <Button 
+                            style={{
+                                fontFamily: settings.Font.major,
+                                fontSize: settings.HeaderText.fontSize,
+                                color: settings.Colors.subColor
+                            }}
+                            onClick={handleIntroClick}                           
+                        >
+                            Introduction 
+                        </Button>
+                        <Button 
+                            style={{
+                                fontFamily: settings.Font.major,
+                                fontSize: settings.HeaderText.fontSize,
+                                color: settings.Colors.subColor
+                            }}
+                            onClick={handleQueryClick} 
+                        >
+                            F1 Query 
+                        </Button>
+                        <Button 
+                            style={{
+                                fontFamily: settings.Font.major,
+                                fontSize: settings.HeaderText.fontSize,
+                                color: settings.Colors.subColor
+                            }}
+                        >
+                            About Us 
+                        </Button>
+                    </div>
+                </Toolbar>
+            </AppBar>
+        </React.Fragment>
+    )
 }
 
 export default Header
