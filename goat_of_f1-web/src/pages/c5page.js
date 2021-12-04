@@ -8,6 +8,7 @@ import GroupBar from '../component/groupBar'
 import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
 import ListItemText from '@mui/material/ListItemText';
+import explainBoard from '../component/explainBoard'
 
 function C5Page() {
     const [topSpoilers, setTopSpoilers] = useState({driver_id : [],driver_name : [],position_diff : [],race_cnt : []});
@@ -20,61 +21,11 @@ function C5Page() {
 
     const getTopSpoilers = async () => {
         const topSpoilersUrl = settings.apiHostURL + '/c5/top10spoiler'
-        // const response = await axios.get(topSpoilersUrl)
-        const fakeResponse = {
-            driver_id: [
-              3, 
-              17, 
-              1, 
-              822, 
-              30, 
-              807, 
-              13, 
-              826, 
-              817, 
-              20
-            ], 
-            driver_name: [
-              "Nico Rosberg", 
-              "Mark Webber", 
-              "Lewis Hamilton", 
-              "Valtteri Bottas", 
-              "Michael Schumacher", 
-              "Nico H\u00fclkenberg", 
-              "Felipe Massa", 
-              "Daniil Kvyat", 
-              "Daniel Ricciardo", 
-              "Sebastian Vettel"
-            ], 
-            position_diff: [
-              -0.6470588235, 
-              -0.0588235294, 
-              -0.036036036, 
-              0.0506329114, 
-              0.5769230769, 
-              0.5795454545, 
-              0.6422018349, 
-              0.6538461538, 
-              0.6960784314, 
-              0.7256637168
-            ], 
-            race_cnt: [
-              102, 
-              51, 
-              111, 
-              79, 
-              26, 
-              88, 
-              109, 
-              52, 
-              102, 
-              113
-            ]
-      }
-        // setTopSpoilers(response.data.result.data)
-        setTopSpoilers(fakeResponse)
-      // setUpTheSelectDriver(0, response.data.result.data)
-      setUpTheSelectDriver(0, fakeResponse.driver_id)
+        const response = await axios.get(topSpoilersUrl)
+        setTopSpoilers(response.data.result.data)
+        // setTopSpoilers(fakeResponse)
+        setUpTheSelectDriver(0, response.data.result.data.driver_id)
+        // setUpTheSelectDriver(0, fakeResponse.driver_id)
     }
 
     const setUpTheSelectDriver = async function(index, spoilerArr) {
@@ -85,86 +36,9 @@ function C5Page() {
 
     const getSpoilerRecordDetail = async function(spoilerId) {
         console.log(spoilerId)
-        const spoilerDetailUrl = settings.apiHostURL + `/c3/spoilerrecord/${spoilerId}`
-        // const response = await axios.get(spoilerDetailUrl)
-        const fakeResponse = {
-                driver_id: 1, 
-                driver_name: "Lewis Hamilton", 
-                position_diff: [
-                  -17, 
-                  -10, 
-                  -7, 
-                  -7, 
-                  -6, 
-                  -6, 
-                  -5, 
-                  -5, 
-                  -4, 
-                  -4
-                ], 
-                qualifying_position: [
-                  2, 
-                  2, 
-                  1, 
-                  3, 
-                  2, 
-                  2, 
-                  2, 
-                  1, 
-                  1, 
-                  5
-                ], 
-                race_id: [
-                  867, 
-                  884, 
-                  864, 
-                  875, 
-                  863, 
-                  842, 
-                  857, 
-                  936, 
-                  888, 
-                  899
-                ], 
-                race_name: [
-                  "European Grand Prix", 
-                  "Spanish Grand Prix", 
-                  "Spanish Grand Prix", 
-                  "Korean Grand Prix", 
-                  "Bahrain Grand Prix", 
-                  "Malaysian Grand Prix", 
-                  "Indian Grand Prix", 
-                  "Hungarian Grand Prix", 
-                  "German Grand Prix", 
-                  "Brazilian Grand Prix"
-                ], 
-                result_position: [
-                  19, 
-                  12, 
-                  8, 
-                  10, 
-                  8, 
-                  8, 
-                  7, 
-                  6, 
-                  5, 
-                  9
-                ], 
-                year: [
-                  2012, 
-                  2013, 
-                  2012, 
-                  2012, 
-                  2012, 
-                  2011, 
-                  2011, 
-                  2015, 
-                  2013, 
-                  2013
-                ]
-              }
-        // setTopSpoilerDetail(response.data.result.data)
-        setTopSpoilerDetail(fakeResponse)
+        const spoilerDetailUrl = settings.apiHostURL + `/c5/spoilerrecord/${spoilerId}`
+        const response = await axios.get(spoilerDetailUrl)
+        setTopSpoilerDetail(response.data.result.data)
     }
 
     function PlotTopSpoiler() {
@@ -218,24 +92,6 @@ function C5Page() {
   
 
     function generateSpoilerDriversList(inputRecord) {
-        const showAllItem = () => {
-            return (
-                <div 
-                    className="list-item-container"
-                    onClick={() => {setUpTheSelectDriver(0, inputRecord.driver_id)}}
-                >
-                    <ListItem>
-                        <ListItemText
-                            disableTypography
-                            sx={{ fontFamily: settings.Font.secondary + "!important", color: settings.Font.forthColor}}
-                            key={0}
-                            primary="Top Spoilers"
-                        />
-                    </ListItem>
-                </div>
-            )
-        };
-
         const listItem = inputRecord.driver_name.map((element, index) => {
             return(
                 <div 
@@ -255,12 +111,11 @@ function C5Page() {
         });
     
         return (
-            <div className="fixed-clickable-list">
-                <List class="hide-scrollbar" style={{maxHeight: '100%', overflow: 'auto'}}>
-                    {showAllItem()}
-                    {listItem}
-                </List>
-            </div>
+          <div className="clickable-list" style={{height: 500}}>
+            <List class="hide-scrollbar" style={{maxHeight: '100%', overflow: 'auto'}}>
+                {listItem}
+            </List>
+          </div>
         )
     }
 
@@ -328,11 +183,33 @@ function C5Page() {
     return(
         <div>
           <Header/>
+          <div className="clickable-list-container">
+            <div>
+              <h2 style={{fontFamily: settings.Font.secondary, marginBottom: 10}}> Select Spoiler </h2>
+              {generateSpoilerDriversList(topSpoilers)}
+            </div>
+          </div>
+          <div style={{marginTop: 100}} className="main-block">
+            <h1 className='title page-title' align='left'> Who's a Spoiler?</h1>
+            <div style={{marginTop: 50}} className="main-function-subcomponents">
+                {explainBoard(
+                    "Driver who has crash records", 
+                    [
+                        "Wha is Crash Records?",
+                        " - Retire from race causing Driver (crash, accident)",
+                        "-------",
+                        "1. Graph A Risky Driver",
+                        "   - Toxic to the team, low score point with multiple crash record",
+                        "2. Graph B Aggressive Driver",
+                        "   - Aggressive driver with great driving skill",
+                        "3. Graph C Crazy Driver",
+                        "   - There talent was born to crash"
+                    ]
+                )}
+            </div>
+          </div>
           <div style={{marginTop: 100}} className="main-block">
             {PlotTopSpoiler()}
-          </div>
-          <div style={{marginTop: 50}} className="main-block">
-            {generateSpoilerDriversList(topSpoilers)}
           </div>
           <div style={{marginTop: 50}} className="main-block">
             {PlotSpoilerRecordDetailGroupedBarChart()}

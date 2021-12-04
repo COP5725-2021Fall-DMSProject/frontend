@@ -174,7 +174,7 @@ function Homepage() {
                                         gutterBottom variant="h5" component="div"
                                         sx={{ color: settings.Colors.subColor, fontFamily: settings.Font.secondary }}
                                     >
-                                        What kind of a driver? 
+                                        Who's a Spoiler? 
                                     </Typography>
                                     <Typography sx={{ color: settings.Colors.subColor, fontFamily: settings.Font.major, fontSize: 16 }} variant="body2" color="text.secondary">
                                         Not all drivers finish in a better position. 
