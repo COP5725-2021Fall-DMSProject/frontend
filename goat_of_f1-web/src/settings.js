@@ -13,5 +13,5 @@ export default {
         'major': 'Titillium Web',
         'secondary': 'Audiowide'
     },
-    apiHostURL: 'http://192.168.0.59:8000'
+    apiHostURL: 'http://dbms.yajr.org:8000'
 }
